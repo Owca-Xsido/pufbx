@@ -1,0 +1,59 @@
+# --- Python Build Artifacts & Environment ---
+# Byte-compiled files
+__pycache__/
+*.pyc
+*.pyd
+*.so
+*.dll
+*.dylib
+
+# Virtual environments (often named 'venv' or '.venv')
+.venv/
+venv/
+env/
+*/.venv/
+*/venv/
+*/env/
+
+# Distribution/Packaging artifacts
+dist/
+build/
+*.egg-info/
+
+# Dependency cache (pip cache)
+.cache/
+
+# --- C/C++ Compiler Artifacts ---
+# Object files generated during compilation
+*.o
+*.obj
+
+# Shared library intermediates/results (specific to the C extension)
+*.a
+*.lib
+
+# OS-specific build directories often created by make or IDEs
+# (Especially for complex C extensions or if using external libraries)
+# If you're not building outside of Python's build system, these might be omitted.
+# For example, 'Release', 'Debug', etc.
+Debug/
+Release/
+*.vcxproj
+*.sln
+
+# --- UFBX Source Vended Files ---
+# If you are including the ufbx source files directly, ignore their generated files,
+# though typically, the C compiler handles these into *.o files which are ignored above.
+# If ufbx generates specific intermediate files, list them here.
+
+# --- Editor/OS Specific Files ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- Tool-Specific Files ---
+# If using CFFI, ignore the dynamically generated C file (if not needed for debugging)
+# Note: CFFI often generates temp files, but the main compiled module is handled by *.pyd/*.so
+*.gcno
+*.gcda
