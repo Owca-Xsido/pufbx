@@ -57,3 +57,4 @@ Thumbs.db
 # Note: CFFI often generates temp files, but the main compiled module is handled by *.pyd/*.so
 *.gcno
 *.gcda
+uv.lock
