@@ -1,6 +1,9 @@
-def main():
-    print("Hello from pyufbx!")
+import pyufbx as fbx 
 
 
-if __name__ == "__main__":
-    main()
+
+print(dir(fbx))
+scene = fbx.load_fbx("/home/owca/Desktop/code/pyufbx/test/Walking.fbx")
+print(scene)
+
+
