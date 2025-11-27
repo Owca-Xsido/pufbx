@@ -60,3 +60,7 @@ Thumbs.db
 uv.lock
 
 *.fbx
+
+
+# Sample fbx files (if any) used for testing or examples
+samples/*.fbx
