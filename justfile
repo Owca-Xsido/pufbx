@@ -1,13 +1,9 @@
 alias b := build
 host := `uname -a`
-default: lint build test
+default: autoformat lint build test
 
-build:
-	@echo "Building pyufbx..."
-	uv run src/utils/generate_list.py
-	uv run src/utils/generate_wrappers.py
-	uv pip install -e .
-	
+
+
 
 test:
 	@echo "Running tests..."
@@ -18,3 +14,14 @@ lint:
 	uv run black src/ tests/
 	uv run isort src/ tests/
 	uv run flake8 src/ tests/
+
+autoformat:
+	@echo "Autoformatting code..."
+	uv run autopep8 --in-place --recursive src/
+
+build:
+	@echo "Building pyufbx..."
+	uv run src/utils/generate_list.py
+	uv run src/utils/generate_wrappers.py
+	uv pip install -e .
+	
