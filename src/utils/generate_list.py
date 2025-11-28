@@ -58,9 +58,9 @@ cdef class {class_name}List:
 
 with open("src/generated_lists.pxi", "w") as f:
     for class_name, item_type, wrap_func in LIST_TYPES:
-        f.write(TEMPLATE.format(
-            class_name=class_name,
-            item_type=item_type,
-            wrap_func=wrap_func
-        ))
+        f.write(
+            TEMPLATE.format(
+                class_name=class_name, item_type=item_type, wrap_func=wrap_func
+            )
+        )
         f.write("\n\n")

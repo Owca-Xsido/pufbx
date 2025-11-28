@@ -1,9 +1,13 @@
 # ufbx_wrapper.pyx
 # cython: language_level=3
+from libc.stdlib cimport free, malloc
+
 from src.pyufbx cimport *
-from libc.stdlib cimport malloc, free
+
 import numpy as np
+
 from cpython.bytes cimport PyBytes_FromStringAndSize
+
 from enum import IntEnum
 
 # Include the generated list and wrappers

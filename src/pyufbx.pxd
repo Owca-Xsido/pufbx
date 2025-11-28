@@ -1,4 +1,6 @@
-from libc.stdint cimport uint32_t, int32_t, int64_t, uint64_t, uint8_t, uintptr_t
+from libc.stdint cimport (int32_t, int64_t, uint8_t, uint32_t, uint64_t,
+                          uintptr_t)
+
 
 cdef extern from "<stdbool.h>":
     ctypedef int bool

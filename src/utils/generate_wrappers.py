@@ -42,21 +42,23 @@ with open("src/generated_wrappers.pxi", "w") as f:
     f.write("# Auto-generated wrapper functions\n")
     f.write("from weakref import WeakValueDictionary\n")
     f.write("from threading import Lock\n\n")
-    
+
     # Generate caches
     for class_name, c_type, attr_name in WRAPPER_TYPES:
         name_lower = class_name.lower()
         f.write(cache_template.format(name_lower=name_lower))
-    
+
     f.write("\n")
-    
+
     # Generate wrappers
     for class_name, c_type, attr_name in WRAPPER_TYPES:
         name_lower = class_name.lower()
-        f.write(wrapper_template.format(
-            class_name=class_name,
-            c_type=c_type,
-            attr_name=attr_name,
-            name_lower=name_lower
-        ))
+        f.write(
+            wrapper_template.format(
+                class_name=class_name,
+                c_type=c_type,
+                attr_name=attr_name,
+                name_lower=name_lower,
+            )
+        )
         f.write("\n")

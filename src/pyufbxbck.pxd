@@ -1,5 +1,5 @@
-from libc.stdint cimport uint32_t, uint64_t, int32_t, int64_t
 from libc.stddef cimport size_t
+from libc.stdint cimport int32_t, int64_t, uint32_t, uint64_t
 
 
 cdef extern from "ufbx.h":
