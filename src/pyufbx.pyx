@@ -26,8 +26,30 @@ cdef str to_py_string(ufbx_string s):
     return PyBytes_FromStringAndSize(s.data, s.length).decode('utf-8')
 
 
+cdef class TransformWrapper:
+    cdef ufbx_transform *_transform
+    
+    @property
+    def translation(self):
+        return (self._transform.translation.x,
+                self._transform.translation.y,
+                self._transform.translation.z)
+    
+    @property
+    def rotation(self):
+        return (self._transform.rotation.x,
+                self._transform.rotation.y,
+                self._transform.rotation.z,
+                self._transform.rotation.w)
+    
+    @property
+    def scale(self):
+        return (self._transform.scale.x,
+                self._transform.scale.y,
+                self._transform.scale.z)
 
-
+    
+        
 cdef class Property:
     cdef ufbx_prop *_prop
 
@@ -116,9 +138,6 @@ cdef class Node:
     def __iter__(self):
         return iter(self.children)
 
-    @property
-    def name(self):
-        return to_py_string(self._node.name)
 
     @property
     def element(self):
@@ -128,8 +147,16 @@ cdef class Node:
         element_obj = Element()
         element_obj._element = &self._node.element  # Take address of the union
         return element_obj  # Return the Python wrapper, not the C pointer
-   
     
+    @property
+    def name(self):
+        return to_py_string(self._node.name)
+
+    @property
+    def properties(self):
+        raise NotImplementedError("properties is not implemented yet.")
+        # return PropertyList.create(self._node.props.data, self._node.props.count)
+
     @property
     def id(self):
         return self._node.element_id
@@ -152,29 +179,25 @@ cdef class Node:
 
     @property
     def is_root(self):
-        return self._node.is_root
+        return <bint>self._node.is_root
+
 
     @property
     def num_children(self):
         return self._node.children.count
     
     @property
-    def local_transform(self):
-        """Returns the local transform matrix as a numpy array."""
-        pass
+    def mesh(self):
+        raise NotImplementedError("mesh is not implemented yet.")
 
     @property
-    def rotation_order(self):
-        return self._node.rotation_order
+    def light(self):
+        raise NotImplementedError("light is not implemented yet")
     
     @property
-    def is_visible(self):
-        return self._node.visible
+    def camera(self):
+        raise NotImplementedError("camera is not implemented yet")
     
-    @property
-    def node_depth(self):
-        return self._node.node_depth
-
     @property
     def bone(self):
         """Returns the associated Bone object, or None if not a bone."""
@@ -183,7 +206,7 @@ cdef class Node:
         bone_obj = Bone()
         bone_obj._bone = self._node.bone
         return bone_obj
-
+    
     @property
     def attrib(self):
         """Returns the generic attached element (for less common types)."""
@@ -192,16 +215,161 @@ cdef class Node:
         element_obj = Element()
         element_obj._element = self._node.attrib
         return element_obj
-
-    @property
-    def attrib_type(self):
-        """Returns the type of the attached element."""
-        return ElementType(self._node.attrib_type)
     
     @property
     def geometry_transform_helper(self):
        raise NotImplementedError("geometry_transform_helper is not implemented yet.")
 
+    @property
+    def scale_helper(self):
+        raise NotImplementedError("scale_helper is not implemented yet.")
+
+    @property
+    def attrib_type(self):
+        """Returns the type of the attached element."""
+        return ElementType(self._node.attrib_type)
+    @property
+    def all_attribs(self):
+        raise NotImplementedError("all_attribs is not implemented yet.")
+
+    @property
+    def local_transform(self):
+        """Returns the local transform matrix as a numpy array."""
+        pass
+
+    @property
+    def inherit_mode(self):
+        return self._node.inherit_mode
+
+    @property
+    def original_inherit_mode(self):
+        return self._node.original_inherit_mode
+    
+    @property
+    def rotation_order(self):
+        return self._node.rotation_order
+    
+    @property
+    def local_transform(self):
+        cdef TransformWrapper wrapper = TransformWrapper()
+        wrapper._transform = &self._node.local_transform
+        return wrapper
+        
+    @property
+    def geometry_transform(self):
+        return self._node.geometry_transform
+
+    @property
+    def inherit_scale(self):
+        raise NotImplementedError("inherit_scale is not implemented yet.")
+        # return self._node.inherit_scale
+    
+    @property
+    def inherit_scale_node(self):
+        raise NotImplementedError("inherit_scale_node is not implemented yet.") 
+        # return self._node.inherit_scale_node
+
+    @property
+    def rotation_order(self):
+        return self._node.rotation_order
+
+    @property
+    def euler_rotation(self):
+        return self._node.euler_rotation
+
+    @property
+    def node_to_parent(self):
+        return self._node.node_to_parent
+
+    @property
+    def node_to_world(self):
+        return self._node.node_to_world
+
+    @property
+    def geometry_to_node(self):
+        return self._node.geometry_to_node
+    
+    @property
+    def geometry_to_world(self):
+        return self._node.geometry_to_world
+    
+    @property
+    def unscaled_node_to_world(self):
+        return self._node.unscaled_node_to_world
+    
+    @property
+    def adjust_pre_translation(self):
+        return self._node.adjust_pre_translation
+    @property
+    def adjust_pre_rotation(self):
+        return self._node.adjust_pre_rotation
+    
+    @property
+    def adjust_pre_scale(self):
+        return self._node.adjust_pre_scale
+    
+    @property
+    def adjust_post_rotation(self):
+        return self._node.adjust_post_rotation
+    
+    @property
+    def adjust_post_scale(self):
+        return self._node.adjust_post_scale
+    
+    @property
+    def adjust_translation_scale(self):
+        return self._node.adjust_translation_scale
+    
+    @property
+    def adjust_mirror_axis(self):
+        return self._node.adjust_mirror_axis
+    
+    @property
+    def materials(self):
+        raise NotImplementedError("materials is not implemented yet.")
+
+    @property
+    def bind_pose(self):
+        raise NotImplementedError("bind_pose is not implemented yet.")
+
+    @property
+    def is_visible(self):
+        return <bint>self._node.visible
+    
+    @property
+    def has_geometry_transform(self):
+        return <bint>self._node.has_geometry_transform
+    
+    @property
+    def	has_adjust_transform(self):
+        return <bint>self._node.has_adjust_transform
+
+    @property
+    def has_root_adjust_transform(self):
+        return <bint>self._node.has_root_adjust_transform
+
+    @property
+    def is_geometry_transform_helper(self):
+        return <bint>self._node.is_geometry_transform_helper
+
+    @property
+    def is_scale_helper(self):
+        return <bint>self._node.is_scale_helper
+
+    @property
+    def is_scale_compensate_parent(self):
+        return <bint>self._node.is_scale_compensate_parent
+
+
+    @property
+    def node_depth(self):
+        return self._node.node_depth
+
+
+
+
+
+    
 
     
 # Python wrapper for scene
@@ -216,6 +384,13 @@ cdef class Scene:
         if self._scene != NULL:
             ufbx_free_scene(self._scene)
     
+    @property
+    def root_node(self):
+        """Returns the root node of the scene."""
+        if self._scene.root_node == NULL:
+            return None
+        return wrap_node(self._scene.root_node)
+
     @property
     def nodes(self):
         """Get list of all nodes in the scene, wrapped as Node objects."""
@@ -233,6 +408,7 @@ cdef class Scene:
             result.append(node_obj)
         
         return result
+
 
     @property
     def num_nodes(self):
