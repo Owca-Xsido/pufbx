@@ -3,15 +3,12 @@
 from src.pyufbx cimport *
 from libc.stdlib cimport malloc, free
 import numpy as np
-from weakref import WeakValueDictionary
-from threading import Lock
 from cpython.bytes cimport PyBytes_FromStringAndSize
 from enum import IntEnum
 
-# Global cache for Node objects with thread safety
-cdef object _node_cache_lock = Lock()
-cdef object __node_cache = WeakValueDictionary()
-
+# Include the generated list and wrappers
+include "generated_lists.pxi"
+include "generated_wrappers.pxi"
 
 # Python wrapper for strings
 cdef str to_py_string(ufbx_string s):
@@ -98,81 +95,6 @@ cdef class Bone:
         return self._bone.is_root
     
 
-
-
-cdef Node wrap_node(ufbx_node *node):
-    """
-    Helper to safely convert a ufbx_node* pointer into a Python Node object,
-    using a global cache to ensure only one Python object exists per C pointer.
-    """
-    if node == NULL:
-        return None
-
-    cdef size_t ptr_key = <size_t>node
-
-    with _node_cache_lock:
-        cached = __node_cache.get(ptr_key, None)
-        if cached is not None:
-            return <Node>cached
-
-        py_node = Node()
-        py_node._node = node
-        __node_cache[ptr_key] = py_node
-        return py_node
-
-
-
-# Wrapper for node children, for more Pythonic access
-cdef class NodeList:
-    cdef ufbx_node **_data
-    cdef size_t _count
-
-    @staticmethod
-    cdef NodeList create(ufbx_node **data, size_t count):
-        """Factory method to create NodeList with C pointers."""
-        cdef NodeList obj = NodeList.__new__(NodeList)
-        obj._data = data
-        obj._count = count
-        return obj
-
-   
-
-    def __len__(self):
-        return self._count
-
-    def __getitem__(self, idx):
-        cdef list result
-        cdef size_t i
-        cdef int start, stop, step
-
-        if isinstance(idx, slice):
-            start, stop, step = idx.indices(self._count)
-            result = []
-            for i in range(start, stop, step):
-                result.append(wrap_node(self._data[i]))
-            return result
-
-        # Single index
-        if idx < 0:
-            idx += self._count
-        if idx < 0 or idx >= self._count:
-            raise IndexError("Index out of range")
-        return wrap_node(self._data[idx])
-
-    def __iter__(self):
-        cdef size_t i
-        for i in range(self._count):
-            yield wrap_node(self._data[i])
-
-    def __repr__(self):
-        # Return list of names for printing
-        cdef list names = []
-        cdef size_t i
-        for i in range(self._count):
-            names.append(to_py_string(self._data[i].name))
-        return repr(names)
-
-
 cdef class Node:
     cdef ufbx_node *_node
     cdef object __weakref__  # Enable weak references
@@ -211,6 +133,7 @@ cdef class Node:
     @property
     def typed_id(self):
         return self._node.typed_id
+        
     @property
     def parent(self):
         """Returns the parent Node, or None if it is the root."""
@@ -270,6 +193,13 @@ cdef class Node:
     def attrib_type(self):
         """Returns the type of the attached element."""
         return ElementType(self._node.attrib_type)
+    
+    @property
+    def geometry_transform_helper(self):
+       raise NotImplementedError("geometry_transform_helper is not implemented yet.")
+
+
+    
 # Python wrapper for scene
 
 cdef class Scene:
