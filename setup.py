@@ -22,6 +22,7 @@ extensions = [
 
 setup(
     name="pyufbx",
-    ext_modules=cythonize(extensions, compiler_directives={'language_level': 3}),
+    ext_modules=cythonize(extensions, compiler_directives={
+                          'language_level': 3}),
     zip_safe=False,
 )
