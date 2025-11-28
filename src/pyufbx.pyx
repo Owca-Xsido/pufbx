@@ -25,6 +25,8 @@ cdef str to_py_string(ufbx_string s):
     return PyBytes_FromStringAndSize(s.data, s.length).decode('utf-8')
 
 
+
+
 cdef class Property:
     cdef ufbx_prop *_prop
 
@@ -68,8 +70,24 @@ cdef class Element:
 
 cdef class Bone:
     cdef ufbx_bone *_bone
+
     @property
-    def radus(self):
+    def element(self):
+        """Returns the Element wrapper for this bone's element field."""
+        if self._bone == NULL:
+            return None
+        element_obj = Element()
+        element_obj._element = &self._bone.element  # Take address of the union
+        return element_obj  # Return the Python wrapper, not the C pointer
+    @property
+    def name(self):
+        return to_py_string(self._bone.element.name)
+    @property
+    def instance(self):
+        return NodeList.create(self._bone.element.instances.data, self._bone.element.instances.count)
+        
+    @property
+    def radius(self):
         return self._bone.radius
     
     @property
@@ -105,14 +123,14 @@ cdef Node wrap_node(ufbx_node *node):
 
 
 # Wrapper for node children, for more Pythonic access
-cdef class NodeChildren:
+cdef class NodeList:
     cdef ufbx_node **_data
     cdef size_t _count
 
     @staticmethod
-    cdef NodeChildren create(ufbx_node **data, size_t count):
-        """Factory method to create NodeChildren with C pointers."""
-        cdef NodeChildren obj = NodeChildren.__new__(NodeChildren)
+    cdef NodeList create(ufbx_node **data, size_t count):
+        """Factory method to create NodeList with C pointers."""
+        cdef NodeList obj = NodeList.__new__(NodeList)
         obj._data = data
         obj._count = count
         return obj
@@ -160,6 +178,17 @@ cdef class Node:
     cdef object __weakref__  # Enable weak references
 
     
+    def __repr__(self):
+        return f"<Node name='{self.name}' id={self.id} type={self.element.type.name}>"
+
+    def __str__(self):
+        return self.__repr__()
+
+    def __len__(self):
+        return self.num_children
+
+    def __iter__(self):
+        return iter(self.children)
 
     @property
     def name(self):
@@ -191,7 +220,7 @@ cdef class Node:
     
     @property
     def children(self):
-        return NodeChildren.create(self._node.children.data, self._node.children.count)
+        return NodeList.create(self._node.children.data, self._node.children.count)
 
 
     @property
@@ -219,16 +248,28 @@ cdef class Node:
     def node_depth(self):
         return self._node.node_depth
 
+    @property
+    def bone(self):
+        """Returns the associated Bone object, or None if not a bone."""
+        if self._node.bone == NULL:
+            return None
+        bone_obj = Bone()
+        bone_obj._bone = self._node.bone
+        return bone_obj
 
-    # @property
-    # def bone(self):
-    #     """Returns the associated Bone object, or None if not a bone."""
-    #     if self._node.bone == NULL:
-    #         return None
-    #     bone_obj = Bone()
-    #     bone_obj._bone = self._node.bone
-    #     return bone_obj
+    @property
+    def attrib(self):
+        """Returns the generic attached element (for less common types)."""
+        if self._node.attrib == NULL:
+            return None
+        element_obj = Element()
+        element_obj._element = self._node.attrib
+        return element_obj
 
+    @property
+    def attrib_type(self):
+        """Returns the type of the attached element."""
+        return ElementType(self._node.attrib_type)
 # Python wrapper for scene
 
 cdef class Scene:
@@ -317,6 +358,10 @@ def load_fbx(filename: str):
 
 class ElementType(IntEnum):
     """Enum representing ufbx element types."""
+    def __str__(self):
+        return self.name
+    def __repr__(self):
+        return f"ElementType.{self.name}"
     UNKNOWN = 0
     NODE = 1
     MESH = 2
