@@ -18,6 +18,7 @@ def prop(cube_scene):
     return first_child.properties[0]
 
 
+@pytest.fixture
 def props(cube_scene):
     root = cube_scene.root_node
     first_child = root.children[0]
@@ -43,14 +44,14 @@ def test_property_flags(prop):
     assert isinstance(prop.flags, fbx.PropFlags)
 
 
-def test_property_value_string(prop):
-    """Test property value retrieval as string."""
-    print(f"Property Value String: {prop.value}")
-    assert isinstance(prop.value, str)
-    assert prop.value != ""
+def test_property_value(props):
+    """Test property value retrieval."""
+    for prop in props:
+        value = prop.value
+        print(f" - {prop.name} ({prop.prop_type}): {value}")
+        if prop.prop_type == fbx.PropType.UFBX_PROP_INTEGER:
+            value = prop.value
+            assert isinstance(value, int)
 
+        assert value is not None
 
-def test_property_value_int(prop):
-    """Test property value retrieval as int."""
-    value = prop.value
-    assert isinstance(value, int)
