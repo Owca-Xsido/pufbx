@@ -56,6 +56,7 @@ cdef class Vec3Property:
         yield self.z
 
 
+
 cdef class QuatProperty:
     """Wrapper for quaternion with conversion methods."""
     cdef double x, y, z, w
@@ -193,6 +194,7 @@ cdef class Node:
     cdef ufbx_node *_node
     cdef object __weakref__  # Enable weak references
 
+    cdef TransformWrapper _local_transform_cache
     
     def __repr__(self):
         return f"<Node name='{self.name}' id={self.id} type={self.element.type.name}>"
@@ -301,11 +303,6 @@ cdef class Node:
         raise NotImplementedError("all_attribs is not implemented yet.")
 
     @property
-    def local_transform(self):
-        """Returns the local transform matrix as a numpy array."""
-        pass
-
-    @property
     def inherit_mode(self):
         return self._node.inherit_mode
 
@@ -319,9 +316,12 @@ cdef class Node:
     
     @property
     def local_transform(self):
-        cdef TransformWrapper wrapper = TransformWrapper()
-        wrapper._transform = &self._node.local_transform
-        return wrapper
+        # Only create wrapper once per node
+        if self._local_transform_cache is None:
+            wrapper = TransformWrapper()
+            wrapper._transform = &self._node.local_transform
+            self._local_transform_cache = wrapper
+        return self._local_transform_cache
         
     @property
     def geometry_transform(self):
