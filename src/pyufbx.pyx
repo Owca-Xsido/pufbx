@@ -8,11 +8,10 @@ import numpy as np
 
 from cpython.bytes cimport PyBytes_FromStringAndSize
 
-from enum import IntEnum
-
 # Include the generated list and wrappers
 include "generated_lists.pxi"
 include "generated_wrappers.pxi"
+include "enums.pxi"
 
 # Python wrapper for strings
 cdef str to_py_string(ufbx_string s):
@@ -24,6 +23,42 @@ cdef str to_py_string(ufbx_string s):
         return ""
     # Create a Python bytes object from char* + length, then decode to str
     return PyBytes_FromStringAndSize(s.data, s.length).decode('utf-8')
+
+cdef inline object blob_to_bytes(ufbx_blob blob):
+    """Convert a ufbx_blob to Python bytes."""
+    if blob.data == NULL or blob.size == 0:
+        return b""
+    return PyBytes_FromStringAndSize(<const char*>blob.data, blob.size)
+
+cdef class Vec2Property:
+    """Wrapper for 3D vector properties with conversion methods."""
+    cdef double x, y
+    
+    def __init__(self, double x, double y):
+        self.x = x
+        self.y = y
+    
+    def as_list(self):
+        """Returns as plain Python list."""
+        return [self.x, self.y]
+    
+    def as_tuple(self):
+        """Returns as tuple."""
+        return (self.x, self.y)
+    
+    def as_array(self):
+        """Returns as numpy array."""
+        return np.array([self.x, self.y], dtype=np.float64)
+    
+    def __repr__(self):
+        return f"Vec3({self.x}, {self.y})"
+    
+    def __iter__(self):
+        """Allows unpacking: x, y = vec"""
+        yield self.x
+        yield self.y
+        
+
 
 cdef class Vec3Property:
     """Wrapper for 3D vector properties with conversion methods."""
@@ -55,6 +90,37 @@ cdef class Vec3Property:
         yield self.y
         yield self.z
 
+cdef class Vec4Property:
+    """Wrapper for 4D vector properties with conversion methods."""
+    cdef double x, y, z, w
+    
+    def __init__(self, double x, double y, double z, double w):
+        self.x = x
+        self.y = y
+        self.z = z
+        self.w = w
+    
+    def as_list(self):
+        """Returns as plain Python list."""
+        return [self.x, self.y, self.z, self.w]
+    
+    def as_tuple(self):
+        """Returns as tuple."""
+        return (self.x, self.y, self.z, self.w)
+    
+    def as_array(self):
+        """Returns as numpy array."""
+        return np.array([self.x, self.y, self.z, self.w], dtype=np.float64)
+    
+    def __repr__(self):
+        return f"Vec4({self.x}, {self.y}, {self.z}, {self.w})"
+    
+    def __iter__(self):
+        """Allows unpacking: x, y, z, w = vec"""
+        yield self.x
+        yield self.y
+        yield self.z
+        yield self.w
 
 
 cdef class QuatProperty:
@@ -118,22 +184,122 @@ cdef class TransformWrapper:
         )
 
     
-        
-cdef class Property:
+      
+cdef class PropsWrapper:
+    cdef ufbx_props *_props
+    
+    @staticmethod
+    cdef PropsWrapper create(ufbx_props *props):
+        cdef PropsWrapper obj = PropsWrapper.__new__(PropsWrapper)
+        obj._props = props
+        return obj
+    
+    def __len__(self):
+        return self._props.props.count
+    
+    @property
+    def num_animated(self):
+        return self._props.num_animated
+    
+    @property
+    def defaults(self):
+        if self._props.defaults != NULL:
+            return PropsWrapper.create(self._props.defaults)
+        return None
+    
+    def __getitem__(self, idx):
+        if idx < 0:
+            idx += self._props.props.count
+        if idx < 0 or idx >= self._props.props.count:
+            raise IndexError("Index out of range")
+        return wrap_prop(&self._props.props.data[idx])
+    
+    def __iter__(self):
+        cdef size_t i
+        for i in range(self._props.props.count):
+            yield wrap_prop(&self._props.props.data[i])
+
+cdef class Prop:
     cdef ufbx_prop *_prop
+    cdef object __weakref__ 
+
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return f"<Name='{self.name}'>"
 
     @property
     def name(self):
         return to_py_string(self._prop.name)
+
     
     @property
-    def type(self):
-        return self._prop.type
+    def prop_type(self):
+        return PropType(<int>self._prop.type)
     
-    
+    @property
+    def flags(self):
+        return PropFlags(<int>self._prop.flags)
+
+    @property
+    def value(self):
+        """Return the property value in the appropriate Python type."""
+        ptype = self.prop_type
+        
+        # String types
+        if ptype == PropType.UFBX_PROP_STRING:
+            return to_py_string(self._prop.value_str)
+        
+        # Numeric types
+        elif ptype == PropType.UFBX_PROP_BOOLEAN:
+            return <bint>self._prop.value_int
+        elif ptype == PropType.UFBX_PROP_INTEGER:
+            return <int>self._prop.value_int
+        elif ptype == PropType.UFBX_PROP_NUMBER:
+            return <double>self._prop.value_real
+        
+        # Vector types
+        elif ptype == PropType.UFBX_PROP_VECTOR:
+            return Vec3Property(
+                self._prop.value_vec3.x,
+                self._prop.value_vec3.y,
+                self._prop.value_vec3.z
+            )
+
+
+        elif ptype == PropType.COLOR:
+            return Vec3Property(
+                    self._prop.value_vec3.x, 
+                    self._prop.value_vec3.y, 
+                    self._prop.value_vec3.z)
+
+        elif ptype == PropType.COLOR_WITH_ALPHA:
+            return Vec4Property(self._prop.value_vec4.x, 
+                    self._prop.value_vec4.y, 
+                    self._prop.value_vec4.z,
+                    self._prop.value_vec4.w)
+        
+        # Blob/binary data
+        elif ptype == PropType.BLOB:
+            return blob_to_bytes(self._prop.value_blob)
+        
+        # Fallback for unknown types
+        else:
+            return None
 
 cdef class Element:
     cdef ufbx_element *_element
+    cdef object __weakref__  
+
+    def __repr__(self):
+        return f"<Name='{self.name}' id={self.id} type={self.element.type.name}>"
+
+    def __str__(self):
+        return self.name
+
+
+
 
     @property
     def name(self):
@@ -150,7 +316,7 @@ cdef class Element:
         return self._element.typed_id
     
     @property
-    def type(self):
+    def element_type(self):
         return ElementType(self._element.type)
     
     @property
@@ -197,10 +363,10 @@ cdef class Node:
     cdef TransformWrapper _local_transform_cache
     
     def __repr__(self):
-        return f"<Node name='{self.name}' id={self.id} type={self.element.type.name}>"
+        return f"<Node name='{self.name}' id={self.id} type={self.element.element_type.name}>"
 
     def __str__(self):
-        return self.__repr__()
+        return self.name
 
     def __len__(self):
         return self.num_children
@@ -224,9 +390,7 @@ cdef class Node:
 
     @property
     def properties(self):
-        raise NotImplementedError("properties is not implemented yet.")
-        # return PropertyList.create(self._node.props.data, self._node.props.count)
-
+        return PropsWrapper.create(&self._node.props)
     @property
     def id(self):
         return self._node.element_id
@@ -534,51 +698,3 @@ def load_fbx(filename: str):
 
 
 
-class ElementType(IntEnum):
-    """Enum representing ufbx element types."""
-    def __str__(self):
-        return self.name
-    def __repr__(self):
-        return f"ElementType.{self.name}"
-    UNKNOWN = 0
-    NODE = 1
-    MESH = 2
-    LIGHT = 3
-    CAMERA = 4
-    BONE = 5
-    EMPTY = 6
-    LINE_CURVE = 7
-    NURBS_CURVE = 8
-    NURBS_SURFACE = 9
-    NURBS_TRIM_SURFACE = 10
-    NURBS_TRIM_BOUNDARY = 11
-    PROCEDURAL_GEOMETRY = 12
-    STEREO_CAMERA = 13
-    CAMERA_SWITCHER = 14
-    MARKER = 15
-    LOD_GROUP = 16
-    SKIN_DEFORMER = 17
-    SKIN_CLUSTER = 18
-    BLEND_DEFORMER = 19
-    BLEND_CHANNEL = 20
-    BLEND_SHAPE = 21
-    CACHE_DEFORMER = 22
-    CACHE_FILE = 23
-    MATERIAL = 24
-    TEXTURE = 25
-    VIDEO = 26
-    SHADER = 27
-    SHADER_BINDING = 28
-    ANIM_STACK = 29
-    ANIM_LAYER = 30
-    ANIM_VALUE = 31
-    ANIM_CURVE = 32
-    DISPLAY_LAYER = 33
-    SELECTION_SET = 34
-    SELECTION_NODE = 35
-    CHARACTER = 36
-    CONSTRAINT = 37
-    AUDIO_LAYER = 38
-    AUDIO_CLIP = 39
-    POSE = 40
-    METADATA_OBJECT = 41
