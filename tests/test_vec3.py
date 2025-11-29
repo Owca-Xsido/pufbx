@@ -1,5 +1,5 @@
-import pytest
 import numpy as np
+
 from pyufbx import Vec3Property
 
 

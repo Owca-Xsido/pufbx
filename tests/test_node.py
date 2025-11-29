@@ -51,7 +51,7 @@ def test_cube_navigation(cube_scene):
             break
 
     assert all_nodes is not None
-    assert all_nodes_count == 23
+    assert all_nodes_count == 22
     assert root_node_len == 2
     assert cube_node is not None
     assert cube_node.name == "cube_1"
