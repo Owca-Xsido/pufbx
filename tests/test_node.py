@@ -81,7 +81,7 @@ def test_element_access(cube_scene):
     element = root.element
     assert element is not None
     # Assuming Element class has a property 'type'
-    assert element.type is not None
+    assert element.element_type is not None
 
 
 def test_missing_optional_components(cube_scene):
@@ -101,6 +101,3 @@ def test_not_implemented_features(cube_scene):
 
     with pytest.raises(NotImplementedError):
         _ = root.geometry_transform_helper
-
-    with pytest.raises(NotImplementedError):
-        _ = root.properties

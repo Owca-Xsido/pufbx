@@ -1,6 +1,7 @@
 LIST_TYPES = [
     ("Element", "ufbx_element", "_element"),
     ("Node", "ufbx_node", "_node"),
+    # ("Property", "ufbx_property", "_property"),
     # ("AnimValue", "ufbx_anim_value", "_anim_value"),
     # ("AnimCurve", "ufbx_anim_curve", "_anim_curve"),
     # ("DisplayLayer", "ufbx_display_layer", "_display_layer"),
