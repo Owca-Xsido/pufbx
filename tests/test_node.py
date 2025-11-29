@@ -8,10 +8,13 @@ def cube_scene():
     # Assuming you have a load function
     return fbx.load_fbx("tests/fixtures/cube_and_bone.fbx")
 
+
 @pytest.fixture()
 def cube_1(cube_scene):
     root = cube_scene.root_node
     return root.children[0]
+
+
 def test_root_node_properties(cube_scene):
     """Test the root node basics."""
     root = cube_scene.root_node
@@ -22,10 +25,12 @@ def test_root_node_properties(cube_scene):
     assert root.id is not None
     assert root.parent is None
 
+
 def test_lcl_values(cube_1):
-    assert  isinstance(cube_1.lcl_translation, fbx.Vec3Property)
-    assert  isinstance(cube_1.lcl_rotation, fbx.Vec3Property)
-    assert  isinstance(cube_1.lcl_scale, fbx.Vec3Property)
+    assert isinstance(cube_1.lcl_translation, fbx.Vec3Property)
+    assert isinstance(cube_1.lcl_rotation, fbx.Vec3Property)
+    assert isinstance(cube_1.lcl_scale, fbx.Vec3Property)
+
 
 def test_node_hierarchy_navigation(cube_scene):
     """Test parent/child relationships."""

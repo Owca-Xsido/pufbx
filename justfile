@@ -8,7 +8,7 @@ build_release: autoformat lint build test
 test:
 	@echo "Running tests..."
 	
-	uv run pytest tests/ --maxfail=1 --disable-warnings
+	uv run pytest tests/ --maxfail=1 -s
 lint:
 	@echo "Linting code..."
 	uv run black src/ tests/

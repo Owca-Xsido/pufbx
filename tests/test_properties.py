@@ -54,4 +54,3 @@ def test_property_value(props):
             assert isinstance(value, int)
 
         assert value is not None
-
