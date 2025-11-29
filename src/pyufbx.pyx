@@ -25,28 +25,96 @@ cdef str to_py_string(ufbx_string s):
     # Create a Python bytes object from char* + length, then decode to str
     return PyBytes_FromStringAndSize(s.data, s.length).decode('utf-8')
 
+cdef class Vec3Property:
+    """Wrapper for 3D vector properties with conversion methods."""
+    cdef double x, y, z
+    
+    def __init__(self, double x, double y, double z):
+        self.x = x
+        self.y = y
+        self.z = z
+    
+    def as_list(self):
+        """Returns as plain Python list."""
+        return [self.x, self.y, self.z]
+    
+    def as_tuple(self):
+        """Returns as tuple."""
+        return (self.x, self.y, self.z)
+    
+    def as_array(self):
+        """Returns as numpy array."""
+        return np.array([self.x, self.y, self.z], dtype=np.float64)
+    
+    def __repr__(self):
+        return f"Vec3({self.x}, {self.y}, {self.z})"
+    
+    def __iter__(self):
+        """Allows unpacking: x, y, z = vec"""
+        yield self.x
+        yield self.y
+        yield self.z
+
+
+cdef class QuatProperty:
+    """Wrapper for quaternion with conversion methods."""
+    cdef double x, y, z, w
+    
+    def __init__(self, double x, double y, double z, double w):
+        self.x = x
+        self.y = y
+        self.z = z
+        self.w = w
+    
+    def as_list(self):
+        """Returns as plain Python list [x, y, z, w]."""
+        return [self.x, self.y, self.z, self.w]
+    
+    def as_tuple(self):
+        """Returns as tuple (x, y, z, w)."""
+        return (self.x, self.y, self.z, self.w)
+    
+    def as_array(self):
+        """Returns as numpy array."""
+        return np.array([self.x, self.y, self.z, self.w], dtype=np.float64)
+    
+    def __repr__(self):
+        return f"Quat({self.x}, {self.y}, {self.z}, {self.w})"
+    
+    def __iter__(self):
+        yield self.x
+        yield self.y
+        yield self.z
+        yield self.w
+
 
 cdef class TransformWrapper:
     cdef ufbx_transform *_transform
     
     @property
     def translation(self):
-        return (self._transform.translation.x,
-                self._transform.translation.y,
-                self._transform.translation.z)
+        return Vec3Property(
+            self._transform.translation.x,
+            self._transform.translation.y,
+            self._transform.translation.z
+        )
     
     @property
     def rotation(self):
-        return (self._transform.rotation.x,
-                self._transform.rotation.y,
-                self._transform.rotation.z,
-                self._transform.rotation.w)
+        return QuatProperty(
+            self._transform.rotation.x,
+            self._transform.rotation.y,
+            self._transform.rotation.z,
+            self._transform.rotation.w
+        )
     
     @property
     def scale(self):
-        return (self._transform.scale.x,
-                self._transform.scale.y,
-                self._transform.scale.z)
+        return Vec3Property(
+            self._transform.scale.x,
+            self._transform.scale.y,
+            self._transform.scale.z
+        )
 
     
         
