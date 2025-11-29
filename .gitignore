@@ -40,7 +40,6 @@ Debug/
 Release/
 *.vcxproj
 *.sln
-
 # --- UFBX Source Vended Files ---
 # If you are including the ufbx source files directly, ignore their generated files,
 # though typically, the C compiler handles these into *.o files which are ignored above.
@@ -66,3 +65,5 @@ uv.lock
 samples/*.fbx
 
 *.test.py
+
+*.html
