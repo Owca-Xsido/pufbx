@@ -231,17 +231,28 @@ cdef class Prop:
 
     @property
     def name(self):
+        
         return to_py_string(self._prop.name)
 
-    
     @property
     def prop_type(self):
+        """Returns prop type Class"""
         return PropType(<int>self._prop.type)
     
     @property
     def flags(self):
         return PropFlags(<int>self._prop.flags)
-
+        
+    @property
+    def value_as_float(self):
+        """Always get numeric value as float (works for int, bool, number types)."""
+        return <double>self._prop.value_real
+        
+    @property
+    def value_as_int(self):
+        """Always get numeric value as int (works for int, bool, number types)."""
+        return <int>self._prop.value_int
+        
     @property
     def value(self):
         """Return the property value in the appropriate Python type."""
@@ -254,8 +265,10 @@ cdef class Prop:
         # Numeric types
         elif ptype == PropType.UFBX_PROP_BOOLEAN:
             return <bint>self._prop.value_int
+
         elif ptype == PropType.UFBX_PROP_INTEGER:
             return <int>self._prop.value_int
+
         elif ptype == PropType.UFBX_PROP_NUMBER:
             return <double>self._prop.value_real
         
@@ -268,20 +281,40 @@ cdef class Prop:
             )
 
 
-        elif ptype == PropType.COLOR:
+        elif ptype == PropType.UFBX_PROP_COLOR:
             return Vec3Property(
                     self._prop.value_vec3.x, 
                     self._prop.value_vec3.y, 
                     self._prop.value_vec3.z)
 
-        elif ptype == PropType.COLOR_WITH_ALPHA:
+        elif ptype == PropType.UFBX_PROP_COLOR_WITH_ALPHA:
             return Vec4Property(self._prop.value_vec4.x, 
                     self._prop.value_vec4.y, 
                     self._prop.value_vec4.z,
                     self._prop.value_vec4.w)
         
-        # Blob/binary data
-        elif ptype == PropType.BLOB:
+        elif ptype == PropType.UFBX_PROP_TRANSLATION:
+            return Vec3Property(
+                self._prop.value_vec3.x,
+                self._prop.value_vec3.y,
+                self._prop.value_vec3.z
+            )
+    
+        elif ptype == PropType.UFBX_PROP_ROTATION:
+            return Vec3Property(
+                self._prop.value_vec3.x,
+                self._prop.value_vec3.y,
+                self._prop.value_vec3.z
+            )
+        
+        elif ptype == PropType.UFBX_PROP_SCALING:
+            return Vec3Property(
+                self._prop.value_vec3.x,
+                self._prop.value_vec3.y,
+                self._prop.value_vec3.z
+            )
+        # # Blob/binary data
+        elif ptype == PropType.UFBX_PROP_BLOB:
             return blob_to_bytes(self._prop.value_blob)
         
         # Fallback for unknown types
@@ -317,7 +350,7 @@ cdef class Element:
     
     @property
     def element_type(self):
-        return ElementType(self._element.type)
+        return ElementType(<int>self._element.type)
     
     @property
     def instance_count(self):
@@ -373,6 +406,13 @@ cdef class Node:
 
     def __iter__(self):
         return iter(self.children)
+
+    cdef get_property_by_enum(self,enum):
+        """Gets the prop.value without the hassle"""
+        for prop in self.properties:
+            if prop.prop_type == enum:
+                return prop.value
+        return None
 
 
     @property
@@ -461,7 +501,7 @@ cdef class Node:
     @property
     def attrib_type(self):
         """Returns the type of the attached element."""
-        return ElementType(self._node.attrib_type)
+        return ElementType(<int>self._node.attrib_type)
     @property
     def all_attribs(self):
         raise NotImplementedError("all_attribs is not implemented yet.")
@@ -597,11 +637,20 @@ cdef class Node:
     def node_depth(self):
         return self._node.node_depth
 
+    @property
+    def lcl_translation(self):
+        """Property wrapper."""
+        return self.get_property_by_enum(PropType.UFBX_PROP_TRANSLATION)
 
+    @property
+    def lcl_rotation(self):
+        """Property wrapper."""
+        return self.get_property_by_enum( PropType.UFBX_PROP_ROTATION)
 
-
-
-    
+    @property
+    def lcl_scale(self):
+        """Property wrapper."""
+        return self.get_property_by_enum( PropType.UFBX_PROP_SCALING)
 
     
 # Python wrapper for scene
