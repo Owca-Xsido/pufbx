@@ -187,7 +187,10 @@ cdef class TransformWrapper:
             self._transform.scale.z
         )
 
-
+cdef class Mesh:
+    cdef ufbx_mesh *_mesh
+    cdef object __weakref__
+    
 cdef class PropsWrapper:
     cdef ufbx_props *_props
 
