@@ -159,9 +159,10 @@ cdef class QuatProperty:
         yield self.w
 
 
-cdef class TransformWrapper:
+cdef class Transform:
     cdef ufbx_transform *_transform
-
+    cdef object __weakref__
+    
     @property
     def translation(self):
         return Vec3Property(
@@ -266,61 +267,61 @@ cdef class Prop:
         ptype = self.prop_type
 
         # String types
-        if ptype == PropType.UFBX_PROP_STRING:
+        if ptype == PropType.STRING:
             return to_py_string(self._prop.value_str)
 
         # Numeric types
-        elif ptype == PropType.UFBX_PROP_BOOLEAN:
+        elif ptype == PropType.BOOLEAN:
             return <bint> self._prop.value_int
 
-        elif ptype == PropType.UFBX_PROP_INTEGER:
+        elif ptype == PropType.INTEGER:
             return <int> self._prop.value_int
 
-        elif ptype == PropType.UFBX_PROP_NUMBER:
+        elif ptype == PropType.NUMBER:
             return <double> self._prop.value_real
 
         # Vector types
-        elif ptype == PropType.UFBX_PROP_VECTOR:
+        elif ptype == PropType.VECTOR:
             return Vec3Property(
                 self._prop.value_vec3.x,
                 self._prop.value_vec3.y,
                 self._prop.value_vec3.z
             )
 
-        elif ptype == PropType.UFBX_PROP_COLOR:
+        elif ptype == PropType.COLOR:
             return Vec3Property(
                 self._prop.value_vec3.x,
                 self._prop.value_vec3.y,
                 self._prop.value_vec3.z)
 
-        elif ptype == PropType.UFBX_PROP_COLOR_WITH_ALPHA:
+        elif ptype == PropType.COLOR_WITH_ALPHA:
             return Vec4Property(self._prop.value_vec4.x,
                                 self._prop.value_vec4.y,
                                 self._prop.value_vec4.z,
                                 self._prop.value_vec4.w)
 
-        elif ptype == PropType.UFBX_PROP_TRANSLATION:
+        elif ptype == PropType.TRANSLATION:
             return Vec3Property(
                 self._prop.value_vec3.x,
                 self._prop.value_vec3.y,
                 self._prop.value_vec3.z
             )
 
-        elif ptype == PropType.UFBX_PROP_ROTATION:
+        elif ptype == PropType.ROTATION:
             return Vec3Property(
                 self._prop.value_vec3.x,
                 self._prop.value_vec3.y,
                 self._prop.value_vec3.z
             )
 
-        elif ptype == PropType.UFBX_PROP_SCALING:
+        elif ptype == PropType.SCALING:
             return Vec3Property(
                 self._prop.value_vec3.x,
                 self._prop.value_vec3.y,
                 self._prop.value_vec3.z
             )
         # # Blob/binary data
-        elif ptype == PropType.UFBX_PROP_BLOB:
+        elif ptype == PropType.BLOB:
             return blob_to_bytes(self._prop.value_blob)
 
         # Fallback for unknown types
@@ -398,7 +399,7 @@ cdef class Node:
     cdef ufbx_node *_node
     cdef object __weakref__  # Enable weak references
 
-    cdef TransformWrapper _local_transform_cache
+    cdef Transform _transform_cache
 
     def __repr__(self):
         return f"<Node name='{self.name}' id={self.id} type={self.element.element_type.name}>"
@@ -509,46 +510,52 @@ cdef class Node:
 
     @property
     def all_attribs(self):
-        raise NotImplementedError("all_attribs is not implemented yet.")
+        return ElementList.create(self._node.all_attribs.data, self._node.all_attribs.count)
 
     @property
     def inherit_mode(self):
-        return self._node.inherit_mode
+        return InheritMode(<int>self._node.inherit_mode)
 
     @property
     def original_inherit_mode(self):
-        return self._node.original_inherit_mode
+        return InheritMode(<int>self._node.original_inherit_mode)
 
     @property
     def rotation_order(self):
-        return self._node.rotation_order
+        return RotationOrder(<int>self._node.rotation_order)
 
     @property
     def local_transform(self):
         # Only create wrapper once per node
-        if self._local_transform_cache is None:
-            wrapper = TransformWrapper()
-            wrapper._transform = &self._node.local_transform
-            self._local_transform_cache = wrapper
-        return self._local_transform_cache
+        return wrap_transform(&self._node.local_transform)
 
     @property
     def geometry_transform(self):
-        return self._node.geometry_transform
+        return  wrap_transform(&self._node.geometry_transform)
 
     @property
     def inherit_scale(self):
-        raise NotImplementedError("inherit_scale is not implemented yet.")
-        # return self._node.inherit_scale
+        return Vec3Property(
+            self._node.inherit_scale.x,
+            self._node.inherit_scale.y,
+            self._node.inherit_scale.z
+            )
 
     @property
     def inherit_scale_node(self):
-        raise NotImplementedError("inherit_scale_node is not implemented yet.")
+        """Node where scale is inherited from for UFBX_INHERIT_MODE_COMPONENTWISE_SCALE 
+        and even for UFBX_INHERIT_MODE_IGNORE_PARENT_SCALE.
+         For componentwise-scale nodes, this will point to parent, 
+         for scale ignoring nodes this will point to the parent of the nearest componentwise-scaled 
+         node in the parent chain."""
+
+
+        return wrap_node(self._node.inherit_scale_node)
         # return self._node.inherit_scale_node
 
     @property
     def rotation_order(self):
-        return self._node.rotation_order
+        return RotationOrder(self._node.rotation_order)
 
     @property
     def euler_rotation(self):
@@ -645,17 +652,17 @@ cdef class Node:
     @property
     def lcl_translation(self):
         """Property wrapper."""
-        return self.get_property_by_enum(PropType.UFBX_PROP_TRANSLATION)
+        return self.get_property_by_enum(PropType.TRANSLATION)
 
     @property
     def lcl_rotation(self):
         """Property wrapper."""
-        return self.get_property_by_enum(PropType.UFBX_PROP_ROTATION)
+        return self.get_property_by_enum(PropType.ROTATION)
 
     @property
     def lcl_scale(self):
         """Property wrapper."""
-        return self.get_property_by_enum(PropType.UFBX_PROP_SCALING)
+        return self.get_property_by_enum(PropType.SCALING)
 
 
 # Python wrapper for scene

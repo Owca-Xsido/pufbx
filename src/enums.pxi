@@ -1,4 +1,5 @@
-from enum import IntEnum
+from enum import IntEnum, IntFlag
+
 
 class ElementType(IntEnum):
     """Enum representing ufbx element types."""
@@ -59,25 +60,23 @@ class PropType(IntEnum):
 
     def __repr__(self):
         return f"PropType.{self.name}"
-    UFBX_PROP_UNKNOWN = 0
-    UFBX_PROP_BOOLEAN = 1
-    UFBX_PROP_INTEGER = 2
-    UFBX_PROP_NUMBER = 3
-    UFBX_PROP_VECTOR = 4
-    UFBX_PROP_COLOR = 5
-    UFBX_PROP_COLOR_WITH_ALPHA = 6
-    UFBX_PROP_STRING = 7
-    UFBX_PROP_DATE_TIME = 8
-    UFBX_PROP_TRANSLATION = 9
-    UFBX_PROP_ROTATION = 10
-    UFBX_PROP_SCALING = 11
-    UFBX_PROP_DISTANCE = 12
-    UFBX_PROP_COMPOUND = 13
-    UFBX_PROP_BLOB = 14
-    UFBX_PROP_REFERENCE = 15
-    UFBX_PROP_TYPE_COUNT = 16
-
-from enum import IntFlag
+    UNKNOWN = 0
+    BOOLEAN = 1
+    INTEGER = 2
+    NUMBER = 3
+    VECTOR = 4
+    COLOR = 5
+    COLOR_WITH_ALPHA = 6
+    STRING = 7
+    DATE_TIME = 8
+    TRANSLATION = 9
+    ROTATION = 10
+    SCALING = 11
+    DISTANCE = 12
+    COMPOUND = 13
+    BLOB = 14
+    REFERENCE = 15
+    TYPE_COUNT = 16
 
 
 class PropFlags(IntFlag):
@@ -147,3 +146,35 @@ class PropFlags(IntFlag):
     VALUE_INT  = 0x1000000
     VALUE_STR  = 0x2000000
     VALUE_BLOB = 0x4000000
+
+class InheritMode(IntEnum):
+    """Enum representing ufbx node transform inheritance modes."""
+    
+    def __str__(self):
+        return self.name
+    
+    def __repr__(self):
+        return f"InheritMode.{self.name}"
+    
+    NORMAL = 0
+    IGNORE_PARENT_SCALE = 1
+    COMPONENTWISE_SCALE = 2
+
+
+# enum for rotation Order
+class RotationOrder(IntEnum):
+    """Enum representing ufbx node rotation order modes."""
+
+    def __str__(self):
+        return self.name
+    
+    def __repr__(self):
+        return f"InheritMode.{self.name}"
+    UFBX_ROTATION_ORDER_XYZ	= 0
+    UFBX_ROTATION_ORDER_XZY	= 1
+    UFBX_ROTATION_ORDER_YZX	= 2
+    UFBX_ROTATION_ORDER_YXZ	= 3
+    UFBX_ROTATION_ORDER_ZXY	= 4
+    UFBX_ROTATION_ORDER_ZYX	= 5
+    UFBX_ROTATION_ORDER_SPHERIC	= 6
+    UFBX_ROTATION_ORDER_COUNT = 7

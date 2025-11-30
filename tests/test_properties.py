@@ -49,7 +49,7 @@ def test_property_value(props):
     for prop in props:
         value = prop.value
         print(f" - {prop.name} ({prop.prop_type}): {value}")
-        if prop.prop_type == fbx.PropType.UFBX_PROP_INTEGER:
+        if prop.prop_type == fbx.PropType.INTEGER:
             value = prop.value
             assert isinstance(value, int)
 
