@@ -1,28 +1,22 @@
-# setup.py
-from setuptools import setup, Extension
+from setuptools import setup, Extension, find_packages
 from Cython.Build import cythonize
 import numpy as np
 
 extensions = [
-    Extension(
-        "pyufbx",
-        sources=[
-            "src/pyufbx.pyx",
-            "ufbx/ufbx.c"
-        ],
-        include_dirs=[
-            ".",
-            "src",
-            np.get_include()
-        ],
-        extra_compile_args=["-std=c99"],
-        language="c"
-    )
+    Extension("pyufbx.ufbx_wrapper", ["pyufbx/ufbx_wrapper.pyx"]),
+    Extension("pyufbx.elements.element", ["pyufbx/elements/element.pyx"]),
+    Extension("pyufbx.elements.node", ["pyufbx/elements/node.pyx"]),
+    Extension("pyufbx.elements.transform", ["pyufbx/elements/transform.pyx"]),
+    Extension("pyufbx.props.props", ["pyufbx/props/props.pyx"]),
+    Extension("pyufbx.scene", ["pyufbx/scene.pyx"]),
 ]
 
 setup(
     name="pyufbx",
-    ext_modules=cythonize(extensions, compiler_directives={
-                          'language_level': 3},annotate=True),
-    zip_safe=False,
+    packages=find_packages(),
+    ext_modules=cythonize(
+        extensions,
+        compiler_directives={'language_level': "3"}
+    ),
+    include_dirs=[np.get_include()],
 )
