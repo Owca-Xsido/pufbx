@@ -1,6 +1,7 @@
 import pytest
 
-import pyufbx as fbx  # Replace with your actual module name
+import pyufbx as fbx
+from pyufbx.core.transform import Vec3Property
 
 
 @pytest.fixture
@@ -40,7 +41,7 @@ def test_all_nodes_in_scene(all_nodes):
         assert isinstance(node.original_inherit_mode, fbx.InheritMode)
         assert isinstance(node.local_transform, fbx.Transform)
         assert isinstance(node.geometry_transform, fbx.Transform)
-        assert isinstance(node.inherit_scale, fbx.Vec3Property)
+        assert isinstance(node.inherit_scale, Vec3Property)
         # assert isinstance(node.inherit_scale_node, fbx.Node)
 
 
@@ -51,9 +52,9 @@ def test_transform(all_nodes):
         rotation = transform.rotation
         scale = transform.scale
 
-        assert isinstance(translation, fbx.Vec3Property)
+        assert isinstance(translation, Vec3Property)
         assert isinstance(rotation, fbx.QuatProperty)
-        assert isinstance(scale, fbx.Vec3Property)
+        assert isinstance(scale, Vec3Property)
 
 
 def test_root_node_properties(cube_scene):
@@ -69,9 +70,9 @@ def test_root_node_properties(cube_scene):
 
 
 def test_lcl_values(cube_1):
-    assert isinstance(cube_1.lcl_translation, fbx.Vec3Property)
-    assert isinstance(cube_1.lcl_rotation, fbx.Vec3Property)
-    assert isinstance(cube_1.lcl_scale, fbx.Vec3Property)
+    assert isinstance(cube_1.lcl_translation, Vec3Property)
+    assert isinstance(cube_1.lcl_rotation, Vec3Property)
+    assert isinstance(cube_1.lcl_scale, Vec3Property)
 
 
 def test_node_hierarchy_navigation(cube_scene):

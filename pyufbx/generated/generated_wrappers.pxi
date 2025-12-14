@@ -15,6 +15,9 @@ cdef object _prop_cache = WeakValueDictionary()
 cdef object _transform_cache_lock = Lock()
 cdef object _transform_cache = WeakValueDictionary()
 
+cdef object _bone_cache_lock = Lock()
+cdef object _bone_cache = WeakValueDictionary()
+
 
 cdef Element wrap_element(ufbx_element *ptr):
     if ptr == NULL:
@@ -81,5 +84,22 @@ cdef Transform wrap_transform(ufbx_transform *ptr):
         obj = Transform()
         obj._transform = ptr
         _transform_cache[ptr_key] = obj
+        return obj
+
+
+cdef Bone wrap_bone(ufbx_bone *ptr):
+    if ptr == NULL:
+        return None
+    
+    cdef size_t ptr_key = <size_t>ptr
+    
+    with _bone_cache_lock:
+        cached = _bone_cache.get(ptr_key, None)
+        if cached is not None:
+            return <Bone>cached
+        
+        obj = Bone()
+        obj._bone = ptr
+        _bone_cache[ptr_key] = obj
         return obj
 

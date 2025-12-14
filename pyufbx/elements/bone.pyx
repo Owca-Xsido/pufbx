@@ -1,9 +1,17 @@
 
 from pyufbx.pyufbx cimport *
+
+from ..core.transform cimport Transform
+from ..props.props cimport Prop, PropsWrapper
+from .element cimport Element
+from .node cimport Node
+
+include "../core/math_types.pxi"
 include "../core/strings.pxi"
+include "../generated/generated_lists.pxi"
+include "../generated/generated_wrappers.pxi"
 
 cdef class Bone:
-    cdef ufbx_bone *_bone
 
     @property
     def element(self):

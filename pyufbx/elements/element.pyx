@@ -1,8 +1,8 @@
 
 from pyufbx.pyufbx cimport *
+
 include "../core/strings.pxi"
-from pyufbx.enums.enums import InheritMode, RotationOrder, PropType
-from pyufbx.enums.element_type import ElementType
+from pyufbx.enums.element_types import ElementType
 
 
 cdef class Element:

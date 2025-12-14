@@ -51,8 +51,8 @@ cdef class Vec3Property:
         """Returns as numpy array."""
         return np.array([self.x, self.y, self.z], dtype=np.float64)
 
-    def __repr__(self):
-        return f"Vec3({self.x}, {self.y}, {self.z})"
+    # def __repr__(self):
+    #     return f"Vec3({self.x}, {self.y}, {self.z})"
 
     def __iter__(self):
         """Allows unpacking: x, y, z = vec"""

@@ -3,6 +3,7 @@ WRAPPER_TYPES = [
     ("Node", "ufbx_node", "_node"),
     ("Prop", "ufbx_prop", "_prop"),
     ("Transform", "ufbx_transform", "_transform"),
+    ("Bone", "ufbx_bone", "_bone"),
     # ("AnimValue", "ufbx_anim_value", "_anim_value"),
     # ("AnimCurve", "ufbx_anim_curve", "_anim_curve"),
     # ("DisplayLayer", "ufbx_display_layer", "_display_layer"),
@@ -40,7 +41,7 @@ cdef {class_name} wrap_{name_lower}({c_type} *ptr):
         return obj
 """
 
-with open("src/generated/generated_wrappers.pxi", "w") as f:
+with open("pyufbx/generated/generated_wrappers.pxi", "w") as f:
     f.write("# Auto-generated wrapper functions\n")
     f.write("from weakref import WeakValueDictionary\n")
     f.write("from threading import Lock\n\n")

@@ -3,20 +3,16 @@
 # cython: language_level=3
 from pyufbx.pyufbx cimport *
 
+from ..core.transform cimport (QuatProperty, Transform, Vec2Property,
+                               Vec3Property, Vec4Property)
+from ..props.props cimport Prop, PropsWrapper
+from .bone cimport Bone
 from .element cimport Element
-from .node cimport Node
 
-from .element import Element
-
-from ..props.props cimport PropsWrapper
-from ..props.props import PropsWrapper
-
-from ..props.props cimport Prop
-from ..core.transform cimport Transform
-from ..elements.bone cimport Bone
-from ..enums.enums import InheritMode, RotationOrder, PropType
 from ..enums.element_types import ElementType
-include "../core/math_types.pxi"
+from ..enums.enums import InheritMode, RotationOrder
+from ..enums.property_types import PropType
+
 include "../core/strings.pxi"
 include "../generated/generated_lists.pxi"
 include "../generated/generated_wrappers.pxi"

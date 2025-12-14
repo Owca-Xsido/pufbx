@@ -1,10 +1,10 @@
 
-from pyufbx.pyufbx cimport *
+from pyufbx.pyufbx cimport ufbx_mesh
+
 include "../core/strings.pxi"
 
 
 cdef class Mesh:
-    cdef ufbx_mesh *_mesh
-    cdef object __weakref__
+    pass
     
 

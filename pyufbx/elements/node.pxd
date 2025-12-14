@@ -1,6 +1,6 @@
 # elements/node.pxd
+from pyufbx.core.transform cimport Transform
 from pyufbx.pyufbx cimport ufbx_node
-from pyufbx.core.transform cimport Transform 
 
 
 cdef class Node:

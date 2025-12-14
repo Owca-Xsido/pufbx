@@ -1,6 +1,7 @@
 LIST_TYPES = [
     ("Element", "ufbx_element", "_element"),
     ("Node", "ufbx_node", "_node"),
+    ("Bone", "ufbx_bone", "_bone"),
     # ("Property", "ufbx_property", "_property"),
     # ("AnimValue", "ufbx_anim_value", "_anim_value"),
     # ("AnimCurve", "ufbx_anim_curve", "_anim_curve"),
@@ -57,7 +58,7 @@ cdef class {class_name}List:
         return f"<{class_name} count={{self._count}}>"
 '''
 
-with open("src/generated/generated_lists.pxi", "w") as f:
+with open("pyufbx/generated/generated_lists.pxi", "w") as f:
     for class_name, item_type, wrap_func in LIST_TYPES:
         f.write(
             TEMPLATE.format(

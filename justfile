@@ -11,24 +11,24 @@ test:
 	uv run pytest tests/ --maxfail=1 -s
 lint:
 	@echo "Linting code..."
-	uv run black src/ tests/
-	uv run isort src/ tests/
-# 	uv run flake8 src/ tests/
+	uv run black pyufbx/ tests/
+	uv run isort pyufbx/ tests/
+# 	uv run flake8 pyufbx/ tests/
 
 autoformat:
 	@echo "Autoformatting code..."
-	uv run autopep8 --in-place --recursive src/
+	uv run autopep8 --in-place --recursive pyufbx/
 
 build_dev:
 	@echo "Building pyufbx..."
-	uv run src/utils/generate_list.py
-	uv run src/utils/generate_wrappers.py
+	uv run pyufbx/utils/generate_list.py
+	uv run pyufbx/utils/generate_wrappers.py
 	uv pip install -e .
 
 build:
 	@echo "Building pyufbx for release..."
-	uv run src/utils/generate_list.py
-	uv run src/utils/generate_wrappers.py
+	uv run pyufbx/utils/generate_list.py
+	uv run pyufbx/utils/generate_wrappers.py
 	uv pip install .
 	
 run:

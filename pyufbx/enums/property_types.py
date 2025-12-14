@@ -1,5 +1,6 @@
 from enum import IntEnum, IntFlag
 
+
 class PropType(IntEnum):
     """Enum representing ufbx property types."""
 
@@ -8,6 +9,7 @@ class PropType(IntEnum):
 
     def __repr__(self):
         return f"PropType.{self.name}"
+
     UNKNOWN = 0
     BOOLEAN = 1
     INTEGER = 2
@@ -30,60 +32,62 @@ class PropType(IntEnum):
 class PropFlags(IntFlag):
     """
     Property flags: Advanced information about properties, not usually needed.
-    
+
     These flags can be combined using bitwise operations.
     """
 
     def __str__(self):
         return self.name
+
     def __repr__(self):
         return self.__str__()
+
     # Supports animation.
     # NOTE: ufbx ignores this and allows animations on non-animatable properties.
     ANIMATABLE = 0x1
-    
+
     # User defined (custom) property.
     USER_DEFINED = 0x2
-    
+
     # Hidden in UI.
     HIDDEN = 0x4
-    
+
     # Disallow modification from UI for components.
     LOCK_X = 0x10
     LOCK_Y = 0x20
     LOCK_Z = 0x40
     LOCK_W = 0x80
-    
+
     # Disable animation from components.
     MUTE_X = 0x100
     MUTE_Y = 0x200
     MUTE_Z = 0x400
     MUTE_W = 0x800
-    
+
     # Property created by ufbx when an element has a connected `ufbx_anim_prop`
     # but doesn't contain the `ufbx_prop` it's referring to.
     # NOTE: The property may have been found in the templated defaults.
     SYNTHETIC = 0x1000
-    
+
     # The property has at least one `ufbx_anim_prop` in some layer.
     ANIMATED = 0x2000
-    
+
     # Used by `ufbx_evaluate_prop()` to indicate the property was not found.
     NOT_FOUND = 0x4000
-    
+
     # The property is connected to another one.
     # This use case is relatively rare so `ufbx_prop` does not track connections
     # directly. You can find connections from `ufbx_element.connections_dst` where
     # `ufbx_connection.dst_prop` is this property and `ufbx_connection.src_prop` is defined.
     CONNECTED = 0x8000
-    
+
     # The value of this property is undefined (represented as zero).
     NO_VALUE = 0x10000
-    
+
     # This property has been overridden by the user.
     # See `ufbx_anim.prop_overrides` for more information.
     OVERRIDDEN = 0x20000
-    
+
     # Value type.
     # `REAL/VEC2/VEC3/VEC4` are mutually exclusive but may coexist with eg. `STRING`
     # in some rare cases where the string defines the unit for the vector.
@@ -91,6 +95,6 @@ class PropFlags(IntFlag):
     VALUE_VEC2 = 0x200000
     VALUE_VEC3 = 0x400000
     VALUE_VEC4 = 0x800000
-    VALUE_INT  = 0x1000000
-    VALUE_STR  = 0x2000000
+    VALUE_INT = 0x1000000
+    VALUE_STR = 0x2000000
     VALUE_BLOB = 0x4000000

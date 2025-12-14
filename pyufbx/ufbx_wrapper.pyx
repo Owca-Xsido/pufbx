@@ -1,21 +1,18 @@
 # pyufbx/ufbx_wrapper.pyx
 # cython: language_level=3
 from libc.stdlib cimport free, malloc
+
 from pyufbx.pyufbx cimport *  # Or just: from . cimport *
 
 import numpy as np
+
 from cpython.bytes cimport PyBytes_FromStringAndSize
 
-from pyufbx.elements.element cimport Element
-from pyufbx.elements.node cimport Node
-from pyufbx.elements.transform cimport Transform
-from pyufbx.props.props cimport Prop
 from pyufbx.scene cimport Scene
 
-# Include files (relative paths work here)
+# Include files (relative paths work here)s
+
 include "core/strings.pxi"
-include "generated/generated_lists.pxi"
-include "generated/generated_wrappers.pxi"
 
 
 
@@ -48,6 +45,6 @@ def load_fbx(filename: str):
         raise FileNotFoundError(
             f"Could not load FBX file: {filename} {error_msg}")
 
-    scene_obj = Scene()
-    scene_obj._scene = scene
-    return scene_obj  # Return the Scene object wrapping the ufbx_scene pointer
+    cdef Scene scene_obj = Scene()
+    scene_obj._set_scene(scene)
+    return scene_obj # Return the Scene object wrapping the ufbx_scene pointer

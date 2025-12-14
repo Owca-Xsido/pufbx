@@ -1,8 +1,21 @@
+from pyufbx.pyufbx cimport *
+
+from ..core.transform cimport Transform
+from ..elements.bone cimport Bone
+from ..elements.element cimport Element
+from ..elements.node cimport Node
+
+from ..enums.property_types import PropFlags, PropType
+
+include "../core/math_types.pxi"
+include "../core/strings.pxi"
+include "../generated/generated_wrappers.pxi"
+
 cdef class PropsWrapper:
 
     @staticmethod
     cdef PropsWrapper create(ufbx_props *props):
-        cpdef PropsWrapper obj = PropsWrapper.__new__(PropsWrapper)
+        cdef PropsWrapper obj = PropsWrapper.__new__(PropsWrapper)
         obj._props = props
         return obj
 

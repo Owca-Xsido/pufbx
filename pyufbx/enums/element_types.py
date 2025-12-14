@@ -1,5 +1,6 @@
 from enum import IntEnum, IntFlag
 
+
 class ElementType(IntEnum):
     """Enum representing ufbx element types."""
 
@@ -8,6 +9,7 @@ class ElementType(IntEnum):
 
     def __repr__(self):
         return f"ElementType.{self.name}"
+
     UNKNOWN = 0
     NODE = 1
     MESH = 2
