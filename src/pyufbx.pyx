@@ -55,7 +55,7 @@ cdef class Vec2Property:
         return np.array([self.x, self.y], dtype=np.float64)
 
     def __repr__(self):
-        return f"Vec3({self.x}, {self.y})"
+        return f"Vec2({self.x}, {self.y})"
 
     def __iter__(self):
         """Allows unpacking: x, y = vec"""
