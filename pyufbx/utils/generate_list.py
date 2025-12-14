@@ -57,7 +57,7 @@ cdef class {class_name}List:
         return f"<{class_name} count={{self._count}}>"
 '''
 
-with open("src/generated_lists.pxi", "w") as f:
+with open("src/generated/generated_lists.pxi", "w") as f:
     for class_name, item_type, wrap_func in LIST_TYPES:
         f.write(
             TEMPLATE.format(

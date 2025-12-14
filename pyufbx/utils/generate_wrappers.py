@@ -40,7 +40,7 @@ cdef {class_name} wrap_{name_lower}({c_type} *ptr):
         return obj
 """
 
-with open("src/generated_wrappers.pxi", "w") as f:
+with open("src/generated/generated_wrappers.pxi", "w") as f:
     f.write("# Auto-generated wrapper functions\n")
     f.write("from weakref import WeakValueDictionary\n")
     f.write("from threading import Lock\n\n")
