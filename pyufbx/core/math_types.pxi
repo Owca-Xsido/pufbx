@@ -1,4 +1,4 @@
-
+import numpy as np
 
 
 cdef class Vec2Property:

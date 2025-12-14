@@ -1,9 +1,8 @@
 cdef class PropsWrapper:
-    cdef ufbx_props *_props
 
     @staticmethod
     cdef PropsWrapper create(ufbx_props *props):
-        cdef PropsWrapper obj = PropsWrapper.__new__(PropsWrapper)
+        cpdef PropsWrapper obj = PropsWrapper.__new__(PropsWrapper)
         obj._props = props
         return obj
 
@@ -34,8 +33,7 @@ cdef class PropsWrapper:
 
 
 cdef class Prop:
-    cdef ufbx_prop *_prop
-    cdef object __weakref__
+
 
     def __str__(self):
         return self.name

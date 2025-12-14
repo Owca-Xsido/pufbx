@@ -6,7 +6,7 @@ extensions = [
     Extension("pyufbx.ufbx_wrapper", ["pyufbx/ufbx_wrapper.pyx"]),
     Extension("pyufbx.elements.element", ["pyufbx/elements/element.pyx"]),
     Extension("pyufbx.elements.node", ["pyufbx/elements/node.pyx"]),
-    Extension("pyufbx.elements.transform", ["pyufbx/elements/transform.pyx"]),
+    Extension("pyufbx.elements.transform", ["pyufbx/core/transform.pyx"]),
     Extension("pyufbx.props.props", ["pyufbx/props/props.pyx"]),
     Extension("pyufbx.scene", ["pyufbx/scene.pyx"]),
 ]

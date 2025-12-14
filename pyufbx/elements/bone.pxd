@@ -1,4 +1,4 @@
-from src.pyufbx cimport ufbx_bone
+from pyufbx.pyufbx cimport ufbx_bone
 
 
 cdef class Bone:

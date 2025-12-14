@@ -3,33 +3,27 @@
 # cython: language_level=3
 from pyufbx.pyufbx cimport *
 
-from ..core.string cimport to_py_string
 from .element cimport Element
 from .node cimport Node
 
 from .element import Element
 
 from ..props.props cimport PropsWrapper
-
 from ..props.props import PropsWrapper
 
-from ..math.transform cimport Transform, wrap_transform
-
-from ..math.transform import Transform
-
-from ..generated.generated_lists cimport NodeList
-from ..generated.generated_wrappers cimport wrap_node
-
-from ..enums.enums cimport InheritMode, RotationOrder, PropType
-from ..enums.element_types cimport ElementType
+from ..props.props cimport Prop
+from ..core.transform cimport Transform
+from ..elements.bone cimport Bone
+from ..enums.enums import InheritMode, RotationOrder, PropType
+from ..enums.element_types import ElementType
+include "../core/math_types.pxi"
+include "../core/strings.pxi"
 include "../generated/generated_lists.pxi"
 include "../generated/generated_wrappers.pxi"
 
 cdef class Node:
-    cdef ufbx_node *_node
-    cdef object __weakref__  # Enable weak references
 
-    cdef Transform _transform_cache
+   
 
     def __repr__(self):
         return f"<Node name='{self.name}' id={self.id} type={self.element.element_type.name}>"
