@@ -67,3 +67,4 @@ samples/*.fbx
 *.test.py
 
 *.html
+*.c
