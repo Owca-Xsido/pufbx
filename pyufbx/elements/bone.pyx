@@ -1,11 +1,11 @@
 
 
+
+from ..generated.lists cimport BoneList, NodeList
 from .element cimport Element
 from .node cimport Node
 
 include "../core/strings.pxi"
-include "../generated/lists/bone_list.pxi"
-include "../generated/generated_wrappers.pxi"
 
 cdef class Bone:
 

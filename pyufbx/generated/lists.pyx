@@ -1,8 +1,11 @@
+# cython: language_level=3
+from pyufbx.pyufbx cimport ufbx_bone, ufbx_element, ufbx_node
+
+from .wrappers cimport wrap_bone, wrap_element, wrap_node
+
 
 cdef class ElementList:
     """A list-like wrapper for ufbx_element pointers."""
-    cdef ufbx_element **_data
-    cdef size_t _count
 
     @staticmethod
     cdef ElementList create(ufbx_element **data, size_t count):
@@ -38,14 +41,11 @@ cdef class ElementList:
             yield wrap_element(self._data[i])
 
     def __repr__(self):
-        return f"<Element count={self._count}>"
-
+        return f"<ElementList count={self._count}>"
 
 
 cdef class NodeList:
     """A list-like wrapper for ufbx_node pointers."""
-    cdef ufbx_node **_data
-    cdef size_t _count
 
     @staticmethod
     cdef NodeList create(ufbx_node **data, size_t count):
@@ -81,14 +81,11 @@ cdef class NodeList:
             yield wrap_node(self._data[i])
 
     def __repr__(self):
-        return f"<Node count={self._count}>"
-
+        return f"<NodeList count={self._count}>"
 
 
 cdef class BoneList:
     """A list-like wrapper for ufbx_bone pointers."""
-    cdef ufbx_bone **_data
-    cdef size_t _count
 
     @staticmethod
     cdef BoneList create(ufbx_bone **data, size_t count):
@@ -124,6 +121,6 @@ cdef class BoneList:
             yield wrap_bone(self._data[i])
 
     def __repr__(self):
-        return f"<Bone count={self._count}>"
+        return f"<BoneList count={self._count}>"
 
 

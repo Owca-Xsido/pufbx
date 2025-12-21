@@ -1,5 +1,5 @@
 from cpython.bytes cimport PyBytes_FromStringAndSize
-
+from pyufbx.pyufbx cimport ufbx_string, ufbx_blob
 cdef str to_py_string(ufbx_string s):
     """
     Converts a ufbx_string (pointer + length) to a Python string.

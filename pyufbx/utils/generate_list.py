@@ -1,5 +1,7 @@
 """Generate individual .pxi files for each list type."""
 
+import os
+
 LIST_TYPES = [
     ("Element", "ufbx_element", "_element"),
     ("Node", "ufbx_node", "_node"),
@@ -19,8 +21,6 @@ LIST_TYPES = [
 
 TEMPLATE = '''cdef class {class_name}List:
     """A list-like wrapper for {item_type} pointers."""
-    cdef {item_type} **_data
-    cdef size_t _count
 
     @staticmethod
     cdef {class_name}List create({item_type} **data, size_t count):
@@ -59,27 +59,47 @@ TEMPLATE = '''cdef class {class_name}List:
         return f"<{class_name}List count={{self._count}}>"
 '''
 
-import os
 
 def generate_list_files():
-    """Generate individual .pxi files for each list type."""
-    output_dir = "pyufbx/generated/lists"
+    """Generate lists.pyx and lists.pxd files."""
+    output_dir = "pyufbx/generated"
     os.makedirs(output_dir, exist_ok=True)
-    
-    for class_name, item_type, wrap_func in LIST_TYPES:
-        filename = f"{class_name.lower()}_list.pxi"
-        filepath = os.path.join(output_dir, filename)
-        
-        with open(filepath, "w") as f:
+    imported_types = ", ".join([item_type for _, item_type, _ in LIST_TYPES])
+    # Generate .pxd (declarations)
+    pxd_path = os.path.join(output_dir, "lists.pxd")
+    with open(pxd_path, "w") as f:
+        f.write("# cython: language_level=3\n")
+        f.write(f"from pyufbx.pyufbx cimport {imported_types}\n\n")
+
+        for class_name, item_type, wrap_func in LIST_TYPES:
+            f.write(f"cdef class {class_name}List:\n")
+            f.write(f"    cdef {item_type} **_data\n")
+            f.write(f"    cdef size_t _count\n")
+            f.write(f"    @staticmethod\n")
+            f.write(
+                f"    cdef {class_name}List create({item_type} **data, size_t count)\n"
+            )
+            f.write("\n")
+
+    print(f"Generated {pxd_path}")
+
+    # Generate .pyx (implementations)
+    pyx_path = os.path.join(output_dir, "lists.pyx")
+    with open(pyx_path, "w") as f:
+        f.write("# cython: language_level=3\n")
+        f.write(f"from pyufbx.pyufbx cimport {imported_types}\n")
+        f.write("from .wrappers cimport wrap_node, wrap_element, wrap_bone\n\n")
+
+        for class_name, item_type, wrap_func in LIST_TYPES:
             f.write(
                 TEMPLATE.format(
-                    class_name=class_name,
-                    item_type=item_type,
-                    wrap_func=wrap_func
+                    class_name=class_name, item_type=item_type, wrap_func=wrap_func
                 )
             )
-        
-        print(f"Generated {filepath}")
+            f.write("\n\n")
+
+    print(f"Generated {pyx_path}")
+
 
 if __name__ == "__main__":
     generate_list_files()

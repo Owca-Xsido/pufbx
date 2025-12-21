@@ -13,8 +13,9 @@ from .enums.element_types import ElementType
 from .enums.enums import InheritMode, RotationOrder
 from .enums.property_types import PropType
 
-include "generated/generated_lists.pxi"
-include "generated/generated_wrappers.pxi"
+from .generated.lists cimport BoneList, NodeList
+from .generated.wrappers cimport wrap_node
+
 
 cdef class Scene:
 

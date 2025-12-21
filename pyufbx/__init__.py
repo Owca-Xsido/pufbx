@@ -5,6 +5,8 @@ from pyufbx.elements.bone import Bone
 from pyufbx.elements.element import *
 from pyufbx.elements.node import *
 from pyufbx.enums import *
+from pyufbx.generated.lists import *
+from pyufbx.generated.wrappers import *
 from pyufbx.props.props import PropsWrapper
 from pyufbx.scene import Scene
 from pyufbx.ufbx_wrapper import load_fbx

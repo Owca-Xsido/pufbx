@@ -52,6 +52,16 @@ extensions = [
         "pyufbx.scene",
         ["pyufbx/scene.pyx"],
         include_dirs=COMMON_INCLUDE_DIRS,
+    ),
+    Extension(
+        "pyufbx.generated.lists",
+        ["pyufbx/generated/lists.pyx"],
+        include_dirs=COMMON_INCLUDE_DIRS,
+    ),
+    Extension(
+        "pyufbx.generated.wrappers",
+        ["pyufbx/generated/wrappers.pyx"],
+        include_dirs=COMMON_INCLUDE_DIRS,
     )
 
 ]

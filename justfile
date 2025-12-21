@@ -21,8 +21,6 @@ autoformat:
 
 build_dev:
 	@echo "Building pyufbx..."
-	uv run pyufbx/utils/generate_list.py
-	uv run pyufbx/utils/generate_wrappers.py
 	uv pip install -e .
 
 build:

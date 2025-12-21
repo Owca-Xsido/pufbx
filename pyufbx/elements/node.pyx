@@ -1,7 +1,6 @@
 
 # elements/node.pyx
 # cython: language_level=3
-from pyufbx.pyufbx cimport *
 
 from ..core.math_types cimport (QuatProperty, Vec2Property, Vec3Property,
                                 Vec4Property)
@@ -13,9 +12,11 @@ from ..enums.element_types import ElementType
 from ..enums.enums import InheritMode, RotationOrder
 from ..enums.property_types import PropType
 
+from ..generated.lists cimport ElementList, NodeList
+from ..generated.wrappers cimport wrap_node, wrap_transform
+
 include "../core/strings.pxi"
-include "../generated/generated_lists.pxi"
-include "../generated/generated_wrappers.pxi"
+
 
 cdef class Node:
 
