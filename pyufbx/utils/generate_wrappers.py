@@ -3,11 +3,12 @@
 import os
 
 WRAPPER_TYPES = [
-    ("Element", "ufbx_element", "_element"),
-    ("Node", "ufbx_node", "_node"),
-    ("Prop", "ufbx_prop", "_prop"),
-    ("Transform", "ufbx_transform", "_transform"),
-    ("Bone", "ufbx_bone", "_bone"),
+    ("Element", "ufbx_element", "_element", "elements"),
+    ("Node", "ufbx_node", "_node", "elements"),
+    ("Prop", "ufbx_prop", "_prop", "props"),
+    ("Transform", "ufbx_transform", "_transform", "core"),
+    ("Bone", "ufbx_bone", "_bone", "elements"),
+    ("Anim", "ufbx_anim", "_anim", "animation"),
 ]
 
 CACHE_TEMPLATE = """# Cache for {class_name}
@@ -38,7 +39,7 @@ def generate_wrapper_files():
     """Generate wrappers.pyx and wrappers.pxd files."""
     output_dir = "pyufbx/generated"
     os.makedirs(output_dir, exist_ok=True)
-    imported_types = ", ".join([c_type for _, c_type, _ in WRAPPER_TYPES])
+    imported_types = ", ".join([f"{c_type}" for _, c_type, _, parrent in WRAPPER_TYPES])
 
     # Generate .pxd (declarations)
     pxd_path = os.path.join(output_dir, "wrappers.pxd")
@@ -47,13 +48,15 @@ def generate_wrapper_files():
         f.write(f"from pyufbx.pyufbx cimport {imported_types}\n")
 
         # Import the classes we're wrapping
-        for class_name, c_type, field_name in WRAPPER_TYPES:
-            f.write(f"from pyufbx.{class_name.lower()} cimport {class_name}\n")
+        for class_name, c_type, field_name, parrent in WRAPPER_TYPES:
+            f.write(
+                f"from pyufbx.{parrent}.{class_name.lower()} cimport {class_name}\n"
+            )
 
         f.write("\n")
 
         # Declare wrapper functions
-        for class_name, c_type, field_name in WRAPPER_TYPES:
+        for class_name, c_type, field_name, _ in WRAPPER_TYPES:
             attr_name = field_name.lstrip("_")
             f.write(f"cdef {class_name} wrap_{attr_name}({c_type} *ptr)\n")
 
@@ -68,20 +71,22 @@ def generate_wrapper_files():
         f.write(f"from pyufbx.pyufbx cimport {imported_types}\n")
 
         # Import the classes we're wrapping
-        for class_name, c_type, field_name in WRAPPER_TYPES:
-            f.write(f"from pyufbx.{class_name.lower()} cimport {class_name}\n")
+        for class_name, c_type, field_name, parrent in WRAPPER_TYPES:
+            f.write(
+                f"from pyufbx.{parrent}.{class_name.lower()} cimport {class_name}\n"
+            )
 
         f.write("\n")
 
         # Write all caches
-        for class_name, c_type, field_name in WRAPPER_TYPES:
+        for class_name, c_type, field_name, _ in WRAPPER_TYPES:
             attr_name = field_name.lstrip("_")
             f.write(CACHE_TEMPLATE.format(class_name=class_name, attr_name=attr_name))
 
         f.write("\n")
 
         # Write all wrapper functions
-        for class_name, c_type, field_name in WRAPPER_TYPES:
+        for class_name, c_type, field_name, _ in WRAPPER_TYPES:
             attr_name = field_name.lstrip("_")
             f.write(
                 WRAPPER_TEMPLATE.format(

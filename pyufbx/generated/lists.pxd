@@ -1,6 +1,5 @@
 # cython: language_level=3
-from pyufbx.pyufbx cimport ufbx_bone, ufbx_element, ufbx_node
-
+from pyufbx.pyufbx cimport ufbx_element, ufbx_node, ufbx_bone
 
 cdef class ElementList:
     cdef ufbx_element **_data

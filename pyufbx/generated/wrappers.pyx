@@ -1,15 +1,13 @@
 # cython: language_level=3
-from threading import Lock
 from weakref import WeakValueDictionary
-
-from pyufbx.core.transform cimport Transform
-from pyufbx.elements.bone cimport Bone
+from threading import Lock
+from pyufbx.pyufbx cimport ufbx_element, ufbx_node, ufbx_prop, ufbx_transform, ufbx_bone, ufbx_anim
 from pyufbx.elements.element cimport Element
 from pyufbx.elements.node cimport Node
-from pyufbx.props.props cimport Prop
-from pyufbx.pyufbx cimport (ufbx_bone, ufbx_element, ufbx_node, ufbx_prop,
-                            ufbx_transform)
-
+from pyufbx.props.prop cimport Prop
+from pyufbx.core.transform cimport Transform
+from pyufbx.elements.bone cimport Bone
+from pyufbx.animation.anim cimport Anim
 
 # Cache for Element
 cdef object _element_cache_lock = Lock()
@@ -26,6 +24,9 @@ cdef object _transform_cache = WeakValueDictionary()
 # Cache for Bone
 cdef object _bone_cache_lock = Lock()
 cdef object _bone_cache = WeakValueDictionary()
+# Cache for Anim
+cdef object _anim_cache_lock = Lock()
+cdef object _anim_cache = WeakValueDictionary()
 
 
 cdef Element wrap_element(ufbx_element *ptr):
@@ -106,4 +107,20 @@ cdef Bone wrap_bone(ufbx_bone *ptr):
         obj = Bone()
         obj._bone = ptr
         _bone_cache[ptr_key] = obj
+        return obj
+
+cdef Anim wrap_anim(ufbx_anim *ptr):
+    if ptr == NULL:
+        return None
+    
+    cdef size_t ptr_key = <size_t>ptr
+    
+    with _anim_cache_lock:
+        cached = _anim_cache.get(ptr_key, None)
+        if cached is not None:
+            return <Anim>cached
+        
+        obj = Anim()
+        obj._anim = ptr
+        _anim_cache[ptr_key] = obj
         return obj

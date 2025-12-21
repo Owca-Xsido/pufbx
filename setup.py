@@ -3,8 +3,8 @@ from Cython.Build import cythonize
 import numpy as np
 import os
 
-ROOT = os.path.abspath(os.path.dirname(__file__))
-
+ROOT = os.path.abspath(os.path.dirname(__file__)) 
+print("Project root:", ROOT)
 COMMON_INCLUDE_DIRS = [
     np.get_include(),
     ROOT,               # allows "ufbx/ufbx.h"
@@ -44,13 +44,13 @@ extensions = [
         include_dirs=COMMON_INCLUDE_DIRS,
     ),
     Extension(
-        "pyufbx.props.props",
-        ["pyufbx/props/props.pyx"],
+        "pyufbx.props.prop",
+        ["pyufbx/props/prop.pyx"],
         include_dirs=COMMON_INCLUDE_DIRS,
     ),
     Extension(
         "pyufbx.scene",
-        ["pyufbx/scene.pyx"],
+        ["pyufbx/scene.pyx", "ufbx/ufbx.c"],
         include_dirs=COMMON_INCLUDE_DIRS,
     ),
     Extension(
@@ -62,8 +62,12 @@ extensions = [
         "pyufbx.generated.wrappers",
         ["pyufbx/generated/wrappers.pyx"],
         include_dirs=COMMON_INCLUDE_DIRS,
+    ),
+    Extension(
+        "pyufbx.animation.anim",
+        ["pyufbx/animation/anim.pyx"],
+        include_dirs=COMMON_INCLUDE_DIRS,
     )
-
 ]
 
 

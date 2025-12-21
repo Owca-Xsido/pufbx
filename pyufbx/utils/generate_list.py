@@ -3,9 +3,10 @@
 import os
 
 LIST_TYPES = [
-    ("Element", "ufbx_element", "_element"),
-    ("Node", "ufbx_node", "_node"),
-    ("Bone", "ufbx_bone", "_bone"),
+    ("Element", "ufbx_element", "_element", "elements"),
+    ("Node", "ufbx_node", "_node", "elements"),
+    ("Bone", "ufbx_bone", "_bone", "elements"),
+    # ("Anim", "ufbx_anim", "_anim", "animation"),
     # ("Property", "ufbx_property", "_property"),
     # ("AnimValue", "ufbx_anim_value", "_anim_value"),
     # ("AnimCurve", "ufbx_anim_curve", "_anim_curve"),
@@ -64,14 +65,14 @@ def generate_list_files():
     """Generate lists.pyx and lists.pxd files."""
     output_dir = "pyufbx/generated"
     os.makedirs(output_dir, exist_ok=True)
-    imported_types = ", ".join([item_type for _, item_type, _ in LIST_TYPES])
+    imported_types = ", ".join([item_type for _, item_type, _, _ in LIST_TYPES])
     # Generate .pxd (declarations)
     pxd_path = os.path.join(output_dir, "lists.pxd")
     with open(pxd_path, "w") as f:
         f.write("# cython: language_level=3\n")
         f.write(f"from pyufbx.pyufbx cimport {imported_types}\n\n")
 
-        for class_name, item_type, wrap_func in LIST_TYPES:
+        for class_name, item_type, wrap_func, _ in LIST_TYPES:
             f.write(f"cdef class {class_name}List:\n")
             f.write(f"    cdef {item_type} **_data\n")
             f.write(f"    cdef size_t _count\n")
@@ -90,7 +91,7 @@ def generate_list_files():
         f.write(f"from pyufbx.pyufbx cimport {imported_types}\n")
         f.write("from .wrappers cimport wrap_node, wrap_element, wrap_bone\n\n")
 
-        for class_name, item_type, wrap_func in LIST_TYPES:
+        for class_name, item_type, wrap_func, _ in LIST_TYPES:
             f.write(
                 TEMPLATE.format(
                     class_name=class_name, item_type=item_type, wrap_func=wrap_func

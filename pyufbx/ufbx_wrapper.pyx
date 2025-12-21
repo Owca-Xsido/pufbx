@@ -48,3 +48,5 @@ def load_fbx(filename: str):
     cdef Scene scene_obj = Scene()
     scene_obj._set_scene(scene)
     return scene_obj # Return the Scene object wrapping the ufbx_scene pointer
+
+

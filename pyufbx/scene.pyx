@@ -7,14 +7,14 @@ from .core.transform cimport Transform
 from .elements.bone cimport Bone
 from .elements.element cimport Element
 from .elements.node cimport Node
-from .props.props cimport Prop, PropsWrapper
+from .props.prop cimport Prop, PropsWrapper
 
 from .enums.element_types import ElementType
 from .enums.enums import InheritMode, RotationOrder
 from .enums.property_types import PropType
 
 from .generated.lists cimport BoneList, NodeList
-from .generated.wrappers cimport wrap_node
+from .generated.wrappers cimport wrap_anim, wrap_node
 
 
 cdef class Scene:
@@ -25,10 +25,10 @@ cdef class Scene:
     cdef void _set_scene(self, ufbx_scene* scene) noexcept:
         self._scene = scene
 
-    # def __dealloc__(self):
-    #     if self._scene != NULL:
-    #         ufbx_free_scene(self._scene)
-    #         self._scene = NULL
+    def __dealloc__(self):
+        if self._scene != NULL:
+            ufbx_free_scene(self._scene)
+            self._scene = NULL
 
     # ========================================================================
     # Core Properties
@@ -62,9 +62,7 @@ cdef class Scene:
         """Default animation descriptor."""
         if self._scene == NULL or self._scene.anim == NULL:
             return None
-        # TODO: Wrap ufbx_anim
-        raise NotImplementedError("anim is not implemented yet.")
-
+        return wrap_anim(self._scene.anim)
     # # ========================================================================
     # # Elements - Nodes
     # # ========================================================================

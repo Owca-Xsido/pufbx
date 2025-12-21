@@ -4,7 +4,7 @@
 
 from ..core.math_types cimport (QuatProperty, Vec2Property, Vec3Property,
                                 Vec4Property)
-from ..props.props cimport Prop, PropsWrapper
+from ..props.prop cimport Prop, PropsWrapper
 from .bone cimport Bone
 from .element cimport Element
 
