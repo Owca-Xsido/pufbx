@@ -1,8 +1,8 @@
 
 from pyufbx.pyufbx cimport *
+from pyufbx.enums.element_types import ElementType
 
 include "../core/strings.pxi"
-from pyufbx.enums.element_types import ElementType
 
 
 cdef class Element:

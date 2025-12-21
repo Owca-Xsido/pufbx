@@ -1,3 +1,5 @@
+"""Generate individual .pxi files for each list type."""
+
 LIST_TYPES = [
     ("Element", "ufbx_element", "_element"),
     ("Node", "ufbx_node", "_node"),
@@ -15,8 +17,7 @@ LIST_TYPES = [
     # ("Pose", "ufbx_pose", "_pose"),
 ]
 
-TEMPLATE = '''
-cdef class {class_name}List:
+TEMPLATE = '''cdef class {class_name}List:
     """A list-like wrapper for {item_type} pointers."""
     cdef {item_type} **_data
     cdef size_t _count
@@ -55,14 +56,30 @@ cdef class {class_name}List:
             yield wrap{wrap_func}(self._data[i])
 
     def __repr__(self):
-        return f"<{class_name} count={{self._count}}>"
+        return f"<{class_name}List count={{self._count}}>"
 '''
 
-with open("pyufbx/generated/generated_lists.pxi", "w") as f:
+import os
+
+def generate_list_files():
+    """Generate individual .pxi files for each list type."""
+    output_dir = "pyufbx/generated/lists"
+    os.makedirs(output_dir, exist_ok=True)
+    
     for class_name, item_type, wrap_func in LIST_TYPES:
-        f.write(
-            TEMPLATE.format(
-                class_name=class_name, item_type=item_type, wrap_func=wrap_func
+        filename = f"{class_name.lower()}_list.pxi"
+        filepath = os.path.join(output_dir, filename)
+        
+        with open(filepath, "w") as f:
+            f.write(
+                TEMPLATE.format(
+                    class_name=class_name,
+                    item_type=item_type,
+                    wrap_func=wrap_func
+                )
             )
-        )
-        f.write("\n\n")
+        
+        print(f"Generated {filepath}")
+
+if __name__ == "__main__":
+    generate_list_files()

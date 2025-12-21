@@ -38,6 +38,11 @@ extensions = [
         ["pyufbx/core/transform.pyx"],
         include_dirs=COMMON_INCLUDE_DIRS,
     ),
+        Extension(
+        "pyufbx.core.math_types",
+        ["pyufbx/core/math_types.pyx"],
+        include_dirs=COMMON_INCLUDE_DIRS,
+    ),
     Extension(
         "pyufbx.props.props",
         ["pyufbx/props/props.pyx"],
@@ -55,6 +60,10 @@ extensions = [
 setup(
     name="pyufbx",
     packages=find_packages(),
+    version="0.1.0",
+    description="Python FBX file parser using the UFBX library",
+    author="Andrzej Weremczuk",
+    author_email="and.weremczuk@gmail.com",
     ext_modules=cythonize(
         extensions,
         compiler_directives={"language_level": "3"},

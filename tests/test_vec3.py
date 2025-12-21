@@ -1,6 +1,6 @@
 import numpy as np
 
-from pyufbx.core.transform import Vec3Property
+from pyufbx.core.math_types import Vec3Property
 
 
 def test_vec3_init():

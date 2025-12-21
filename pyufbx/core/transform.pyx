@@ -1,5 +1,7 @@
 
-include "math_types.pxi"
+from .math_types cimport QuatProperty, Vec3Property
+
+
 cdef class Transform:
     """Wrapper for ufbx_transform with conversion methods."""
     

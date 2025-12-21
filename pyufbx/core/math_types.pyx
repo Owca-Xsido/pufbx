@@ -3,7 +3,7 @@ import numpy as np
 
 cdef class Vec2Property:
     """Wrapper for 3D vector properties with conversion methods."""
-    cdef double x, y
+
 
     def __init__(self, double x, double y):
         self.x = x
@@ -32,7 +32,7 @@ cdef class Vec2Property:
 
 cdef class Vec3Property:
     """Wrapper for 3D vector properties with conversion methods."""
-    cdef double x, y, z
+
 
     def __init__(self, double x, double y, double z):
         self.x = x
@@ -51,8 +51,8 @@ cdef class Vec3Property:
         """Returns as numpy array."""
         return np.array([self.x, self.y, self.z], dtype=np.float64)
 
-    # def __repr__(self):
-    #     return f"Vec3({self.x}, {self.y}, {self.z})"
+    def __repr__(self):
+        return f"Vec3({self.x}, {self.y}, {self.z})"
 
     def __iter__(self):
         """Allows unpacking: x, y, z = vec"""
@@ -63,7 +63,7 @@ cdef class Vec3Property:
 
 cdef class Vec4Property:
     """Wrapper for 4D vector properties with conversion methods."""
-    cdef double x, y, z, w
+
 
     def __init__(self, double x, double y, double z, double w):
         self.x = x
@@ -96,8 +96,6 @@ cdef class Vec4Property:
 
 cdef class QuatProperty:
     """Wrapper for quaternion with conversion methods."""
-    cdef double x, y, z, w
-
     def __init__(self, double x, double y, double z, double w):
         self.x = x
         self.y = y
