@@ -26,7 +26,7 @@ def test_all_nodes_in_scene(all_nodes):
         assert repr(node) is not None
         assert isinstance(str(node), str)
         assert isinstance(node.name, str)
-        assert isinstance(node.id, int)
+        assert isinstance(node.element_id, int)
         assert isinstance(node.typed_id, int)
         assert isinstance(node.properties, fbx.PropsWrapper)
         assert isinstance(node.element, fbx.Element)
@@ -64,7 +64,7 @@ def test_root_node_properties(cube_scene):
     assert isinstance(root, fbx.Node)
     assert root.is_root is True
     # FBX root usually has specific ID/Name conventions
-    assert root.id is not None
+    assert root.element_id is not None
     assert root.parent is None
     assert root.typed_id is not None
 
@@ -86,7 +86,7 @@ def test_node_hierarchy_navigation(cube_scene):
     child = root.children[0]
 
     assert isinstance(child, fbx.Node)
-    assert child.parent.id == root.id  # Verify referential integrity
+    assert child.parent.element_id == root.element_id  # Verify referential integrity
     assert child.is_root is False
     assert child.node_depth == 1
 

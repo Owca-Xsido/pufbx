@@ -27,8 +27,8 @@ Custom ufbx_anim created by ufbx_create_anim(). """
 
 from ..core.math_types cimport Vec3Property
 from ..elements.element cimport Element
-from ..generated.lists cimport ElementList, NodeList
-from ..generated.wrappers cimport wrap_anim
+from ..generated.lists cimport AnimCurveList, ElementList, NodeList
+from ..generated.wrappers cimport wrap_anim, wrap_anim_curve
 
 include "../core/strings.pxi"
 
@@ -41,8 +41,8 @@ cdef class AnimValue(Element):
 
     @property
     def curves(self):
-        # TODO: curves add implementation
-        raise NotImplementedError("AnimValue curves are not yet implemented.")
+        """Tuple of 3 animation curves for the value (X, Y, Z components)."""
+        return AnimCurveList.create(self._anim_value.curves, 3)
 
 
 

@@ -13,7 +13,7 @@ from .enums.element_types import ElementType
 from .enums.enums import InheritMode, RotationOrder
 from .enums.property_types import PropType
 
-from .generated.lists cimport BoneList, NodeList
+from .generated.lists cimport AnimCurveList, AnimValueList, BoneList, NodeList
 from .generated.wrappers cimport wrap_anim, wrap_node
 
 
@@ -59,16 +59,10 @@ cdef class Scene:
             return None
         return wrap_node(self._scene.root_node)
 
-    @property
-    def anim(self):
-        """Default animation descriptor."""
-        if self._scene == NULL or self._scene.anim == NULL:
-            return None
-        return wrap_anim(self._scene.anim)
+
     # # ========================================================================
     # # Elements - Nodes
     # # ========================================================================
-
     @property
     def unknowns(self):
         """List of unknown elements."""
@@ -534,33 +528,33 @@ cdef class Scene:
     #         return 0
     #     return self._scene.anim_layers.count
 
-    # @property
-    # def anim_values(self):
-    #     """List of animation value objects in the scene."""
-    #     if self._scene == NULL:
-    #         return []
-    #     return AnimValueList.create(self._scene.anim_values.data, self._scene.anim_values.count)
+    @property
+    def anim_values(self):
+        """List of animation value objects in the scene."""
+        if self._scene == NULL:
+            return []
+        return AnimValueList.create(self._scene.anim_values.data, self._scene.anim_values.count)
 
-    # @property
-    # def num_anim_values(self):
-    #     """Number of animation values in the scene."""
-    #     if self._scene == NULL:
-    #         return 0
-    #     return self._scene.anim_values.count
+    @property
+    def num_anim_values(self):
+        """Number of animation values in the scene."""
+        if self._scene == NULL:
+            return 0
+        return self._scene.anim_values.count
 
-    # @property
-    # def anim_curves(self):
-    #     """List of animation curve objects in the scene."""
-    #     if self._scene == NULL:
-    #         return []
-    #     return AnimCurveList.create(self._scene.anim_curves.data, self._scene.anim_curves.count)
+    @property
+    def anim_curves(self):
+        """List of animation curve objects in the scene."""
+        if self._scene == NULL:
+            return []
+        return AnimCurveList.create(self._scene.anim_curves.data, self._scene.anim_curves.count)
 
-    # @property
-    # def num_anim_curves(self):
-    #     """Number of animation curves in the scene."""
-    #     if self._scene == NULL:
-    #         return 0
-    #     return self._scene.anim_curves.count
+    @property
+    def num_anim_curves(self):
+        """Number of animation curves in the scene."""
+        if self._scene == NULL:
+            return 0
+        return self._scene.anim_curves.count
 
     # # ========================================================================
     # # Collections

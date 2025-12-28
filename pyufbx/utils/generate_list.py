@@ -9,14 +9,7 @@ LIST_TYPES = [
     ("Anim", "ufbx_anim", "_anim", "animation.anim"),
     ("AnimValue", "ufbx_anim_value", "_anim_value", "animation.anim"),
     ("AnimCurve", "ufbx_anim_curve", "_anim_curve", "animation.anim_curve"),
-    # ("DisplayLayer", "ufbx_display_layer", "_display_layer"),
-    # ("SelectionSet", "ufbx_selection_set", "_selection_set"),
-    # ("SelectionNode", "ufbx_selection_node", "_selection_node"),
-    # ("Character", "ufbx_character", "_character"),
-    # ("Constraint", "ufbx_constraint", "_constraint"),
-    # ("AudioLayer", "ufbx_audio_layer", "_audio_layer"),
-    # ("AudioClip", "ufbx_audio_clip", "_audio_clip"),
-    # ("Pose", "ufbx_pose", "_pose"),
+    # ("Keyframe", "ufbx_keyframe", "_keyframe", "animation.keyframe"),
 ]
 
 TEMPLATE = '''cdef class {class_name}List:

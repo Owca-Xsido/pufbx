@@ -1,5 +1,5 @@
-# TODO: Add implementation for animation curves
 from ..elements.element cimport Element
+from .keyframe cimport KeyframeList
 
 
 cdef class AnimCurve(Element):
@@ -8,7 +8,7 @@ cdef class AnimCurve(Element):
     @property
     def keyframes(self):
         """List of keyframes that define the curve."""
-        return KeyFrames.create(self._anim_curve.data, self._anim_curve.count)
+        return KeyframeList.create(self._anim_curve.keyframes.data, self._anim_curve.keyframes.count)
         
     @property
     def pre_extrapolation(self):
@@ -39,3 +39,4 @@ cdef class AnimCurve(Element):
     def max_time(self):
         """Get the maximum time of the animation curve."""
         return self._anim_curve.max_time
+

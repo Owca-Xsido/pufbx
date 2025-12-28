@@ -11,6 +11,7 @@ WRAPPER_TYPES = [
     ("Anim", "ufbx_anim", "_anim", "animation.anim"),
     ("AnimValue", "ufbx_anim_value", "_anim_value", "animation.anim"),
     ("AnimCurve", "ufbx_anim_curve", "_anim_curve", "animation.anim_curve"),
+    ("Keyframe", "ufbx_keyframe", "_keyframe", "animation.keyframe"),
 ]
 
 CACHE_TEMPLATE = """# Cache for {class_name}

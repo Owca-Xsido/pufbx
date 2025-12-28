@@ -9,7 +9,7 @@ cdef class Element:
     """Base class for all elements in the FBX structure."""
     
     def __repr__(self):
-        return f"<Name='{self.name}' id={self.id} type={self.element.type.name}>"
+        return f"<Name='{self.name}' id={self.element_id} type={self.element.type.name}>"
 
     def __str__(self):
         return self.name
@@ -17,7 +17,7 @@ cdef class Element:
     @property
     def name(self):
         if self._element == NULL:
-            return ""
+            return "None"
         return to_py_string(self._element.name)
 
     @property
