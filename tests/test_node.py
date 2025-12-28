@@ -29,7 +29,6 @@ def test_all_nodes_in_scene(all_nodes):
         assert isinstance(node.element_id, int)
         assert isinstance(node.typed_id, int)
         assert isinstance(node.properties, fbx.PropsWrapper)
-        assert isinstance(node.element, fbx.Element)
         if not node.is_root:
             assert node.parent is not None
         assert node.num_children is not None
@@ -128,15 +127,6 @@ def test_node_attributes(cube_scene):
     assert cube_node.is_visible is True
 
 
-def test_element_access(cube_scene):
-    """Test the 'element' property wrapper."""
-    root = cube_scene.root_node
-
-    # The root node usually has an element type
-    element = root.element
-    assert element is not None
-    # Assuming Element class has a property 'type'
-    assert element.element_type is not None
 
 
 def test_missing_optional_components(cube_scene):

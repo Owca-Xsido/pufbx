@@ -18,11 +18,22 @@ from ..generated.wrappers cimport wrap_node, wrap_transform
 include "../core/strings.pxi"
 
 
-cdef class Node(Element):
-
+cdef class Node:
     """Represents a node in the FBX scene graph."""
 
+    def __repr__(self):
+        return f"<Node Name='{self.name}' element_id={self.element_id} typed_id={self.typed_id}>"
+    @property
+    def name(self):
+        return to_py_string(self._node.name)
 
+    @property
+    def element_id(self):
+        return self._node.element_id
+    @property
+    def typed_id(self):
+        return self._node.typed_id
+    
     def __len__(self):
         return self.num_children
 
@@ -259,6 +270,13 @@ cdef class Node(Element):
 
     @property
     def lcl_rotation(self):
+        """Property wrapper."""
+        return self.get_property_by_enum(PropType.ROTATION)
+
+    @property
+    def lcl_scale(self):
+        """Property wrapper."""
+        return self.get_property_by_enum(PropType.SCALING)
         """Property wrapper."""
         return self.get_property_by_enum(PropType.ROTATION)
 

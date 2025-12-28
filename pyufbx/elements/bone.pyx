@@ -21,3 +21,5 @@ cdef class Bone(Element):
     @property
     def is_root(self):
         return self._bone.is_root
+    def is_root(self):
+        return self._bone.is_root

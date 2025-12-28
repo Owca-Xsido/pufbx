@@ -36,6 +36,41 @@ def __getattr__(name):
                                             Vec3Property, Vec4Property)
 
         return locals()[name]
-    # Add others as needed
+    elif name == "Node":
+        from pyufbx.elements.node import Node
+
+        return Node
+    elif name == "Element":
+        from pyufbx.elements.element import Element
+
+        return Element
+    elif name == "InheritMode":
+        from pyufbx.elements.node import InheritMode
+
+        return InheritMode
+    elif name == "ElementList":
+        from pyufbx.generated.lists import ElementList
+
+        return ElementList
+    elif name == "NodeList":
+        from pyufbx.generated.lists import NodeList
+
+        return NodeList
+
+    elif name == "PropType":
+        from pyufbx.enums import PropType
+        return PropType
+
+    elif name == "Interpolation":
+        from pyufbx.enums import Interpolation
+        return Interpolation
+    
+    elif name == "RotationOrder":
+        from pyufbx.enums import RotationOrder
+        return RotationOrder
+    
+    elif name == "PropFlags":
+        from pyufbx.enums import PropFlags
+        return PropFlags
 
     raise AttributeError(f"module 'pyufbx' has no attribute '{name}'")

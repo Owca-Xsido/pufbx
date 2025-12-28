@@ -13,3 +13,5 @@ cdef class Mesh(Element):
     
     
 
+        return wrap_element(&self._mesh.element)
+
