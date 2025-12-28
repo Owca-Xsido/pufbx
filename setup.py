@@ -67,7 +67,12 @@ extensions = [
         "pyufbx.animation.anim",
         ["pyufbx/animation/anim.pyx"],
         include_dirs=COMMON_INCLUDE_DIRS,
-    )
+    
+    ),
+    Extension("pyufbx.animation.anim_curve",
+        ["pyufbx/animation/anim_curve.pyx"],
+        include_dirs=COMMON_INCLUDE_DIRS,
+    ),
 ]
 
 
