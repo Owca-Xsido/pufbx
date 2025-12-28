@@ -2,14 +2,14 @@
 from weakref import WeakValueDictionary
 from threading import Lock
 from pyufbx.pyufbx cimport ufbx_element, ufbx_node, ufbx_prop, ufbx_transform, ufbx_bone, ufbx_anim, ufbx_anim_value, ufbx_anim_curve
-from pyufbx.elements.element cimport Element
-from pyufbx.elements.node cimport Node
-from pyufbx.props.prop cimport Prop
-from pyufbx.core.transform cimport Transform
-from pyufbx.elements.bone cimport Bone
-from pyufbx.animation.anim cimport Anim
-from pyufbx.animation.animvalue cimport AnimValue
-from pyufbx.animation.animcurve cimport AnimCurve
+from pyufbx.elements cimport Element
+from pyufbx.elements cimport Node
+from pyufbx.props cimport Prop
+from pyufbx.core cimport Transform
+from pyufbx.elements cimport Bone
+from pyufbx.animation cimport Anim
+from pyufbx.animation cimport AnimValue
+from pyufbx.animation cimport AnimCurve
 
 # Cache for Element
 cdef object _element_cache_lock = Lock()

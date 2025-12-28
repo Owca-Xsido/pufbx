@@ -6,6 +6,8 @@ include "../core/strings.pxi"
 
 
 cdef class Element:
+    """Base class for all elements in the FBX structure."""
+    
     def __repr__(self):
         return f"<Name='{self.name}' id={self.id} type={self.element.type.name}>"
 

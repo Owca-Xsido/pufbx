@@ -27,6 +27,7 @@ Custom ufbx_anim created by ufbx_create_anim(). """
 
 from ..generated.lists cimport ElementList, NodeList
 
+include "../core/strings.pxi"
 
 cdef class AnimValue:
     """ Animation value descriptor used for evaluating animated properties.
@@ -47,10 +48,7 @@ cdef class AnimValue:
     @property
     def typed_id(self):
         return self._anim_value.typed_id
-    
-    @property
-    def properties(self):
-        return self._anim_value.prop_type
+
 
 
 cdef class Anim:
@@ -97,18 +95,18 @@ cdef class Anim:
         return self._anim.custom
 
     
-def class BakedAnim:
+cdef class BakedAnim:
     """
     Animation descriptor used for evaluating baked animation.
     """
 
-    @property
-    def modified_nodes(self):
-        return NodeList.create(self._baked_anim.nodes)
+    # @property
+    # def modified_nodes(self):
+        # return NodeList.create(self._baked_anim.nodes.data, self._baked_anim.nodes.count)
 
-    @property
-    def modified_elements(self):
-        return ElementList.create(self._baked_anim.elements)
+    # @property
+    # def modified_elements(self):
+    #     return ElementList.create(self._baked_anim.elements.data, self._baked_anim.elements.count)
 
     @property
     def playback_time_begin(self):
@@ -136,10 +134,8 @@ def class BakedAnim:
 cdef class AnimLayer:
 
     def __repr__(self):
-    return f"<AnimLayer name='{self.name}' weight={self.weight}>"
-    
-    def __cinit__(self, ufbx_anim_layer* layer not None):
-        self._layer = layer
+        return f"<AnimLayer name='{self.name}' weight={self.weight}>"
+
 
     @property
     def name(self):
@@ -166,12 +162,12 @@ cdef class AnimLayer:
         return self._layer.additive
 
     @property
-    def compose_rotations(self):
-        return self._layer.compose_rotations
+    def compose_rotation(self):
+        return self._layer.compose_rotation
 
     @property
-    def compose_scales(self):
-        return self._layer.compose_scales
+    def compose_scale(self):
+        return self._layer.compose_scale
 
     @property
     def anim_values(self):

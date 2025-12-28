@@ -51,9 +51,7 @@ def generate_wrapper_files():
 
         # Import the classes we're wrapping
         for class_name, c_type, field_name, parrent in WRAPPER_TYPES:
-            f.write(
-                f"from pyufbx.{parrent}.{class_name.lower()} cimport {class_name}\n"
-            )
+            f.write(f"from pyufbx.{parrent} cimport {class_name}\n")
 
         f.write("\n")
 
@@ -74,9 +72,7 @@ def generate_wrapper_files():
 
         # Import the classes we're wrapping
         for class_name, c_type, field_name, parrent in WRAPPER_TYPES:
-            f.write(
-                f"from pyufbx.{parrent}.{class_name.lower()} cimport {class_name}\n"
-            )
+            f.write(f"from pyufbx.{parrent} cimport {class_name}\n")
 
         f.write("\n")
 

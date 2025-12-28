@@ -25,7 +25,8 @@ Evaluate connected properties as if they would not be connected.
 bool 	custom
 Custom ufbx_anim created by ufbx_create_anim(). """
 
-from pyufbx.pyufbx cimport ufbx_anim
+from pyufbx.pyufbx cimport (ufbx_anim, ufbx_anim_layer, ufbx_anim_value,
+                            ufbx_baked_anim)
 
 
 cdef class Anim:
