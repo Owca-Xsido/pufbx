@@ -40,6 +40,7 @@ cdef class Scene:
         if self._scene == NULL:
             return None
         # TODO: Wrap ufbx_metadata
+        # TODO: metadata add implementation
         raise NotImplementedError("metadata is not implemented yet.")
 
     @property
@@ -48,6 +49,7 @@ cdef class Scene:
         if self._scene == NULL:
             return None
         # TODO: Wrap ufbx_scene_settings
+        # TODO: settings add implementation
         raise NotImplementedError("settings is not implemented yet.")
 
     @property
@@ -73,6 +75,7 @@ cdef class Scene:
         if self._scene == NULL:
             return []
         # TODO: Wrap ufbx_unknown_list
+        # TODO: unknowns add implementation
         raise NotImplementedError("unknowns is not implemented yet.")
 
     @property
@@ -715,6 +718,7 @@ cdef class Scene:
     #         return {}
         
     #     # TODO: Implement proper wrapping for elements_by_type array
+    #     # TODO: elements_by_type add implementation
     #     raise NotImplementedError("elements_by_type is not implemented yet.")
 
     # def get_elements_by_type(self, element_type):
@@ -735,6 +739,7 @@ cdef class Scene:
     #         raise ValueError(f"Invalid element type: {element_type}")
         
     #     # TODO: Implement proper wrapping
+    #     # TODO: get_elements_by_type add implementation
     #     raise NotImplementedError("get_elements_by_type is not implemented yet.")
 
     # # ========================================================================
@@ -783,6 +788,7 @@ cdef class Scene:
     #     if self._scene == NULL:
     #         return []
     #     # TODO: Wrap ufbx_connection_list
+    #     # TODO: connections_src add implementation
     #     raise NotImplementedError("connections_src is not implemented yet.")
 
     # @property
@@ -798,6 +804,7 @@ cdef class Scene:
     #     if self._scene == NULL:
     #         return []
     #     # TODO: Wrap ufbx_connection_list
+    #     # TODO: connections_dst add implementation
     #     raise NotImplementedError("connections_dst is not implemented yet.")
 
     # @property
@@ -817,6 +824,7 @@ cdef class Scene:
     #     if self._scene == NULL:
     #         return []
     #     # TODO: Wrap ufbx_name_element_list
+    #     # TODO: elements_by_name add implementation
     #     raise NotImplementedError("elements_by_name is not implemented yet.")
 
     # @property
@@ -839,6 +847,7 @@ cdef class Scene:
     #     if self._scene == NULL or self._scene.dom_root == NULL:
     #         return None
     #     # TODO: Wrap ufbx_dom_node
+    #     # TODO: dom_root add implementation
     #     raise NotImplementedError("dom_root is not implemented yet.")
 
     # # ========================================================================

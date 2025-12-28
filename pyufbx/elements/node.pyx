@@ -87,14 +87,17 @@ cdef class Node:
 
     @property
     def mesh(self):
+        # TODO: mesh add implementation
         raise NotImplementedError("mesh is not implemented yet.")
 
     @property
     def light(self):
+        # TODO: light add implementation
         raise NotImplementedError("light is not implemented yet")
 
     @property
     def camera(self):
+        # TODO: camera add implementation
         raise NotImplementedError("camera is not implemented yet")
 
     @property
@@ -117,11 +120,13 @@ cdef class Node:
 
     @property
     def geometry_transform_helper(self):
+        # TODO: geometry_transform_helper add implementation
         raise NotImplementedError(
             "geometry_transform_helper is not implemented yet.")
 
     @property
     def scale_helper(self):
+        # TODO: scale_helper add implementation
         raise NotImplementedError("scale_helper is not implemented yet.")
 
     @property
@@ -232,10 +237,12 @@ cdef class Node:
 
     @property
     def materials(self):
+        # TODO: materials add implementation
         raise NotImplementedError("materials is not implemented yet.")
 
     @property
     def bind_pose(self):
+        # TODO: bind_pose add implementation
         raise NotImplementedError("bind_pose is not implemented yet.")
 
     @property
