@@ -59,18 +59,22 @@ def __getattr__(name):
 
     elif name == "PropType":
         from pyufbx.enums import PropType
+
         return PropType
 
     elif name == "Interpolation":
         from pyufbx.enums import Interpolation
+
         return Interpolation
-    
+
     elif name == "RotationOrder":
         from pyufbx.enums import RotationOrder
+
         return RotationOrder
-    
+
     elif name == "PropFlags":
         from pyufbx.enums import PropFlags
+
         return PropFlags
 
     raise AttributeError(f"module 'pyufbx' has no attribute '{name}'")

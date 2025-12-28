@@ -127,8 +127,6 @@ def test_node_attributes(cube_scene):
     assert cube_node.is_visible is True
 
 
-
-
 def test_missing_optional_components(cube_scene):
     """Test safety when C pointers are NULL (e.g. Bone)."""
     root = cube_scene.root_node

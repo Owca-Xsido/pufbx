@@ -1,9 +1,7 @@
 from pyufbx.pyufbx cimport ufbx_anim_curve
 
-from ..elements.element cimport Element
 
-
-cdef class AnimCurve(Element):
+cdef class AnimCurve:
     """ Animation curve representation. """
     cdef ufbx_anim_curve *_anim_curve
     cdef object __weakref__  # Enable weak references

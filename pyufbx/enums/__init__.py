@@ -1,6 +1,6 @@
 from .element_types import ElementType
 from .enums import InheritMode, RotationOrder
-from .interpolation_type import Interpolation
+from .interpolation_types import Interpolation
 from .property_types import PropFlags, PropType
 
 __all__ = [

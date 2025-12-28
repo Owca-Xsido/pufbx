@@ -28,13 +28,32 @@ Custom ufbx_anim created by ufbx_create_anim(). """
 from ..core.math_types cimport Vec3Property
 from ..elements.element cimport Element
 from ..generated.lists cimport AnimCurveList, ElementList, NodeList
-from ..generated.wrappers cimport wrap_anim, wrap_anim_curve
+from ..generated.wrappers cimport wrap_anim, wrap_anim_value
+from ..props.prop cimport PropsWrapper
 
 include "../core/strings.pxi"
 
-cdef class AnimValue(Element):
+cdef class AnimValue:
     """ Animation value descriptor used for evaluating animated properties.
     """
+    def __repr__(self):
+        return f"<AnimValue Name='{self.name}' element_id={self.element_id} typed_id={self.typed_id}>"
+    @property
+    def name(self):
+        cdef ufbx_string name_str = self._anim_value.name
+        return to_py_string(name_str)
+
+    @property
+    def element_id(self):
+        return self._anim_value.element_id
+    @property
+    def typed_id(self):
+        return self._anim_value.typed_id
+
+    @property
+    def properties(self):
+        return PropsWrapper.create(&self._anim_value.props)
+        
     @property
     def default_value(self):
         return Vec3Property(*self._anim_value.default_value)
@@ -126,7 +145,7 @@ cdef class BakedAnim:
         return self._baked_anim.metadata
 
 
-cdef class AnimLayer(Element):
+cdef class AnimLayer:
     """ Animation layer descriptor used for layering multiple animations.
     """
 

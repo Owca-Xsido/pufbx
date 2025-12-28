@@ -12,7 +12,11 @@ from ..generated.wrappers cimport wrap_prop
 include "../core/strings.pxi"
 
 cdef class PropsWrapper:
+    def __repr__(self):
+        return repr(list(self))
 
+
+    
     @staticmethod
     cdef PropsWrapper create(ufbx_props *props):
         cdef PropsWrapper obj = PropsWrapper.__new__(PropsWrapper)
