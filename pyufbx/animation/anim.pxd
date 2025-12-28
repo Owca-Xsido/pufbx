@@ -39,3 +39,7 @@ cdef class BakedAnim:
 cdef class AnimLayer:
     cdef ufbx_anim_layer *_layer
     cdef object __weakref__  # Enable weak references
+
+cdef class AnimValue:
+    cdef ufbx_anim_value *_anim_value
+    cdef object __weakref__  # Enable weak references

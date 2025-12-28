@@ -1,13 +1,15 @@
 # cython: language_level=3
 from weakref import WeakValueDictionary
 from threading import Lock
-from pyufbx.pyufbx cimport ufbx_element, ufbx_node, ufbx_prop, ufbx_transform, ufbx_bone, ufbx_anim
+from pyufbx.pyufbx cimport ufbx_element, ufbx_node, ufbx_prop, ufbx_transform, ufbx_bone, ufbx_anim, ufbx_anim_value, ufbx_anim_curve
 from pyufbx.elements.element cimport Element
 from pyufbx.elements.node cimport Node
 from pyufbx.props.prop cimport Prop
 from pyufbx.core.transform cimport Transform
 from pyufbx.elements.bone cimport Bone
 from pyufbx.animation.anim cimport Anim
+from pyufbx.animation.animvalue cimport AnimValue
+from pyufbx.animation.animcurve cimport AnimCurve
 
 # Cache for Element
 cdef object _element_cache_lock = Lock()
@@ -27,6 +29,12 @@ cdef object _bone_cache = WeakValueDictionary()
 # Cache for Anim
 cdef object _anim_cache_lock = Lock()
 cdef object _anim_cache = WeakValueDictionary()
+# Cache for AnimValue
+cdef object _anim_value_cache_lock = Lock()
+cdef object _anim_value_cache = WeakValueDictionary()
+# Cache for AnimCurve
+cdef object _anim_curve_cache_lock = Lock()
+cdef object _anim_curve_cache = WeakValueDictionary()
 
 
 cdef Element wrap_element(ufbx_element *ptr):
@@ -123,4 +131,36 @@ cdef Anim wrap_anim(ufbx_anim *ptr):
         obj = Anim()
         obj._anim = ptr
         _anim_cache[ptr_key] = obj
+        return obj
+
+cdef AnimValue wrap_anim_value(ufbx_anim_value *ptr):
+    if ptr == NULL:
+        return None
+    
+    cdef size_t ptr_key = <size_t>ptr
+    
+    with _anim_value_cache_lock:
+        cached = _anim_value_cache.get(ptr_key, None)
+        if cached is not None:
+            return <AnimValue>cached
+        
+        obj = AnimValue()
+        obj._anim_value = ptr
+        _anim_value_cache[ptr_key] = obj
+        return obj
+
+cdef AnimCurve wrap_anim_curve(ufbx_anim_curve *ptr):
+    if ptr == NULL:
+        return None
+    
+    cdef size_t ptr_key = <size_t>ptr
+    
+    with _anim_curve_cache_lock:
+        cached = _anim_curve_cache.get(ptr_key, None)
+        if cached is not None:
+            return <AnimCurve>cached
+        
+        obj = AnimCurve()
+        obj._anim_curve = ptr
+        _anim_curve_cache[ptr_key] = obj
         return obj

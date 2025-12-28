@@ -28,6 +28,31 @@ Custom ufbx_anim created by ufbx_create_anim(). """
 from ..generated.lists cimport ElementList, NodeList
 
 
+cdef class AnimValue:
+    """ Animation value descriptor used for evaluating animated properties.
+    """
+    def __repr__(self):
+        return f"<AnimValue name='{self.name}'>"
+    def __str__(self):
+        return self.name
+
+    @property
+    def name(self):
+        return to_py_string(self._anim_value.name)
+    
+    @property
+    def element_id(self):
+        return self._anim_value.element_id
+    
+    @property
+    def typed_id(self):
+        return self._anim_value.typed_id
+    
+    @property
+    def properties(self):
+        return self._anim_value.prop_type
+
+
 cdef class Anim:
     """"
     Animation descriptor used for evaluating animation.

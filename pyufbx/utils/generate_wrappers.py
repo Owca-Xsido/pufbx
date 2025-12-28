@@ -9,6 +9,8 @@ WRAPPER_TYPES = [
     ("Transform", "ufbx_transform", "_transform", "core"),
     ("Bone", "ufbx_bone", "_bone", "elements"),
     ("Anim", "ufbx_anim", "_anim", "animation"),
+    ("AnimValue", "ufbx_anim_value", "_anim_value", "animation"),
+    ("AnimCurve", "ufbx_anim_curve", "_anim_curve", "animation"),
 ]
 
 CACHE_TEMPLATE = """# Cache for {class_name}
