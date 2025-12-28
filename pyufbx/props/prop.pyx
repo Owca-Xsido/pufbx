@@ -1,4 +1,3 @@
-from pyufbx.pyufbx cimport *
 
 from ..core.transform cimport Transform
 from ..elements.bone cimport Bone

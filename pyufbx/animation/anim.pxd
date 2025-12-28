@@ -28,6 +28,8 @@ Custom ufbx_anim created by ufbx_create_anim(). """
 from pyufbx.pyufbx cimport (ufbx_anim, ufbx_anim_layer, ufbx_anim_value,
                             ufbx_baked_anim)
 
+from ..elements.element cimport Element
+
 
 cdef class Anim:
     cdef ufbx_anim *_anim
@@ -37,10 +39,10 @@ cdef class BakedAnim:
     cdef ufbx_baked_anim *_baked_anim
     cdef object __weakref__  # Enable weak references
 
-cdef class AnimLayer:
+cdef class AnimLayer(Element):
     cdef ufbx_anim_layer *_layer
     cdef object __weakref__  # Enable weak references
 
-cdef class AnimValue:
+cdef class AnimValue(Element):
     cdef ufbx_anim_value *_anim_value
     cdef object __weakref__  # Enable weak references

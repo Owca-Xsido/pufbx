@@ -27,7 +27,7 @@ cdef class Element:
     @property
     def typed_id(self):
         return self._element.typed_id
-
+    
     @property
     def element_type(self):
         return ElementType(<int>self._element.type)

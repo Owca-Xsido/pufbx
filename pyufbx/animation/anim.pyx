@@ -25,29 +25,24 @@ Evaluate connected properties as if they would not be connected.
 bool 	custom
 Custom ufbx_anim created by ufbx_create_anim(). """
 
+from ..core.math_types cimport Vec3Property
+from ..elements.element cimport Element
 from ..generated.lists cimport ElementList, NodeList
+from ..generated.wrappers cimport wrap_anim
 
 include "../core/strings.pxi"
 
-cdef class AnimValue:
+cdef class AnimValue(Element):
     """ Animation value descriptor used for evaluating animated properties.
     """
-    def __repr__(self):
-        return f"<AnimValue name='{self.name}'>"
-    def __str__(self):
-        return self.name
+    @property
+    def default_value(self):
+        return Vec3Property(*self._anim_value.default_value)
 
     @property
-    def name(self):
-        return to_py_string(self._anim_value.name)
-    
-    @property
-    def element_id(self):
-        return self._anim_value.element_id
-    
-    @property
-    def typed_id(self):
-        return self._anim_value.typed_id
+    def curves(self):
+        # TODO: curves add implementation
+        raise NotImplementedError("AnimValue curves are not yet implemented.")
 
 
 
@@ -131,24 +126,10 @@ cdef class BakedAnim:
         return self._baked_anim.metadata
 
 
-cdef class AnimLayer:
+cdef class AnimLayer(Element):
+    """ Animation layer descriptor used for layering multiple animations.
+    """
 
-    def __repr__(self):
-        return f"<AnimLayer name='{self.name}' weight={self.weight}>"
-
-
-    @property
-    def name(self):
-        return to_py_string(self._layer.name)
-    
-    @property
-    def element_id(self):
-        return self._layer.element_id
-    
-    @property
-    def typed_id(self):
-        return self._layer.typed_id
-    
     @property
     def weight(self):
         return self._layer.weight
@@ -179,4 +160,9 @@ cdef class AnimLayer:
         # TODO: anim_props add implementation
         raise NotImplementedError("AnimLayer anim_props are not yet implemented.")
     
+    @property
+    def anim(self):
+        # TODO: anim add implementation
+        raise NotImplementedError("AnimLayer anim is not yet implemented.")
+        
 

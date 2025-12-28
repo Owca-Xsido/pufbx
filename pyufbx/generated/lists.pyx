@@ -1,6 +1,6 @@
 # cython: language_level=3
 from pyufbx.pyufbx cimport ufbx_element, ufbx_node, ufbx_bone, ufbx_anim, ufbx_anim_value, ufbx_anim_curve
-from .wrappers cimport wrap_node, wrap_element, wrap_bone
+from .wrappers cimport wrap_element, wrap_node, wrap_bone, wrap_anim, wrap_anim_value, wrap_anim_curve
 
 cdef class ElementList:
     """A list-like wrapper for ufbx_element pointers."""

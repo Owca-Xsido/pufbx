@@ -7,24 +7,8 @@ from .node cimport Node
 
 include "../core/strings.pxi"
 
-cdef class Bone:
-
-    @property
-    def element(self):
-        """Returns the Element wrapper for this bone's element field."""
-        if self._bone == NULL:
-            return None
-        element_obj = Element()
-        element_obj._element = &self._bone.element  # Take address of the union
-        return element_obj  # Return the Python wrapper, not the C pointer
-
-    @property
-    def name(self):
-        return to_py_string(self._bone.element.name)
-
-    @property
-    def instance(self):
-        return NodeList.create(self._bone.element.instances.data, self._bone.element.instances.count)
+cdef class Bone(Element):
+    """Represents a bone in the FBX structure."""
 
     @property
     def radius(self):

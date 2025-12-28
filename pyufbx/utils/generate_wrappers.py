@@ -3,14 +3,14 @@
 import os
 
 WRAPPER_TYPES = [
-    ("Element", "ufbx_element", "_element", "elements"),
-    ("Node", "ufbx_node", "_node", "elements"),
-    ("Prop", "ufbx_prop", "_prop", "props"),
-    ("Transform", "ufbx_transform", "_transform", "core"),
-    ("Bone", "ufbx_bone", "_bone", "elements"),
-    ("Anim", "ufbx_anim", "_anim", "animation"),
-    ("AnimValue", "ufbx_anim_value", "_anim_value", "animation"),
-    ("AnimCurve", "ufbx_anim_curve", "_anim_curve", "animation"),
+    ("Element", "ufbx_element", "_element", "elements.element"),
+    ("Node", "ufbx_node", "_node", "elements.node"),
+    ("Prop", "ufbx_prop", "_prop", "props.prop"),
+    ("Transform", "ufbx_transform", "_transform", "core.transform"),
+    ("Bone", "ufbx_bone", "_bone", "elements.bone"),
+    ("Anim", "ufbx_anim", "_anim", "animation.anim"),
+    ("AnimValue", "ufbx_anim_value", "_anim_value", "animation.anim"),
+    ("AnimCurve", "ufbx_anim_curve", "_anim_curve", "animation.anim_curve"),
 ]
 
 CACHE_TEMPLATE = """# Cache for {class_name}

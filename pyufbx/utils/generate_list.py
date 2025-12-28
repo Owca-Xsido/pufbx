@@ -3,13 +3,12 @@
 import os
 
 LIST_TYPES = [
-    ("Element", "ufbx_element", "_element", "elements"),
-    ("Node", "ufbx_node", "_node", "elements"),
-    ("Bone", "ufbx_bone", "_bone", "elements"),
-    ("Anim", "ufbx_anim", "_anim", "animation"),
-    # ("Property", "ufbx_property", "_property"),
-    ("AnimValue", "ufbx_anim_value", "_anim_value", "animation"),
-    ("AnimCurve", "ufbx_anim_curve", "_anim_curve", "animation"),
+    ("Element", "ufbx_element", "_element", "elements.element"),
+    ("Node", "ufbx_node", "_node", "elements.node"),
+    ("Bone", "ufbx_bone", "_bone", "elements.bone"),
+    ("Anim", "ufbx_anim", "_anim", "animation.anim"),
+    ("AnimValue", "ufbx_anim_value", "_anim_value", "animation.anim"),
+    ("AnimCurve", "ufbx_anim_curve", "_anim_curve", "animation.anim_curve"),
     # ("DisplayLayer", "ufbx_display_layer", "_display_layer"),
     # ("SelectionSet", "ufbx_selection_set", "_selection_set"),
     # ("SelectionNode", "ufbx_selection_node", "_selection_node"),
@@ -87,10 +86,13 @@ def generate_list_files():
     # Generate .pyx (implementations)
     pyx_path = os.path.join(output_dir, "lists.pyx")
     with open(pyx_path, "w") as f:
+        wrap_funcs = ", ".join(
+            [f"wrap{wrap_func}" for _, _, wrap_func, _ in LIST_TYPES]
+        )
         f.write("# cython: language_level=3\n")
         f.write(f"from pyufbx.pyufbx cimport {imported_types}\n")
-        f.write("from .wrappers cimport wrap_node, wrap_element, wrap_bone\n\n")
 
+        f.write("from .wrappers cimport {}\n\n".format(wrap_funcs))
         for class_name, item_type, wrap_func, _ in LIST_TYPES:
             f.write(
                 TEMPLATE.format(

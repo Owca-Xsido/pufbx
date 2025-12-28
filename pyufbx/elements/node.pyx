@@ -18,15 +18,10 @@ from ..generated.wrappers cimport wrap_node, wrap_transform
 include "../core/strings.pxi"
 
 
-cdef class Node:
+cdef class Node(Element):
 
-   
+    """Represents a node in the FBX scene graph."""
 
-    def __repr__(self):
-        return f"<Node name='{self.name}' id={self.id} type={self.element.element_type.name}>"
-
-    def __str__(self):
-        return self.name
 
     def __len__(self):
         return self.num_children
@@ -41,30 +36,10 @@ cdef class Node:
                 return prop.value
         return None
 
-    @property
-    def element(self):
-        """Returns the Element wrapper for this node's union element field."""
-        if self._node == NULL:
-            return None
-        element_obj = Element()
-        element_obj._element = &self._node.element  # Take address of the union
-        return element_obj  # Return the Python wrapper, not the C pointer
-
-    @property
-    def name(self):
-        return to_py_string(self._node.name)
 
     @property
     def properties(self):
         return PropsWrapper.create(&self._node.props)
-
-    @property
-    def id(self):
-        return self._node.element_id
-
-    @property
-    def typed_id(self):
-        return self._node.typed_id
 
     @property
     def parent(self):

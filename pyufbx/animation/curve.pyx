@@ -1,1 +1,0 @@
-# TODO: Add implementation for animation curves
