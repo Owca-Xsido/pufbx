@@ -39,5 +39,5 @@ build:
 	
 run:
 	@echo "Running pyufbx..."
-	uv run --no-sync test2.test.py
-# 	uv run test.test.py
+	uv run test.test.py
+# 	uv run --no-sync test2.test.py

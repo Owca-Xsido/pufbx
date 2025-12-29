@@ -77,7 +77,14 @@ extensions = [
         ['pyufbx/animation/keyframe.pyx'],
         include_dirs=COMMON_INCLUDE_DIRS,
     ),
+    Extension('pyufbx.animation.bake_anim',
+        ['pyufbx/animation/bake_anim.pyx',
+                     "ufbx/ufbx.c"
+],
+        include_dirs=COMMON_INCLUDE_DIRS,
+    )
 ]
+
 
 
 setup(

@@ -5,7 +5,7 @@ __version__ = "0.1.0"
 # Only import the entry point eagerly
 from pyufbx.ufbx_wrapper import load_fbx
 
-__all__ = ["load_fbx"]
+__all__ = ["load_fbx", "bake_anim"]
 
 # Lazy import everything else
 
@@ -56,7 +56,10 @@ def __getattr__(name):
         from pyufbx.generated.lists import NodeList
 
         return NodeList
+    elif name == "bake_anim":
+        from pyufbx.animation.bake_anim import bake_anim
 
+        return bake_anim
     elif name == "PropType":
         from pyufbx.enums import PropType
 

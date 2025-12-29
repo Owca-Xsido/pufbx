@@ -1,5 +1,5 @@
 # cython: language_level=3
-from pyufbx.pyufbx cimport ufbx_element, ufbx_node, ufbx_prop, ufbx_transform, ufbx_bone, ufbx_anim, ufbx_anim_value, ufbx_anim_curve, ufbx_keyframe, ufbx_anim_prop, ufbx_anim_layer
+from pyufbx.pyufbx cimport ufbx_element, ufbx_node, ufbx_prop, ufbx_transform, ufbx_bone, ufbx_anim, ufbx_anim_value, ufbx_anim_curve, ufbx_keyframe, ufbx_anim_prop, ufbx_anim_layer, ufbx_baked_anim
 from pyufbx.elements.element cimport Element
 from pyufbx.elements.node cimport Node
 from pyufbx.props.prop cimport Prop
@@ -11,6 +11,7 @@ from pyufbx.animation.anim_curve cimport AnimCurve
 from pyufbx.animation.keyframe cimport Keyframe
 from pyufbx.animation.anim cimport AnimProp
 from pyufbx.animation.anim cimport AnimLayer
+from pyufbx.animation.bake_anim cimport BakedAnim
 
 cdef Element wrap_element(ufbx_element *ptr)
 cdef Node wrap_node(ufbx_node *ptr)
@@ -23,3 +24,4 @@ cdef AnimCurve wrap_anim_curve(ufbx_anim_curve *ptr)
 cdef Keyframe wrap_keyframe(ufbx_keyframe *ptr)
 cdef AnimProp wrap_anim_prop(ufbx_anim_prop *ptr)
 cdef AnimLayer wrap_anim_layer(ufbx_anim_layer *ptr)
+cdef BakedAnim wrap_baked_anim(ufbx_baked_anim *ptr)
