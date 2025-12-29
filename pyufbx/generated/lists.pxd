@@ -1,5 +1,5 @@
 # cython: language_level=3
-from pyufbx.pyufbx cimport ufbx_element, ufbx_node, ufbx_bone, ufbx_anim, ufbx_anim_value, ufbx_anim_curve
+from pyufbx.pyufbx cimport ufbx_element, ufbx_node, ufbx_bone, ufbx_anim, ufbx_anim_value, ufbx_anim_curve, ufbx_anim_layer
 
 cdef class ElementList:
     cdef ufbx_element **_data
@@ -36,4 +36,10 @@ cdef class AnimCurveList:
     cdef size_t _count
     @staticmethod
     cdef AnimCurveList create(ufbx_anim_curve **data, size_t count)
+
+cdef class AnimLayerList:
+    cdef ufbx_anim_layer **_data
+    cdef size_t _count
+    @staticmethod
+    cdef AnimLayerList create(ufbx_anim_layer **data, size_t count)
 

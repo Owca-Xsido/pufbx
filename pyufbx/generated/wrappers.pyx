@@ -1,7 +1,7 @@
 # cython: language_level=3
 from weakref import WeakValueDictionary
 from threading import Lock
-from pyufbx.pyufbx cimport ufbx_element, ufbx_node, ufbx_prop, ufbx_transform, ufbx_bone, ufbx_anim, ufbx_anim_value, ufbx_anim_curve, ufbx_keyframe
+from pyufbx.pyufbx cimport ufbx_element, ufbx_node, ufbx_prop, ufbx_transform, ufbx_bone, ufbx_anim, ufbx_anim_value, ufbx_anim_curve, ufbx_keyframe, ufbx_anim_prop, ufbx_anim_layer
 from pyufbx.elements.element cimport Element
 from pyufbx.elements.node cimport Node
 from pyufbx.props.prop cimport Prop
@@ -11,6 +11,8 @@ from pyufbx.animation.anim cimport Anim
 from pyufbx.animation.anim cimport AnimValue
 from pyufbx.animation.anim_curve cimport AnimCurve
 from pyufbx.animation.keyframe cimport Keyframe
+from pyufbx.animation.anim cimport AnimProp
+from pyufbx.animation.anim cimport AnimLayer
 
 # Cache for Element
 cdef object _element_cache_lock = Lock()
@@ -39,6 +41,12 @@ cdef object _anim_curve_cache = WeakValueDictionary()
 # Cache for Keyframe
 cdef object _keyframe_cache_lock = Lock()
 cdef object _keyframe_cache = WeakValueDictionary()
+# Cache for AnimProp
+cdef object _anim_prop_cache_lock = Lock()
+cdef object _anim_prop_cache = WeakValueDictionary()
+# Cache for AnimLayer
+cdef object _anim_layer_cache_lock = Lock()
+cdef object _anim_layer_cache = WeakValueDictionary()
 
 
 cdef Element wrap_element(ufbx_element *ptr):
@@ -183,4 +191,36 @@ cdef Keyframe wrap_keyframe(ufbx_keyframe *ptr):
         obj = Keyframe()
         obj._keyframe = ptr
         _keyframe_cache[ptr_key] = obj
+        return obj
+
+cdef AnimProp wrap_anim_prop(ufbx_anim_prop *ptr):
+    if ptr == NULL:
+        return None
+    
+    cdef size_t ptr_key = <size_t>ptr
+    
+    with _anim_prop_cache_lock:
+        cached = _anim_prop_cache.get(ptr_key, None)
+        if cached is not None:
+            return <AnimProp>cached
+        
+        obj = AnimProp()
+        obj._anim_prop = ptr
+        _anim_prop_cache[ptr_key] = obj
+        return obj
+
+cdef AnimLayer wrap_anim_layer(ufbx_anim_layer *ptr):
+    if ptr == NULL:
+        return None
+    
+    cdef size_t ptr_key = <size_t>ptr
+    
+    with _anim_layer_cache_lock:
+        cached = _anim_layer_cache.get(ptr_key, None)
+        if cached is not None:
+            return <AnimLayer>cached
+        
+        obj = AnimLayer()
+        obj._anim_layer = ptr
+        _anim_layer_cache[ptr_key] = obj
         return obj

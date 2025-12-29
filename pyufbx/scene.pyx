@@ -13,7 +13,8 @@ from .enums.element_types import ElementType
 from .enums.enums import InheritMode, RotationOrder
 from .enums.property_types import PropType
 
-from .generated.lists cimport AnimCurveList, AnimValueList, BoneList, NodeList
+from .generated.lists cimport (AnimCurveList, AnimLayerList, AnimValueList,
+                               BoneList, NodeList)
 from .generated.wrappers cimport wrap_anim, wrap_node
 
 
@@ -514,19 +515,19 @@ cdef class Scene:
     #         return 0
     #     return self._scene.anim_stacks.count
 
-    # @property
-    # def anim_layers(self):
-    #     """List of animation layer objects in the scene."""
-    #     if self._scene == NULL:
-    #         return []
-    #     return AnimLayerList.create(self._scene.anim_layers.data, self._scene.anim_layers.count)
+    @property
+    def anim_layers(self):
+        """List of animation layer objects in the scene."""
+        if self._scene == NULL:
+            return []
+        return AnimLayerList.create(self._scene.anim_layers.data, self._scene.anim_layers.count)
 
-    # @property
-    # def num_anim_layers(self):
-    #     """Number of animation layers in the scene."""
-    #     if self._scene == NULL:
-    #         return 0
-    #     return self._scene.anim_layers.count
+    @property
+    def num_anim_layers(self):
+        """Number of animation layers in the scene."""
+        if self._scene == NULL:
+            return 0
+        return self._scene.anim_layers.count
 
     @property
     def anim_values(self):

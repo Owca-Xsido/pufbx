@@ -21,6 +21,8 @@ include "../core/strings.pxi"
 cdef class Node:
     """Represents a node in the FBX scene graph."""
 
+
+    # Common
     def __repr__(self):
         return f"<Node Name='{self.name}' element_id={self.element_id} typed_id={self.typed_id}>"
     @property
@@ -34,12 +36,10 @@ cdef class Node:
     def typed_id(self):
         return self._node.typed_id
     
-    def __len__(self):
-        return self.num_children
-
-    def __iter__(self):
-        return iter(self.children)
-
+    @property
+    def properties(self):
+        return PropsWrapper.create(&self._node.props)
+    
     cdef get_property_by_enum(self, enum):
         """Gets the prop.value without the hassle"""
         for prop in self.properties:
@@ -48,10 +48,11 @@ cdef class Node:
         return None
 
 
-    @property
-    def properties(self):
-        return PropsWrapper.create(&self._node.props)
+    def __len__(self):
+        return self.num_children
 
+    def __iter__(self):
+        return iter(self.children)
     @property
     def parent(self):
         """Returns the parent Node, or None if it is the root."""

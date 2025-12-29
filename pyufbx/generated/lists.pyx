@@ -1,6 +1,6 @@
 # cython: language_level=3
-from pyufbx.pyufbx cimport ufbx_element, ufbx_node, ufbx_bone, ufbx_anim, ufbx_anim_value, ufbx_anim_curve
-from .wrappers cimport wrap_element, wrap_node, wrap_bone, wrap_anim, wrap_anim_value, wrap_anim_curve
+from pyufbx.pyufbx cimport ufbx_element, ufbx_node, ufbx_bone, ufbx_anim, ufbx_anim_value, ufbx_anim_curve, ufbx_anim_layer
+from .wrappers cimport wrap_element, wrap_node, wrap_bone, wrap_anim, wrap_anim_value, wrap_anim_curve, wrap_anim_layer
 
 cdef class ElementList:
     """A list-like wrapper for ufbx_element pointers."""
@@ -240,5 +240,45 @@ cdef class AnimCurveList:
 
     def __repr__(self):
         return f"<AnimCurveList count={self._count}>"
+
+
+cdef class AnimLayerList:
+    """A list-like wrapper for ufbx_anim_layer pointers."""
+
+    @staticmethod
+    cdef AnimLayerList create(ufbx_anim_layer **data, size_t count):
+        cdef AnimLayerList obj = AnimLayerList.__new__(AnimLayerList)
+        obj._data = data
+        obj._count = count
+        return obj
+
+    def __len__(self):
+        return self._count
+
+    def __getitem__(self, idx):
+        cdef list result
+        cdef size_t i
+        cdef int start, stop, step
+
+        if isinstance(idx, slice):
+            start, stop, step = idx.indices(self._count)
+            result = []
+            for i in range(start, stop, step):
+                result.append(wrap_anim_layer(self._data[i]))
+            return result
+
+        if idx < 0:
+            idx += self._count
+        if idx < 0 or idx >= self._count:
+            raise IndexError("Index out of range")
+        return wrap_anim_layer(self._data[idx])
+
+    def __iter__(self):
+        cdef size_t i
+        for i in range(self._count):
+            yield wrap_anim_layer(self._data[i])
+
+    def __repr__(self):
+        return f"<AnimLayerList count={self._count}>"
 
 

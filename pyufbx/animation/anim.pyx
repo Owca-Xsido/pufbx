@@ -27,8 +27,9 @@ Custom ufbx_anim created by ufbx_create_anim(). """
 
 from ..core.math_types cimport Vec3Property
 from ..elements.element cimport Element
-from ..generated.lists cimport AnimCurveList, ElementList, NodeList
-from ..generated.wrappers cimport wrap_anim, wrap_anim_value
+from ..generated.lists cimport (AnimCurveList, AnimValueList, ElementList,
+                                NodeList)
+from ..generated.wrappers cimport wrap_anim, wrap_anim_prop, wrap_anim_value
 from ..props.prop cimport PropsWrapper
 
 include "../core/strings.pxi"
@@ -148,6 +149,30 @@ cdef class BakedAnim:
 cdef class AnimLayer:
     """ Animation layer descriptor used for layering multiple animations.
     """
+    # Common
+    def __repr__(self):
+        return f"<AnimLayer Name='{self.name}' element_id={self.element_id} typed_id={self.typed_id}>"
+    @property
+    def name(self):
+        return to_py_string(self._anim_layer.name)
+
+    @property
+    def element_id(self):
+        return self._anim_layer.element_id
+    @property
+    def typed_id(self):
+        return self._anim_layer.typed_id
+    
+    @property
+    def properties(self):
+        return PropsWrapper.create(&self._anim_layer.props)
+    
+    cdef get_property_by_enum(self, enum):
+        """Gets the prop.value without the hassle"""
+        for prop in self.properties:
+            if prop.prop_type == enum:
+                return prop.value
+        return None
 
     @property
     def weight(self):
@@ -171,17 +196,60 @@ cdef class AnimLayer:
 
     @property
     def anim_values(self):
-        # TODO: anim_values add implementation
-        raise NotImplementedError("AnimLayer anim_values are not yet implemented.")
+        return AnimValueList.create(self._anim_layer.anim_values.data, 
+                                    self._anim_layer.anim_values.count)
     
     @property
     def anim_props(self):
-        # TODO: anim_props add implementation
-        raise NotImplementedError("AnimLayer anim_props are not yet implemented.")
+        return AnimPropList.create(self._anim_layer.anim_props.data,
+                                    self._anim_layer.anim_props.count)
     
     @property
     def anim(self):
-        # TODO: anim add implementation
-        raise NotImplementedError("AnimLayer anim is not yet implemented.")
+        return wrap_anim(self._anim_layer.anim)   
+
+cdef class AnimProp:
+        # Common
+    def __repr__(self):
+        return f"<AnimProp Name='{self.name}' element_id={self.element_id} typed_id={self.typed_id}>"
+    @property
+    def name(self):
+        return to_py_string(self._anim_prop.prop_name)
+
+    # @property
+    # def element_id(self):
+    #     return self._anim_prop.element_id
+    # @property
+    # def typed_id(self):
+    #     return self._anim_prop.typed_id
         
+    # @property
+    # def properties(self):
+    #     return PropsWrapper.create(&self._anim_prop.props)
+   
+    @property
+    def anim_value(self):
+        return wrap_anim_value(self._anim_prop.anim_value)
+
+from pyufbx.pyufbx cimport ufbx_anim_prop
+
+
+cdef class AnimPropList:
+    """A list-like wrapper for ufbx_anim_prop pointers."""
+
+    @staticmethod
+    cdef AnimPropList create(ufbx_anim_prop *data, size_t count):
+        cdef AnimPropList obj = AnimPropList.__new__(AnimPropList)
+        obj._data = data
+        obj._count = count
+        return obj
+
+    def __len__(self):
+        return self._count
+
+
+
+    def __repr__(self):
+        return f"<AnimPropList count={self._count}>"
+
 

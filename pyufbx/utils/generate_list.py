@@ -9,7 +9,7 @@ LIST_TYPES = [
     ("Anim", "ufbx_anim", "_anim", "animation.anim"),
     ("AnimValue", "ufbx_anim_value", "_anim_value", "animation.anim"),
     ("AnimCurve", "ufbx_anim_curve", "_anim_curve", "animation.anim_curve"),
-    # ("Keyframe", "ufbx_keyframe", "_keyframe", "animation.keyframe"),
+    ("AnimLayer", "ufbx_anim_layer", "_anim_layer", "animation.anim"),
 ]
 
 TEMPLATE = '''cdef class {class_name}List:
