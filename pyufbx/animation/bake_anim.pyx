@@ -12,13 +12,13 @@ cdef class BakedAnim:
     Animation descriptor used for evaluating baked animation.
     """
 
-    # @property
-    # def modified_nodes(self):
-        # return NodeList.create(self._baked_anim.nodes.data, self._baked_anim.nodes.count)
+    @property
+    def modified_nodes(self):
+        return NodeList.create(self._baked_anim.nodes.data, self._baked_anim.nodes.count)
 
-    # @property
-    # def modified_elements(self):
-    #     return ElementList.create(self._baked_anim.elements.data, self._baked_anim.elements.count)
+    @property
+    def modified_elements(self):
+        return ElementList.create(self._baked_anim.elements.data, self._baked_anim.elements.count)
 
     @property
     def playback_time_begin(self):
@@ -83,7 +83,7 @@ def bake_anim(Scene scene, Anim anim=None, dict opts=None):
     
     # Set default values
     c_opts.resample_rate = 30.0
-    c_opts.key_reduction_enabled = True
+    c_opts.key_reduction_enabled = False
     c_opts.key_reduction_threshold = 0.001
     if opts is not None:
         if 'resample_rate' in opts:
