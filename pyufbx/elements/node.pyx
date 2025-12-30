@@ -3,7 +3,7 @@
 # cython: language_level=3
 
 from ..core.math_types cimport (QuatProperty, Vec2Property, Vec3Property,
-                                Vec4Property)
+                                Vec4Property, fast_baked_quat_copy)
 from ..props.prop cimport Prop, PropsWrapper
 from .bone cimport Bone
 from .element cimport Element
@@ -285,3 +285,57 @@ cdef class Node:
     def lcl_scale(self):
         """Property wrapper."""
         return self.get_property_by_enum(PropType.SCALING)
+
+
+class BakedNode:
+    """Baked transform animation for a single node. From used in Bake Anim func"""
+
+    def __init__(self, baked_node):
+        """Initialize with a baked node data structure"""
+        self._baked_node = baked_node
+    
+    @property
+    def element_id(self):
+        """Return the element ID of the baked node"""
+        return self._baked_node.element_id
+        
+    @property
+    def typed_id(self):
+        """Return the typed ID of the baked node"""
+        return self._baked_node.typed_id
+
+    @property
+    def name(self):
+        """Return the name of the baked node (accessible via the underlying element)"""
+        return self._baked_node.name
+
+    @property
+    def constant_translation(self): 
+        """True if translation doesn't change over the animation"""
+        return self._baked_node.constant_translation
+
+    @property
+    def constant_rotation(self):
+        """True if rotation doesn't change over the animation"""
+        return self._baked_node.constant_rotation
+
+    @property
+    def constant_scale(self):
+        """True if scale doesn't change over the animation"""
+        return self._baked_node.constant_scale
+
+
+    @property
+    def translation_keys(self):
+        """Returns the list of baked translation vectors"""
+        return self._baked_node.translation_keys
+
+    @property
+    def rotation_keys(self):
+        """Returns the list of baked rotation quaternions"""
+        return fast_baked_quat_copy(self._baked_node.rotation_keys)
+        
+    @property
+    def scale_keys(self):
+        """Returns the list of baked scale vectors"""
+        return self._baked_node.scale_keys

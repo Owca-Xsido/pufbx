@@ -1,7 +1,7 @@
 # cython: language_level=3
 from weakref import WeakValueDictionary
 from threading import Lock
-from pyufbx.pyufbx cimport ufbx_element, ufbx_node, ufbx_prop, ufbx_transform, ufbx_bone, ufbx_anim, ufbx_anim_value, ufbx_anim_curve, ufbx_keyframe, ufbx_anim_prop, ufbx_anim_layer, ufbx_baked_anim, ufbx_mesh, ufbx_light, ufbx_camera, ufbx_empty, ufbx_line_curve, ufbx_nurbs_curve, ufbx_nurbs_surface, ufbx_nurbs_trim_surface, ufbx_nurbs_trim_boundary, ufbx_procedural_geometry, ufbx_stereo_camera, ufbx_camera_switcher, ufbx_marker, ufbx_lod_group, ufbx_skin_deformer, ufbx_skin_cluster, ufbx_blend_deformer, ufbx_blend_channel, ufbx_blend_shape, ufbx_cache_deformer, ufbx_cache_file, ufbx_material, ufbx_texture, ufbx_video, ufbx_shader, ufbx_shader_binding, ufbx_anim_stack, ufbx_display_layer, ufbx_selection_set, ufbx_selection_node, ufbx_character, ufbx_constraint, ufbx_audio_layer, ufbx_audio_clip, ufbx_pose, ufbx_metadata_object, ufbx_texture_file
+from pyufbx.pyufbx cimport ufbx_element, ufbx_node, ufbx_prop, ufbx_transform, ufbx_bone, ufbx_anim, ufbx_anim_value, ufbx_anim_curve, ufbx_keyframe, ufbx_anim_prop, ufbx_anim_layer, ufbx_baked_anim, ufbx_baked_node, ufbx_mesh, ufbx_light, ufbx_camera, ufbx_empty, ufbx_line_curve, ufbx_nurbs_curve, ufbx_nurbs_surface, ufbx_nurbs_trim_surface, ufbx_nurbs_trim_boundary, ufbx_procedural_geometry, ufbx_stereo_camera, ufbx_camera_switcher, ufbx_marker, ufbx_lod_group, ufbx_skin_deformer, ufbx_skin_cluster, ufbx_blend_deformer, ufbx_blend_channel, ufbx_blend_shape, ufbx_cache_deformer, ufbx_cache_file, ufbx_material, ufbx_texture, ufbx_video, ufbx_shader, ufbx_shader_binding, ufbx_anim_stack, ufbx_display_layer, ufbx_selection_set, ufbx_selection_node, ufbx_character, ufbx_constraint, ufbx_audio_layer, ufbx_audio_clip, ufbx_pose, ufbx_metadata_object, ufbx_texture_file
 from pyufbx.elements.element cimport Element
 from pyufbx.elements.node cimport Node
 from pyufbx.props.prop cimport Prop
@@ -14,6 +14,7 @@ from pyufbx.animation.keyframe cimport Keyframe
 from pyufbx.animation.anim cimport AnimProp
 from pyufbx.animation.anim cimport AnimLayer
 from pyufbx.animation.bake_anim cimport BakedAnim
+from pyufbx.elements.node cimport BakedNode
 from pyufbx.elements.mesh cimport Mesh
 from pyufbx.elements.light cimport Light
 from pyufbx.elements.camera cimport Camera
@@ -279,6 +280,25 @@ cdef BakedAnim wrap_baked_anim(ufbx_baked_anim *ptr):
         obj = BakedAnim()
         obj._baked_anim = ptr
         _baked_anim_cache[ptr_key] = obj
+        return obj
+# Cache for BakedNode
+cdef object _baked_node_cache_lock = Lock()
+cdef object _baked_node_cache = WeakValueDictionary()
+
+cdef BakedNode wrap_baked_node(ufbx_baked_node *ptr):
+    if ptr == NULL:
+        return None
+    
+    cdef size_t ptr_key = <size_t>ptr
+    
+    with _baked_node_cache_lock:
+        cached = _baked_node_cache.get(ptr_key, None)
+        if cached is not None:
+            return <BakedNode>cached
+        
+        obj = BakedNode()
+        obj._baked_node = ptr
+        _baked_node_cache[ptr_key] = obj
         return obj
 # Cache for Mesh
 cdef object _mesh_cache_lock = Lock()

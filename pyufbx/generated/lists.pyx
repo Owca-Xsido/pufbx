@@ -1,6 +1,6 @@
 # cython: language_level=3
-from pyufbx.pyufbx cimport ufbx_element, ufbx_node, ufbx_prop, ufbx_transform, ufbx_bone, ufbx_anim, ufbx_anim_value, ufbx_anim_curve, ufbx_keyframe, ufbx_anim_prop, ufbx_anim_layer, ufbx_baked_anim, ufbx_mesh, ufbx_light, ufbx_camera, ufbx_empty, ufbx_line_curve, ufbx_nurbs_curve, ufbx_nurbs_surface, ufbx_nurbs_trim_surface, ufbx_nurbs_trim_boundary, ufbx_procedural_geometry, ufbx_stereo_camera, ufbx_camera_switcher, ufbx_marker, ufbx_lod_group, ufbx_skin_deformer, ufbx_skin_cluster, ufbx_blend_deformer, ufbx_blend_channel, ufbx_blend_shape, ufbx_cache_deformer, ufbx_cache_file, ufbx_material, ufbx_texture, ufbx_video, ufbx_shader, ufbx_shader_binding, ufbx_anim_stack, ufbx_display_layer, ufbx_selection_set, ufbx_selection_node, ufbx_character, ufbx_constraint, ufbx_audio_layer, ufbx_audio_clip, ufbx_pose, ufbx_metadata_object, ufbx_texture_file
-from .wrappers cimport wrap_element, wrap_node, wrap_prop, wrap_transform, wrap_bone, wrap_anim, wrap_anim_value, wrap_anim_curve, wrap_keyframe, wrap_anim_prop, wrap_anim_layer, wrap_baked_anim, wrap_mesh, wrap_light, wrap_camera, wrap_empty, wrap_line_curve, wrap_nurbs_curve, wrap_nurbs_surface, wrap_nurbs_trim_surface, wrap_nurbs_trim_boundary, wrap_procedural_geometry, wrap_stereo_camera, wrap_camera_switcher, wrap_marker, wrap_lod_group, wrap_skin_deformer, wrap_skin_cluster, wrap_blend_deformer, wrap_blend_channel, wrap_blend_shape, wrap_cache_deformer, wrap_cache_file, wrap_material, wrap_texture, wrap_video, wrap_shader, wrap_shader_binding, wrap_anim_stack, wrap_display_layer, wrap_selection_set, wrap_selection_node, wrap_character, wrap_constraint, wrap_audio_layer, wrap_audio_clip, wrap_pose, wrap_metadata_object, wrap_texture_file
+from pyufbx.pyufbx cimport ufbx_element, ufbx_node, ufbx_prop, ufbx_transform, ufbx_bone, ufbx_anim, ufbx_anim_value, ufbx_anim_curve, ufbx_keyframe, ufbx_anim_prop, ufbx_anim_layer, ufbx_baked_anim, ufbx_baked_node, ufbx_mesh, ufbx_light, ufbx_camera, ufbx_empty, ufbx_line_curve, ufbx_nurbs_curve, ufbx_nurbs_surface, ufbx_nurbs_trim_surface, ufbx_nurbs_trim_boundary, ufbx_procedural_geometry, ufbx_stereo_camera, ufbx_camera_switcher, ufbx_marker, ufbx_lod_group, ufbx_skin_deformer, ufbx_skin_cluster, ufbx_blend_deformer, ufbx_blend_channel, ufbx_blend_shape, ufbx_cache_deformer, ufbx_cache_file, ufbx_material, ufbx_texture, ufbx_video, ufbx_shader, ufbx_shader_binding, ufbx_anim_stack, ufbx_display_layer, ufbx_selection_set, ufbx_selection_node, ufbx_character, ufbx_constraint, ufbx_audio_layer, ufbx_audio_clip, ufbx_pose, ufbx_metadata_object, ufbx_texture_file
+from .wrappers cimport wrap_element, wrap_node, wrap_prop, wrap_transform, wrap_bone, wrap_anim, wrap_anim_value, wrap_anim_curve, wrap_keyframe, wrap_anim_prop, wrap_anim_layer, wrap_baked_anim, wrap_baked_node, wrap_mesh, wrap_light, wrap_camera, wrap_empty, wrap_line_curve, wrap_nurbs_curve, wrap_nurbs_surface, wrap_nurbs_trim_surface, wrap_nurbs_trim_boundary, wrap_procedural_geometry, wrap_stereo_camera, wrap_camera_switcher, wrap_marker, wrap_lod_group, wrap_skin_deformer, wrap_skin_cluster, wrap_blend_deformer, wrap_blend_channel, wrap_blend_shape, wrap_cache_deformer, wrap_cache_file, wrap_material, wrap_texture, wrap_video, wrap_shader, wrap_shader_binding, wrap_anim_stack, wrap_display_layer, wrap_selection_set, wrap_selection_node, wrap_character, wrap_constraint, wrap_audio_layer, wrap_audio_clip, wrap_pose, wrap_metadata_object, wrap_texture_file
 
 cdef class ElementList:
     """A list-like wrapper for ufbx_element pointers."""
@@ -480,6 +480,46 @@ cdef class BakedAnimList:
 
     def __repr__(self):
         return f"<BakedAnimList count={self._count}>"
+
+
+cdef class BakedNodeList:
+    """A list-like wrapper for ufbx_baked_node pointers."""
+
+    @staticmethod
+    cdef BakedNodeList create(ufbx_baked_node *data, size_t count):
+        cdef BakedNodeList obj = BakedNodeList.__new__(BakedNodeList)
+        obj._data = data
+        obj._count = count
+        return obj
+
+    def __len__(self):
+        return self._count
+
+    def __getitem__(self, idx):
+        cdef list result
+        cdef size_t i
+        cdef int start, stop, step
+
+        if isinstance(idx, slice):
+            start, stop, step = idx.indices(self._count)
+            result = []
+            for i in range(start, stop, step):
+                result.append(wrap_baked_node(&self._data[i]))
+            return result
+
+        if idx < 0:
+            idx += self._count
+        if idx < 0 or idx >= self._count:
+            raise IndexError("Index out of range")
+        return wrap_baked_node(&self._data[idx])
+
+    def __iter__(self):
+        cdef size_t i
+        for i in range(self._count):
+            yield wrap_baked_node(&self._data[i])
+
+    def __repr__(self):
+        return f"<BakedNodeList count={self._count}>"
 
 
 cdef class MeshList:

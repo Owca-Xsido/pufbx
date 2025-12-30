@@ -1,5 +1,25 @@
 import numpy as np
 
+cimport numpy as cnp
+from libc.string cimport memcpy
+
+from ..pyufbx cimport ufbx_baked_quat, ufbx_baked_quat_list
+
+# Define numpy dtype
+quat_dtype = np.dtype([
+    ('x', np.float64),
+    ('y', np.float64),
+    ('z', np.float64),
+    ('w', np.float64)
+], align=True)
+
+baked_quat_dtype = np.dtype([
+    ('time', np.float64),
+    ('value', quat_dtype),
+    ('flags', np.uint32)
+], align=True)
+
+
 
 cdef class Vec2Property:
     """Wrapper for 3D vector properties with conversion methods."""
@@ -124,3 +144,19 @@ cdef class QuatProperty:
         yield self.w
 
 
+cpdef cnp.ndarray fast_baked_quat_copy(size_t list_ptr):
+    """Fastest memcopy - direct pointer access"""
+    cdef ufbx_baked_quat_list* quat_list = <ufbx_baked_quat_list*>list_ptr
+    cdef size_t count = quat_list.count
+    cdef ufbx_baked_quat* data = quat_list.data
+    
+    if count == 0:
+        return np.empty(0, dtype=baked_quat_dtype)
+    
+    # Allocate result
+    cdef cnp.ndarray result = np.empty(count, dtype=baked_quat_dtype)
+    
+    # Single memcpy call - fastest possible
+    memcpy(<void*>result.data, <void*>data, count * sizeof(ufbx_baked_quat))
+    
+    return result

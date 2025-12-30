@@ -26,8 +26,8 @@ bool 	custom
 Custom ufbx_anim created by ufbx_create_anim(). """
 
 from ..core.math_types cimport Vec3Property
-from ..generated.lists cimport (AnimCurveList, AnimValueList, ElementList,
-                                NodeList)
+from ..generated.lists cimport (AnimCurveList, AnimValueList, BakedNodeList,
+                                ElementList, NodeList)
 from ..generated.wrappers cimport wrap_anim, wrap_anim_prop, wrap_anim_value
 from ..props.prop cimport PropsWrapper
 
@@ -114,9 +114,9 @@ cdef class BakedAnim:
     Animation descriptor used for evaluating baked animation.
     """
 
-    # @property
-    # def modified_nodes(self):
-        # return NodeList.create(self._baked_anim.nodes.data, self._baked_anim.nodes.count)
+    @property
+    def modified_nodes(self):
+        return BakedNodeList.create(self._baked_anim.nodes.data, self._baked_anim.nodes.count)
 
     # @property
     # def modified_elements(self):

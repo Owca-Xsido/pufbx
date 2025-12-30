@@ -1,4 +1,6 @@
 # props.pxd
+cimport numpy as cnp
+
 
 cdef class Vec2Property:
     cdef public double x, y
@@ -11,3 +13,5 @@ cdef class Vec4Property:
 
 cdef class QuatProperty:
     cdef public double x, y, z, w
+
+cpdef cnp.ndarray fast_baked_quat_copy(size_t list_ptr)

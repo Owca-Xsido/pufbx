@@ -16,6 +16,7 @@ LIST_TYPES = [
     ("AnimProp", "ufbx_anim_prop", "_anim_prop", "animation.anim"),
     ("AnimLayer", "ufbx_anim_layer", "_anim_layer", "animation.anim"),
     ("BakedAnim", "ufbx_baked_anim", "_baked_anim", "animation.bake_anim"),
+    ("BakedNode", "ufbx_baked_node", "_baked_node", "elements.node"),
     # Node Attributes (Common)
     ("Mesh", "ufbx_mesh", "_mesh", "elements.mesh"),
     ("Light", "ufbx_light", "_light", "elements.light"),
