@@ -7,7 +7,7 @@ from .node cimport Node
 
 include "../core/strings.pxi"
 
-cdef class Bone(Element):
+cdef class Bone:
     """Represents a bone in the FBX structure."""
 
     @property

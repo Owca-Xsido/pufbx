@@ -1,22 +1,20 @@
 # scene_skeleton.pyx
 # Extended Scene class with all ufbx_scene properties
-from pyufbx.pyufbx cimport *
-from pyufbx.pyufbx cimport ufbx_free_scene, ufbx_scene
-
 from .core.transform cimport Transform
 from .elements.bone cimport Bone
 from .elements.element cimport Element
 from .elements.node cimport Node
 from .props.prop cimport Prop, PropsWrapper
+from .pyufbx cimport UFBX_ELEMENT_TYPE_COUNT, ufbx_free_scene, ufbx_scene
 
 from .enums.element_types import ElementType
 from .enums.enums import InheritMode, RotationOrder
 from .enums.property_types import PropType
 
-from .generated.lists cimport (AnimCurveList, AnimLayerList, AnimValueList,
-                               BoneList, NodeList)
+from .generated.lists cimport *
 from .generated.wrappers cimport wrap_anim, wrap_node
 
+include "./core/strings.pxi"
 
 cdef class Scene:
 

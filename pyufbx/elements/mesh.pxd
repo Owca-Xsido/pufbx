@@ -1,9 +1,8 @@
-from pyufbx cimport ufbx_mesh
+# cython: language_level=3
+from pyufbx.pyufbx cimport ufbx_mesh
 
-from .element cimport Element
 
-
-cdef class Mesh(Element):
+cdef class Mesh:
     cdef ufbx_mesh *_mesh
     cdef object __weakref__
     

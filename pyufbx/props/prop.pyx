@@ -1,7 +1,6 @@
 
 from ..core.transform cimport Transform
 from ..elements.bone cimport Bone
-from ..elements.element cimport Element
 from ..elements.node cimport Node
 
 from ..core import Vec3Property, Vec4Property

@@ -2,90 +2,59 @@ from setuptools import setup, Extension, find_packages
 from Cython.Build import cythonize
 import numpy as np
 import os
+from pathlib import Path
 
-ROOT = os.path.abspath(os.path.dirname(__file__)) 
+ROOT = Path(__file__).parent.absolute()
 print("Project root:", ROOT)
+
 COMMON_INCLUDE_DIRS = [
     np.get_include(),
-    ROOT,               # allows "ufbx/ufbx.h"
+    str(ROOT),  # allows "ufbx/ufbx.h"
 ]
-extensions = [
-    Extension(
-        "pyufbx.ufbx_wrapper",
-        sources=[
-            "pyufbx/ufbx_wrapper.pyx",
-            "ufbx/ufbx.c",
-        ],
-        include_dirs=COMMON_INCLUDE_DIRS,
-    ),
-    Extension(
-        "pyufbx.elements.element",
-        ["pyufbx/elements/element.pyx"],
-        include_dirs=COMMON_INCLUDE_DIRS,
-    ),
-    Extension(
-        "pyufbx.elements.bone",
-        ["pyufbx/elements/bone.pyx"],
-        include_dirs=COMMON_INCLUDE_DIRS,
-    ),
-    Extension(
-        "pyufbx.elements.node",
-        ["pyufbx/elements/node.pyx"],
-        include_dirs=COMMON_INCLUDE_DIRS,
-    ),
-    Extension(
-        "pyufbx.core.transform",
-        ["pyufbx/core/transform.pyx"],
-        include_dirs=COMMON_INCLUDE_DIRS,
-    ),
-        Extension(
-        "pyufbx.core.math_types",
-        ["pyufbx/core/math_types.pyx"],
-        include_dirs=COMMON_INCLUDE_DIRS,
-    ),
-    Extension(
-        "pyufbx.props.prop",
-        ["pyufbx/props/prop.pyx"],
-        include_dirs=COMMON_INCLUDE_DIRS,
-    ),
-    Extension(
-        "pyufbx.scene",
-        ["pyufbx/scene.pyx", "ufbx/ufbx.c"],
-        include_dirs=COMMON_INCLUDE_DIRS,
-    ),
-    Extension(
-        "pyufbx.generated.lists",
-        ["pyufbx/generated/lists.pyx"],
-        include_dirs=COMMON_INCLUDE_DIRS,
-    ),
-    Extension(
-        "pyufbx.generated.wrappers",
-        ["pyufbx/generated/wrappers.pyx"],
-        include_dirs=COMMON_INCLUDE_DIRS,
-    ),
-    Extension(
-        "pyufbx.animation.anim",
-        ["pyufbx/animation/anim.pyx"],
-        include_dirs=COMMON_INCLUDE_DIRS,
+
+# Modules that need ufbx.c compiled with them
+NEEDS_UFBX_C = {
+    "pyufbx.ufbx_wrapper",
+    "pyufbx.scene",
+    "pyufbx.animation.bake_anim",
+}
+
+def find_pyx_files(base_dir="pyufbx"):
+    """Recursively find all .pyx files and convert to module names."""
+    base_path = ROOT / base_dir
+    pyx_files = base_path.rglob("*.pyx")
+    modules = []
     
-    ),
-    Extension("pyufbx.animation.anim_curve",
-        ["pyufbx/animation/anim_curve.pyx"],
-        include_dirs=COMMON_INCLUDE_DIRS,
-    ),
-    Extension('pyufbx.animation.keyframe',
-        ['pyufbx/animation/keyframe.pyx'],
-        include_dirs=COMMON_INCLUDE_DIRS,
-    ),
-    Extension('pyufbx.animation.bake_anim',
-        ['pyufbx/animation/bake_anim.pyx',
-                     "ufbx/ufbx.c"
-],
-        include_dirs=COMMON_INCLUDE_DIRS,
+    for pyx_path in pyx_files:
+        # Convert path to module name: pyufbx/elements/node.pyx -> pyufbx.elements.node
+        relative = pyx_path.relative_to(ROOT)
+        module_name = str(relative.with_suffix("")).replace(os.sep, ".")
+        modules.append(module_name)
+    
+    return modules
+
+# Auto-discover all .pyx files
+all_modules = find_pyx_files("pyufbx")
+extensions = []
+
+for module_name in all_modules:
+    pyx_path = module_name.replace(".", "/") + ".pyx"
+    
+    # Check if this module needs ufbx.c
+    if module_name in NEEDS_UFBX_C:
+        sources = [pyx_path, "ufbx/ufbx.c"]
+    else:
+        sources = [pyx_path]
+    
+    extensions.append(
+        Extension(
+            module_name,
+            sources=sources,
+            include_dirs=COMMON_INCLUDE_DIRS,
+        )
     )
-]
 
-
+print(f"Found {len(extensions)} Cython modules to build")
 
 setup(
     name="pyufbx",

@@ -12,13 +12,13 @@ cdef class BakedAnim:
     Animation descriptor used for evaluating baked animation.
     """
 
-    @property
-    def modified_nodes(self):
-        return NodeList.create(self._baked_anim.nodes.data, self._baked_anim.nodes.count)
+    # @property
+    # def modified_nodes(self):
+    #     return NodeList.create(self._baked_anim.nodes.data, self._baked_anim.nodes.count)
 
-    @property
-    def modified_elements(self):
-        return ElementList.create(self._baked_anim.elements.data, self._baked_anim.elements.count)
+    # @property
+    # def modified_elements(self):
+    #     return ElementList.create(self._baked_anim.elements.data, self._baked_anim.elements.count)
 
     @property
     def playback_time_begin(self):
