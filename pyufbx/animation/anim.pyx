@@ -109,41 +109,6 @@ cdef class Anim:
         return self._anim.custom
 
     
-cdef class BakedAnim:
-    """
-    Animation descriptor used for evaluating baked animation.
-    """
-
-    @property
-    def modified_nodes(self):
-        return BakedNodeList.create(self._baked_anim.nodes.data, self._baked_anim.nodes.count)
-
-    # @property
-    # def modified_elements(self):
-    #     return ElementList.create(self._baked_anim.elements.data, self._baked_anim.elements.count)
-
-    @property
-    def playback_time_begin(self):
-        return self._baked_anim.playback_time_begin
-
-    @property
-    def playback_time_end(self):
-        return self._baked_anim.playback_time_end
-
-    @property
-    def playback_duration(self):
-        return self._baked_anim.playback_duration
-
-    @property
-    def key_time_min(self):
-        return self._baked_anim.key_time_min
-    @property
-    def key_time_max(self):
-        return self._baked_anim.key_time_max
-    @property
-    def metadata(self):
-        return self._baked_anim.metadata
-
 
 cdef class AnimLayer:
     """ Animation layer descriptor used for layering multiple animations.

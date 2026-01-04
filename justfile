@@ -1,6 +1,6 @@
 alias b := build
 host := `uname -a`
-default: autoformat lint generate_list generate_wrappers build_dev test run
+default: autoformat lint generate_list generate_wrappers build_dev  run
 build_release: autoformat lint build test
 
 

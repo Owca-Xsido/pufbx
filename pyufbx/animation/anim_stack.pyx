@@ -1,6 +1,7 @@
 # cython: language_level=3
 from pyufbx.pyufbx cimport ufbx_anim_stack
 
+from ..generated.wrappers cimport wrap_anim
 from ..props.prop cimport PropsWrapper
 
 include "../core/strings.pxi"
@@ -41,3 +42,6 @@ cdef class AnimStack:
         # TODO: layers add implementation
         raise NotImplementedError("layers is not implemented yet.")
 
+    @property
+    def anim(self):
+        return wrap_anim(self._anim_stack.anim)

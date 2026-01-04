@@ -10,5 +10,5 @@ cdef class Node:
     cdef get_property_by_enum(self, enum)
 
 cdef class BakedNode:
-    cdef ufbx_baked_node *_node
+    cdef ufbx_baked_node *_baked_node
     cdef object __weakref__  # Enable weak references

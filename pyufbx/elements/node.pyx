@@ -287,12 +287,12 @@ cdef class Node:
         return self.get_property_by_enum(PropType.SCALING)
 
 
-class BakedNode:
+cdef class BakedNode:
     """Baked transform animation for a single node. From used in Bake Anim func"""
 
-    def __init__(self, baked_node):
-        """Initialize with a baked node data structure"""
-        self._baked_node = baked_node
+    # def __init__(self, baked_node):
+    #     """Initialize with a baked node data structure"""
+    #     self._baked_node = baked_node
     
     @property
     def element_id(self):
@@ -303,11 +303,6 @@ class BakedNode:
     def typed_id(self):
         """Return the typed ID of the baked node"""
         return self._baked_node.typed_id
-
-    @property
-    def name(self):
-        """Return the name of the baked node (accessible via the underlying element)"""
-        return self._baked_node.name
 
     @property
     def constant_translation(self): 
@@ -328,14 +323,15 @@ class BakedNode:
     @property
     def translation_keys(self):
         """Returns the list of baked translation vectors"""
-        return self._baked_node.translation_keys
+        return self._baked_node.translation_keys.count
 
     @property
     def rotation_keys(self):
         """Returns the list of baked rotation quaternions"""
-        return fast_baked_quat_copy(self._baked_node.rotation_keys)
-        
-    @property
-    def scale_keys(self):
-        """Returns the list of baked scale vectors"""
-        return self._baked_node.scale_keys
+        print(f"DEBUG: Accessing rotation_keys count {self._baked_node.rotation_keys.count}")
+        return fast_baked_quat_copy(<size_t>&self._baked_node.rotation_keys)  
+
+    # @property
+    # def scale_keys(self):
+    #     """Returns the list of baked scale vectors"""
+    #     return self._baked_node.scale_keys
