@@ -2,6 +2,7 @@
 from pyufbx.pyufbx cimport ufbx_line_curve
 
 from ..core.math_types cimport Vec3Property
+from ..generated.lists cimport NodeList
 from ..props.prop cimport PropsWrapper
 from .element cimport Element
 
@@ -50,24 +51,15 @@ cdef class LineCurve:
     def from_tessellated_nurbs(self):
         return <bint> self._line_curve.from_tessellated_nurbs
 
-    # Complex properties - TODO
     @property
     def instances(self):
-        # TODO: instances add implementation
-        raise NotImplementedError("instances is not implemented yet.")
+        return NodeList.create(self._line_curve.instances.data, self._line_curve.instances.count)
 
     @property
-    def control_points(self):
-        # TODO: control_points add implementation
-        raise NotImplementedError("control_points is not implemented yet.")
+    def num_control_points(self):
+        return self._line_curve.control_points.count
 
     @property
-    def point_indices(self):
-        # TODO: point_indices add implementation
-        raise NotImplementedError("point_indices is not implemented yet.")
-
-    @property
-    def segments(self):
-        # TODO: segments add implementation
-        raise NotImplementedError("segments is not implemented yet.")
+    def num_segments(self):
+        return self._line_curve.segments.count
 

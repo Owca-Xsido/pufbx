@@ -2,6 +2,7 @@
 from pyufbx.pyufbx cimport ufbx_light
 
 from ..core.math_types cimport Vec3Property
+from ..generated.lists cimport NodeList
 from ..props.prop cimport PropsWrapper
 from .element cimport Element
 
@@ -89,9 +90,7 @@ cdef class Light:
     def cast_shadows(self):
         return <bint> self._light.cast_shadows
 
-    # Complex properties - TODO
     @property
     def instances(self):
-        # TODO: instances add implementation
-        raise NotImplementedError("instances is not implemented yet.")
+        return NodeList.create(self._light.instances.data, self._light.instances.count)
 

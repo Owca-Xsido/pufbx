@@ -13,8 +13,8 @@ from ..enums.element_types import ElementType
 from ..enums.enums import InheritMode, RotationOrder
 from ..enums.property_types import PropType
 
-from ..generated.lists cimport ElementList, NodeList
-from ..generated.wrappers cimport wrap_node, wrap_transform
+from ..generated.lists cimport ElementList, MaterialList, NodeList
+from ..generated.wrappers cimport wrap_camera, wrap_light, wrap_mesh, wrap_node, wrap_pose, wrap_transform
 
 include "../core/strings.pxi"
 
@@ -75,18 +75,21 @@ cdef class Node:
 
     @property
     def mesh(self):
-        # TODO: mesh add implementation
-        raise NotImplementedError("mesh is not implemented yet.")
+        if self._node.mesh == NULL:
+            return None
+        return wrap_mesh(self._node.mesh)
 
     @property
     def light(self):
-        # TODO: light add implementation
-        raise NotImplementedError("light is not implemented yet")
+        if self._node.light == NULL:
+            return None
+        return wrap_light(self._node.light)
 
     @property
     def camera(self):
-        # TODO: camera add implementation
-        raise NotImplementedError("camera is not implemented yet")
+        if self._node.camera == NULL:
+            return None
+        return wrap_camera(self._node.camera)
 
     @property
     def bone(self):
@@ -108,14 +111,15 @@ cdef class Node:
 
     @property
     def geometry_transform_helper(self):
-        # TODO: geometry_transform_helper add implementation
-        raise NotImplementedError(
-            "geometry_transform_helper is not implemented yet.")
+        if self._node.geometry_transform_helper == NULL:
+            return None
+        return wrap_node(self._node.geometry_transform_helper)
 
     @property
     def scale_helper(self):
-        # TODO: scale_helper add implementation
-        raise NotImplementedError("scale_helper is not implemented yet.")
+        if self._node.scale_helper == NULL:
+            return None
+        return wrap_node(self._node.scale_helper)
 
     @property
     def attrib_type(self):
@@ -225,13 +229,13 @@ cdef class Node:
 
     @property
     def materials(self):
-        # TODO: materials add implementation
-        raise NotImplementedError("materials is not implemented yet.")
+        return MaterialList.create(self._node.materials.data, self._node.materials.count)
 
     @property
     def bind_pose(self):
-        # TODO: bind_pose add implementation
-        raise NotImplementedError("bind_pose is not implemented yet.")
+        if self._node.bind_pose == NULL:
+            return None
+        return wrap_pose(self._node.bind_pose)
 
     @property
     def is_visible(self):

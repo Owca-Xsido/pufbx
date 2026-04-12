@@ -2,6 +2,7 @@
 from pyufbx.pyufbx cimport ufbx_camera
 
 from ..core.math_types cimport Vec2Property
+from ..generated.lists cimport NodeList
 from ..props.prop cimport PropsWrapper
 from .element cimport Element
 
@@ -140,14 +141,7 @@ cdef class Camera:
     def squeeze_ratio(self):
         return self._camera.squeeze_ratio
 
-    # Complex properties - TODO
     @property
     def instances(self):
-        # TODO: instances add implementation
-        raise NotImplementedError("instances is not implemented yet.")
-
-    @property
-    def projection_axes(self):
-        # TODO: projection_axes add implementation
-        raise NotImplementedError("projection_axes is not implemented yet.")
+        return NodeList.create(self._camera.instances.data, self._camera.instances.count)
 

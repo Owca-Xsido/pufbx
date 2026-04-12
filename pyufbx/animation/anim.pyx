@@ -26,8 +26,8 @@ bool 	custom
 Custom ufbx_anim created by ufbx_create_anim(). """
 
 from ..core.math_types cimport Vec3Property
-from ..generated.lists cimport (AnimCurveList, AnimValueList, BakedNodeList,
-                                ElementList, NodeList)
+from ..generated.lists cimport (AnimCurveList, AnimLayerList, AnimValueList,
+                                BakedNodeList, ElementList, NodeList)
 from ..generated.wrappers cimport wrap_anim, wrap_anim_prop, wrap_anim_value
 from ..props.prop cimport PropsWrapper
 
@@ -82,23 +82,7 @@ cdef class Anim:
 
     @property
     def layers(self):
-        # TODO: layers add implementation
-        raise NotImplementedError("Animation layers are not yet implemented.")
-    
-    @property
-    def override_layer_weights(self):
-        # TODO: override_layer_weights add implementation
-        raise NotImplementedError("Override layer weights are not yet implemented.")
-
-    @property
-    def prop_overrides(self):
-        # TODO: prop_overrides add implementation
-        raise NotImplementedError("Property overrides are not yet implemented.")
-
-    @property
-    def transform_overrides(self):
-        # TODO: transform_overrides add implementation
-        raise NotImplementedError("Transform overrides are not yet implemented.")
+        return AnimLayerList.create(self._anim.layers.data, self._anim.layers.count)
 
     @property
     def ignore_connections(self):

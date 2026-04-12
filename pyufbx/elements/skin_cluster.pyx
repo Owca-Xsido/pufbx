@@ -1,6 +1,7 @@
 # cython: language_level=3
 from pyufbx.pyufbx cimport ufbx_skin_cluster
 
+from ..generated.wrappers cimport wrap_node
 from ..props.prop cimport PropsWrapper
 from .element cimport Element
 
@@ -36,14 +37,13 @@ cdef class SkinCluster:
     def properties(self):
         return PropsWrapper.create(&self._skin_cluster.props)
 
-    # Complex properties - TODO
     @property
-    def bone(self):
-        # TODO: bone add implementation
-        raise NotImplementedError("bone is not implemented yet.")
+    def bone_node(self):
+        if self._skin_cluster.bone_node == NULL:
+            return None
+        return wrap_node(self._skin_cluster.bone_node)
 
     @property
-    def weights(self):
-        # TODO: weights add implementation
-        raise NotImplementedError("weights is not implemented yet.")
+    def num_weights(self):
+        return self._skin_cluster.num_weights
 

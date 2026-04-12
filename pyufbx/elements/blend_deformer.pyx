@@ -1,6 +1,7 @@
 # cython: language_level=3
 from pyufbx.pyufbx cimport ufbx_blend_deformer
 
+from ..generated.lists cimport BlendChannelList
 from ..props.prop cimport PropsWrapper
 from .element cimport Element
 
@@ -36,9 +37,7 @@ cdef class BlendDeformer:
     def properties(self):
         return PropsWrapper.create(&self._blend_deformer.props)
 
-    # Complex properties - TODO
     @property
     def channels(self):
-        # TODO: channels add implementation
-        raise NotImplementedError("channels is not implemented yet.")
+        return BlendChannelList.create(self._blend_deformer.channels.data, self._blend_deformer.channels.count)
 

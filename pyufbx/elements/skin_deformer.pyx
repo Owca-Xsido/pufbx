@@ -1,6 +1,7 @@
 # cython: language_level=3
 from pyufbx.pyufbx cimport ufbx_skin_deformer
 
+from ..generated.lists cimport SkinClusterList
 from ..props.prop cimport PropsWrapper
 from .element cimport Element
 
@@ -36,9 +37,7 @@ cdef class SkinDeformer:
     def properties(self):
         return PropsWrapper.create(&self._skin_deformer.props)
 
-    # Complex properties - TODO
     @property
     def clusters(self):
-        # TODO: clusters add implementation
-        raise NotImplementedError("clusters is not implemented yet.")
+        return SkinClusterList.create(self._skin_deformer.clusters.data, self._skin_deformer.clusters.count)
 

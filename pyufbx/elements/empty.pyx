@@ -1,6 +1,7 @@
 # cython: language_level=3
 from pyufbx.pyufbx cimport ufbx_empty
 
+from ..generated.lists cimport NodeList
 from ..props.prop cimport PropsWrapper
 from .element cimport Element
 
@@ -36,9 +37,7 @@ cdef class Empty:
     def properties(self):
         return PropsWrapper.create(&self._empty.props)
 
-    # Complex properties - TODO
     @property
     def instances(self):
-        # TODO: instances add implementation
-        raise NotImplementedError("instances is not implemented yet.")
+        return NodeList.create(self._empty.instances.data, self._empty.instances.count)
 

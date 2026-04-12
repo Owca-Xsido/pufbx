@@ -41,9 +41,7 @@ cdef class BlendChannel:
     def weight(self):
         return self._blend_channel.weight
 
-    # Complex properties - TODO
     @property
-    def shapes(self):
-        # TODO: shapes add implementation
-        raise NotImplementedError("shapes is not implemented yet.")
+    def keyframe_count(self):
+        return self._blend_channel.keyframes.count
 
