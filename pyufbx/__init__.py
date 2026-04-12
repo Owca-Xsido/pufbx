@@ -2,10 +2,22 @@
 
 __version__ = "0.1.0"
 
+# Load ufbx_wrapper with RTLD_GLOBAL so its ufbx C symbols (string constants,
+# ufbx_free_scene, ufbx_bake_anim, etc.) are visible to all other extension
+# modules. ufbx uses pointer identity for interned strings, so all ufbx code
+# must share a single compiled copy. This must run before any other pyufbx
+# extension modules are imported.
+import ctypes as _ctypes
+import importlib.util as _importlib_util
+
+_spec = _importlib_util.find_spec("pyufbx.ufbx_wrapper")
+if _spec and _spec.origin:
+    _ctypes.CDLL(_spec.origin, mode=_ctypes.RTLD_GLOBAL)
+
 # Only import the entry point eagerly
 from pyufbx.ufbx_wrapper import load_fbx
 
-__all__ = ["load_fbx", "bake_anim"]
+__all__ = ["load_fbx", "bake_anim", "anim_to_array"]
 
 # Lazy import everything else
 
@@ -60,6 +72,10 @@ def __getattr__(name):
         from pyufbx.animation.bake_anim import bake_anim
 
         return bake_anim
+    elif name == "anim_to_array":
+        from pyufbx.animation.bake_anim import anim_to_array
+
+        return anim_to_array
     elif name == "PropType":
         from pyufbx.enums import PropType
 

@@ -3,7 +3,8 @@
 # cython: language_level=3
 
 from ..core.math_types cimport (QuatProperty, Vec2Property, Vec3Property,
-                                Vec4Property, fast_baked_quat_copy)
+                                Vec4Property, fast_baked_quat_copy,
+                                fast_baked_vec3_copy)
 from ..props.prop cimport Prop, PropsWrapper
 from .bone cimport Bone
 from .element cimport Element
@@ -322,16 +323,12 @@ cdef class BakedNode:
 
     @property
     def translation_keys(self):
-        """Returns the list of baked translation vectors"""
-        return self._baked_node.translation_keys.count
+        return fast_baked_vec3_copy(<size_t>&self._baked_node.translation_keys)
 
     @property
     def rotation_keys(self):
-        """Returns the list of baked rotation quaternions"""
-        print(f"DEBUG: Accessing rotation_keys count {self._baked_node.rotation_keys.count}")
-        return fast_baked_quat_copy(<size_t>&self._baked_node.rotation_keys)  
+        return fast_baked_quat_copy(<size_t>&self._baked_node.rotation_keys)
 
-    # @property
-    # def scale_keys(self):
-    #     """Returns the list of baked scale vectors"""
-    #     return self._baked_node.scale_keys
+    @property
+    def scale_keys(self):
+        return fast_baked_vec3_copy(<size_t>&self._baked_node.scale_keys)

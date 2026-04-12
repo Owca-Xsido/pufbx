@@ -1,5 +1,7 @@
 from libc.string cimport memset
 
+import numpy as np
+
 from ..animation.anim cimport Anim
 from ..generated.lists cimport BakedNodeList
 from ..generated.wrappers cimport wrap_baked_anim
@@ -143,4 +145,62 @@ def bake_anim(Scene scene, Anim anim=None, *,
     if result == NULL:
         # TODO: Raise a proper UFBXError exception
         raise NotImplementedError(f"ERORR HERE: {error.message.decode('utf-8')}")
+
     return wrap_baked_anim(result)
+
+
+def anim_to_array(filename, anim_index=0, **bake_opts):
+    """
+    Load an FBX file, bake its animation, and return the result as a numpy array.
+
+    Returns:
+        data:       float64 array of shape (num_nodes, num_frames, 10)
+                    last axis: [tx, ty, tz, rx, ry, rz, rw, sx, sy, sz]
+        times:      float64 array of shape (num_frames,) — keyframe times in seconds
+        node_names: list of node names, length num_nodes
+    """
+    from ..ufbx_wrapper import load_fbx
+
+    scene = load_fbx(filename)
+    anim = scene.anim_stacks[anim_index].anim
+    baked = bake_anim(scene, anim, **bake_opts)
+
+    nodes = baked.modified_nodes
+    num_nodes = len(nodes)
+
+    if num_nodes == 0:
+        return (np.empty((0, 0, 10), dtype=np.float64),
+                np.empty(0, dtype=np.float64),
+                [])
+
+    # All nodes are resampled to the same times — use first node's rotation keys for times.
+    times = nodes[0].rotation_keys['time']
+    num_frames = len(times)
+
+    out = np.empty((num_nodes, num_frames, 10), dtype=np.float64)
+    node_names = []
+
+    for i, node in enumerate(nodes):
+        t_keys = node.translation_keys
+        r_keys = node.rotation_keys
+        s_keys = node.scale_keys
+
+        # Constant channels produce fewer keyframes — interpolate to full timeline.
+        def _expand(keys, cols, out_cols):
+            vals = keys['value']
+            t_src = keys['time']
+            for j, col in enumerate(cols):
+                src = vals[list(vals.dtype.names)[j]]
+                if len(src) == num_frames:
+                    out[i, :, out_cols[j]] = src
+                else:
+                    out[i, :, out_cols[j]] = np.interp(times, t_src, src)
+
+        _expand(t_keys, ['x','y','z'], [0,1,2])
+        _expand(r_keys, ['x','y','z','w'], [3,4,5,6])
+        _expand(s_keys, ['x','y','z'], [7,8,9])
+
+        scene_node = scene.nodes[node.typed_id]
+        node_names.append(scene_node.name)
+
+    return out, times, node_names

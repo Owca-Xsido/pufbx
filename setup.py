@@ -12,11 +12,16 @@ COMMON_INCLUDE_DIRS = [
     str(ROOT),  # allows "ufbx/ufbx.h"
 ]
 
-# Modules that need ufbx.c compiled with them
+# IMPORTANT: ufbx.c must be compiled into exactly ONE extension module.
+# ufbx interns strings and compares them by pointer identity. If ufbx.c is
+# compiled into multiple .so files, each gets its own string constants at
+# different addresses, and cross-module comparisons silently fail (e.g.
+# bake_anim produces 2 identity keyframes instead of real animation data).
+# pyufbx/__init__.py loads ufbx_wrapper with RTLD_GLOBAL so its symbols are
+# shared with all other extensions. See tests/test_bake_anim.py for the
+# regression test that catches this.
 NEEDS_UFBX_C = {
     "pyufbx.ufbx_wrapper",
-    "pyufbx.scene",
-    "pyufbx.animation.bake_anim",
 }
 
 def find_pyx_files(base_dir="pyufbx"):
