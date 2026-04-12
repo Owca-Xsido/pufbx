@@ -15,3 +15,4 @@ cdef class QuatProperty:
     cdef public double x, y, z, w
 
 cpdef cnp.ndarray fast_baked_quat_copy(size_t list_ptr)
+cpdef cnp.ndarray fast_baked_vec3_copy(size_t list_ptr)

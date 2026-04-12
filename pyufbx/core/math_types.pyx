@@ -3,7 +3,7 @@ import numpy as np
 cimport numpy as cnp
 from libc.string cimport memcpy
 
-from ..pyufbx cimport ufbx_baked_quat, ufbx_baked_quat_list
+from ..pyufbx cimport ufbx_baked_quat, ufbx_baked_quat_list, ufbx_baked_vec3, ufbx_baked_vec3_list
 
 # Define numpy dtype
 quat_dtype = np.dtype([
@@ -16,6 +16,18 @@ quat_dtype = np.dtype([
 baked_quat_dtype = np.dtype([
     ('time', np.float64),
     ('value', quat_dtype),
+    ('flags', np.uint32)
+], align=True)
+
+vec3_dtype = np.dtype([
+    ('x', np.float64),
+    ('y', np.float64),
+    ('z', np.float64)
+], align=True)
+
+baked_vec3_dtype = np.dtype([
+    ('time', np.float64),
+    ('value', vec3_dtype),
     ('flags', np.uint32)
 ], align=True)
 
@@ -145,18 +157,20 @@ cdef class QuatProperty:
 
 
 cpdef cnp.ndarray fast_baked_quat_copy(size_t list_ptr):
-    """Fastest memcopy - direct pointer access"""
     cdef ufbx_baked_quat_list* quat_list = <ufbx_baked_quat_list*>list_ptr
     cdef size_t count = quat_list.count
-    cdef ufbx_baked_quat* data = quat_list.data
-    
     if count == 0:
         return np.empty(0, dtype=baked_quat_dtype)
-    
-    # Allocate result
     cdef cnp.ndarray result = np.empty(count, dtype=baked_quat_dtype)
-    
-    # Single memcpy call - fastest possible
-    memcpy(<void*>result.data, <void*>data, count * sizeof(ufbx_baked_quat))
-    
+    memcpy(<void*>result.data, <void*>quat_list.data, count * sizeof(ufbx_baked_quat))
+    return result
+
+
+cpdef cnp.ndarray fast_baked_vec3_copy(size_t list_ptr):
+    cdef ufbx_baked_vec3_list* vec3_list = <ufbx_baked_vec3_list*>list_ptr
+    cdef size_t count = vec3_list.count
+    if count == 0:
+        return np.empty(0, dtype=baked_vec3_dtype)
+    cdef cnp.ndarray result = np.empty(count, dtype=baked_vec3_dtype)
+    memcpy(<void*>result.data, <void*>vec3_list.data, count * sizeof(ufbx_baked_vec3))
     return result
