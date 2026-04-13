@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 
-Fast, Pythonic bindings for the [ufbx](https://github.com/ufbx/ufbx) FBX file loader.
+Fast, Pythonic bindings for the [ufbx](https://github.com/ufbx/ufbx) FBX file loader by [Samuli Raivio (@bqqbarbhg)](https://github.com/bqqbarbhg).
 
 **pyufbx** wraps the battle-tested C library *ufbx* via Cython, giving you
 high-performance access to FBX scene data — nodes, meshes, bones, animations,
@@ -106,14 +106,16 @@ isort pyufbx/ tests/
 
 ## How it works
 
-pyufbx vendors the [ufbx](https://github.com/ufbx/ufbx) C source and compiles
-it into a shared Cython extension. On Linux/macOS, `ufbx_wrapper` is loaded with
-`RTLD_GLOBAL` so all extension modules share a single copy of the ufbx C symbols
-(required for ufbx string interning via pointer identity).
+pyufbx vendors the [ufbx](https://github.com/ufbx/ufbx) C source (by
+[Samuli Raivio](https://github.com/bqqbarbhg)) and compiles it into a shared
+Cython extension. On Linux/macOS, `ufbx_wrapper` is loaded with `RTLD_GLOBAL`
+so all extension modules share a single copy of the ufbx C symbols (required
+for ufbx string interning via pointer identity).
 
 ## License
 
 [MIT](LICENSE) — see the license file for details.
 
-The vendored ufbx library is Copyright (c) 2020 Samuli Raivio, available under
-the MIT License or the Unlicense (public domain) at your option.
+The vendored [ufbx](https://github.com/ufbx/ufbx) library is Copyright (c) 2020
+[Samuli Raivio (@bqqbarbhg)](https://github.com/bqqbarbhg), available under the
+MIT License or the Unlicense (public domain) at your option.
