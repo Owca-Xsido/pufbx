@@ -1,0 +1,46 @@
+# AGENTS.md
+
+## Cursor Cloud specific instructions
+
+**pyufbx** is a Python/Cython binding for the [ufbx](https://github.com/ufbx/ufbx) FBX file loader. It is a single-package library (not a monorepo) with no external services, databases, or network dependencies.
+
+### Prerequisites
+
+- **Python 3.12** with dev headers (`python3.12-dev`) — needed to compile the Cython/C extensions.
+- **gcc** — the vendored `ufbx/ufbx.c` is compiled during install.
+- **uv** — the project's preferred package manager (see `justfile`).
+
+### Build & install (editable, dev)
+
+```
+uv venv --python 3.12 .venv
+source .venv/bin/activate
+uv pip install -e ".[dev]"
+```
+
+The editable install compiles ~51 Cython `.pyx` modules and the C library. Expect the first build to take ~1 minute.
+
+### Running tests
+
+```
+python -m pytest tests/ -v
+```
+
+All 49 tests should pass. The single test fixture lives at `tests/fixtures/drunk_idle_turn_360_R_001.fbx`.
+
+### Lint / format
+
+The `justfile` uses `black`, `isort`, and `autopep8`. Note: the existing codebase has some pre-existing lint issues that are not regressions.
+
+```
+python -m black --check pyufbx/ tests/
+python -m isort --check pyufbx/ tests/
+```
+
+### Gotchas
+
+- `.python-version` says `3.14`, but the CI uses Python 3.11 and the system Python 3.12 works fine. Using 3.12 avoids potential alpha-version instability.
+- The build requires `python3.12-dev` (or equivalent) for `Python.h`. Without it the C extension compilation fails.
+- On Linux/macOS, `ufbx_wrapper` is loaded with `RTLD_GLOBAL` so all extension modules share C symbols. This is handled automatically by `pyufbx/__init__.py`.
+- `anim_to_array()` takes a filename string (not a `Scene` object) and returns a `(data, times, names)` tuple.
+- `bake_anim()` takes a `Scene` object and returns a `BakedAnim` (not a dict); use `.modified_nodes` to iterate.
