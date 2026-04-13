@@ -40,19 +40,37 @@ for i in range(1, 11):
 # Animate cube chain
 # -------------------------------------------------------
 start_frame = 1
+mid_frame = 50
 end_frame = 100
 
 for index, cube in enumerate(cubes, start=1):
 
     cube.rotation_mode = "XYZ"
 
-    # Keyframe at start
+    cube.location = (index * 2.0, 0, 0)
     cube.rotation_euler = (0, 0, 0)
+    cube.scale = (1, 1, 1)
+    cube.keyframe_insert("location", frame=start_frame)
     cube.keyframe_insert("rotation_euler", frame=start_frame)
+    cube.keyframe_insert("scale", frame=start_frame)
 
-    # Final rotation — predictable for tests
+    cube.location = (index * 2.0 + index * 0.3, index * 0.5, index * 0.3)
+    cube.rotation_euler = (
+        math.radians(index * 10),
+        math.radians(index * 15),
+        math.radians(index * 50),
+    )
+    cube.scale = (1 + index * 0.01, 1 + index * 0.01, 1 + index * 0.01)
+    cube.keyframe_insert("location", frame=mid_frame)
+    cube.keyframe_insert("rotation_euler", frame=mid_frame)
+    cube.keyframe_insert("scale", frame=mid_frame)
+
+    cube.location = (index * 2.0, index * 1.0, 0)
     cube.rotation_euler = (0, 0, math.radians(index * 100))
+    cube.scale = (1, 1, 1)
+    cube.keyframe_insert("location", frame=end_frame)
     cube.keyframe_insert("rotation_euler", frame=end_frame)
+    cube.keyframe_insert("scale", frame=end_frame)
 
 # -------------------------------------------------------
 # Create armature with bone chain
@@ -86,11 +104,30 @@ bpy.ops.object.mode_set(mode="POSE")
 for i, pbone in enumerate(arm.pose.bones, start=1):
     pbone.rotation_mode = "XYZ"
 
+    pbone.location = (0, 0, 0)
     pbone.rotation_euler = (0, 0, 0)
+    pbone.scale = (1, 1, 1)
+    pbone.keyframe_insert("location", frame=start_frame)
     pbone.keyframe_insert("rotation_euler", frame=start_frame)
+    pbone.keyframe_insert("scale", frame=start_frame)
 
+    pbone.location = (i * 0.05, i * 0.05, i * 0.1)
+    pbone.rotation_euler = (
+        math.radians(i * 5),
+        math.radians(i * 10),
+        math.radians(i * 25),
+    )
+    pbone.scale = (1 + i * 0.005, 1 + i * 0.005, 1 + i * 0.005)
+    pbone.keyframe_insert("location", frame=mid_frame)
+    pbone.keyframe_insert("rotation_euler", frame=mid_frame)
+    pbone.keyframe_insert("scale", frame=mid_frame)
+
+    pbone.location = (0, 0, 0)
     pbone.rotation_euler = (0, 0, math.radians(i * 50))
+    pbone.scale = (1, 1, 1)
+    pbone.keyframe_insert("location", frame=end_frame)
     pbone.keyframe_insert("rotation_euler", frame=end_frame)
+    pbone.keyframe_insert("scale", frame=end_frame)
 
 # -------------------------------------------------------
 # Export FBX
