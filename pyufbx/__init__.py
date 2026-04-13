@@ -2,17 +2,20 @@
 
 __version__ = "0.1.0"
 
-# Load ufbx_wrapper with RTLD_GLOBAL so its ufbx C symbols (string constants,
-# ufbx_free_scene, ufbx_bake_anim, etc.) are visible to all other extension
-# modules. ufbx uses pointer identity for interned strings, so all ufbx code
-# must share a single compiled copy. This must run before any other pyufbx
-# extension modules are imported.
+# On Linux/macOS: load ufbx_wrapper with RTLD_GLOBAL so its ufbx C symbols
+# (string constants, ufbx_free_scene, ufbx_bake_anim, etc.) are visible to
+# all other extension modules. ufbx uses pointer identity for interned strings,
+# so all ufbx code must share a single compiled copy.
+# On Windows: RTLD_GLOBAL is a no-op; each module that needs ufbx symbols
+# has ufbx.c compiled into it directly (see setup.py).
+import sys as _sys
 import ctypes as _ctypes
 import importlib.util as _importlib_util
 
-_spec = _importlib_util.find_spec("pyufbx.ufbx_wrapper")
-if _spec and _spec.origin:
-    _ctypes.CDLL(_spec.origin, mode=_ctypes.RTLD_GLOBAL)
+if _sys.platform != "win32":
+    _spec = _importlib_util.find_spec("pyufbx.ufbx_wrapper")
+    if _spec and _spec.origin:
+        _ctypes.CDLL(_spec.origin, mode=_ctypes.RTLD_GLOBAL)
 
 # Only import the entry point eagerly
 from pyufbx.ufbx_wrapper import load_fbx

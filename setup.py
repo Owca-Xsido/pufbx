@@ -1,3 +1,4 @@
+import sys
 from setuptools import setup, Extension, find_packages
 from Cython.Build import cythonize
 import numpy as np
@@ -12,17 +13,27 @@ COMMON_INCLUDE_DIRS = [
     str(ROOT),  # allows "ufbx/ufbx.h"
 ]
 
-# IMPORTANT: ufbx.c must be compiled into exactly ONE extension module.
-# ufbx interns strings and compares them by pointer identity. If ufbx.c is
-# compiled into multiple .so files, each gets its own string constants at
-# different addresses, and cross-module comparisons silently fail (e.g.
-# bake_anim produces 2 identity keyframes instead of real animation data).
-# pyufbx/__init__.py loads ufbx_wrapper with RTLD_GLOBAL so its symbols are
-# shared with all other extensions. See tests/test_bake_anim.py for the
-# regression test that catches this.
-NEEDS_UFBX_C = {
-    "pyufbx.ufbx_wrapper",
-}
+# ufbx uses pointer identity for interned strings, so ideally all code shares
+# a single compiled copy of ufbx.c.
+#
+# On Linux/macOS: compile ufbx.c only into ufbx_wrapper, then load it with
+# RTLD_GLOBAL in __init__.py so all other extensions share its symbols.
+#
+# On Windows: RTLD_GLOBAL is a no-op and DLLs cannot share symbols without
+# explicit import libraries. We compile ufbx.c into every module that calls
+# ufbx functions directly (scene, bake_anim). This means bake_anim string
+# interning is broken on Windows until a proper shared DLL approach is added.
+if sys.platform == "win32":
+    NEEDS_UFBX_C = {
+        "pyufbx.ufbx_wrapper",
+        "pyufbx.scene",
+        "pyufbx.animation.bake_anim",
+    }
+else:
+    # RTLD_GLOBAL approach — see __init__.py and tests/test_bake_anim.py
+    NEEDS_UFBX_C = {
+        "pyufbx.ufbx_wrapper",
+    }
 
 def find_pyx_files(base_dir="pyufbx"):
     """Recursively find all .pyx files and convert to module names."""
