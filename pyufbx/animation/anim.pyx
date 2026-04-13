@@ -56,7 +56,9 @@ cdef class AnimValue:
         
     @property
     def default_value(self):
-        return Vec3Property(*self._anim_value.default_value)
+        return Vec3Property(self._anim_value.default_value.x,
+                            self._anim_value.default_value.y,
+                            self._anim_value.default_value.z)
 
     @property
     def curves(self):
@@ -86,11 +88,11 @@ cdef class Anim:
 
     @property
     def ignore_connections(self):
-        return self._anim.ignore_connections
+        return bool(self._anim.ignore_connections)
     
     @property
     def custom(self):
-        return self._anim.custom
+        return bool(self._anim.custom)
 
     
 

@@ -58,11 +58,9 @@ Thumbs.db
 *.gcda
 uv.lock
 
+# FBX files are large — ignore by default, but allow test fixtures
 *.fbx
-
-
-# Sample fbx files (if any) used for testing or examples
-samples/*.fbx
+!tests/fixtures/*.fbx
 
 *.test.py
 

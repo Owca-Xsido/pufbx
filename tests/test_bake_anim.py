@@ -9,7 +9,7 @@ import numpy as np
 import pytest
 import pyufbx
 
-SAMPLE_FBX = "samples/drunk_idle_turn_360_R_001.fbx"
+SAMPLE_FBX = "tests/fixtures/drunk_idle_turn_360_R_001.fbx"
 
 
 @pytest.fixture(scope="module")
