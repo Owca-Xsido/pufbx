@@ -22,6 +22,7 @@ SOFTWARE.
 
 ---
 
-This project vendors the ufbx library (https://github.com/ufbx/ufbx),
-which is available under the MIT License or the Unlicense (public domain),
-at your option. Copyright (c) 2020 Samuli Raivio.
+This project vendors the ufbx library (https://github.com/ufbx/ufbx)
+by Samuli Raivio (https://github.com/bqqbarbhg), which is available
+under the MIT License or the Unlicense (public domain), at your option.
+Copyright (c) 2020 Samuli Raivio.
