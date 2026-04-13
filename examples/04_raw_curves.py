@@ -9,7 +9,7 @@ the resampled quaternion output from bake_anim().
 """
 import pyufbx
 
-scene = pyufbx.load_fbx("samples/drunk_idle_turn_360_R_001.fbx")
+scene = pyufbx.load_fbx("tests/fixtures/drunk_idle_turn_360_R_001.fbx")
 anim = scene.anim_stacks[0].anim
 
 for layer in anim.layers:
@@ -31,6 +31,6 @@ for layer in anim.layers:
         k0 = keyframes[0]
         print(f"  keyframe[0]: time={k0['time']:.4f}s  value={k0['value']:.4f}  "
               f"interp={k0['interpolation']}  "
-              f"left=({k0['left_dx']:.4f}, {k0['left_dy']:.4f})  "
-              f"right=({k0['right_dx']:.4f}, {k0['right_dy']:.4f})")
+              f"left=({k0['left']['dx']:.4f}, {k0['left']['dy']:.4f})  "
+              f"right=({k0['right']['dx']:.4f}, {k0['right']['dy']:.4f})")
         break  # just show first anim_value for brevity
