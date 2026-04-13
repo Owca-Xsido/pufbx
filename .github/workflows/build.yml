@@ -9,6 +9,26 @@ on:
     types: [published]
 
 jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install lint tools
+        run: pip install black isort
+
+      - name: Check formatting (black)
+        run: black --check pyufbx/ tests/
+
+      - name: Check import order (isort)
+        run: isort --check pyufbx/ tests/
+
   test:
     name: Test (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
@@ -33,7 +53,7 @@ jobs:
   build_wheels:
     name: Build wheels (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
-    needs: test
+    needs: [lint, test]
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
@@ -46,7 +66,6 @@ jobs:
         env:
           CIBW_BUILD: "cp39-* cp310-* cp311-* cp312-* cp313-*"
           CIBW_SKIP: "*-win32 *-manylinux_i686 pp*"
-          # Only run bake_anim tests on platforms where RTLD_GLOBAL works
           CIBW_TEST_REQUIRES: pytest numpy
           CIBW_TEST_COMMAND: "python -m pytest {project}/tests/test_bake_anim.py -q --import-mode=importlib"
           CIBW_TEST_SKIP: "*-win_amd64"
@@ -59,7 +78,7 @@ jobs:
   build_sdist:
     name: Build source distribution
     runs-on: ubuntu-latest
-    needs: test
+    needs: [lint, test]
 
     steps:
       - uses: actions/checkout@v4
@@ -79,12 +98,13 @@ jobs:
           path: dist/*.tar.gz
 
   release:
-    name: Attach wheels to GitHub Release
+    name: Publish to GitHub Releases & PyPI
     runs-on: ubuntu-latest
     needs: [build_wheels, build_sdist]
     if: github.event_name == 'release'
     permissions:
       contents: write
+      id-token: write
 
     steps:
       - uses: actions/download-artifact@v4
@@ -102,3 +122,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: dist/*
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

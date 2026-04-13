@@ -1,6 +1,11 @@
 """PyUFBX - Python FBX file parser"""
 
-__version__ = "0.1.0"
+from importlib.metadata import version as _get_version
+
+try:
+    __version__ = _get_version("pyufbx")
+except Exception:
+    __version__ = "0.0.0"
 
 # On Linux/macOS: load ufbx_wrapper with RTLD_GLOBAL so its ufbx C symbols
 # (string constants, ufbx_free_scene, ufbx_bake_anim, etc.) are visible to
@@ -20,7 +25,31 @@ if _sys.platform != "win32":
 # Only import the entry point eagerly
 from pyufbx.ufbx_wrapper import load_fbx
 
-__all__ = ["load_fbx", "bake_anim", "anim_to_array"]
+__all__ = [
+    "load_fbx",
+    "bake_anim",
+    "anim_to_array",
+    "Anim",
+    "Scene",
+    "Bone",
+    "Transform",
+    "PropsWrapper",
+    "Vec2Property",
+    "Vec3Property",
+    "Vec4Property",
+    "QuatProperty",
+    "Node",
+    "Element",
+    "InheritMode",
+    "ElementList",
+    "NodeList",
+    "AnimCurveList",
+    "KeyframeList",
+    "PropType",
+    "Interpolation",
+    "RotationOrder",
+    "PropFlags",
+]
 
 # Lazy import everything else
 

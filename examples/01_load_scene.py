@@ -6,7 +6,7 @@ each node's name and attribute type.
 """
 import pyufbx
 
-scene = pyufbx.load_fbx("samples/drunk_idle_turn_360_R_001.fbx")
+scene = pyufbx.load_fbx("tests/fixtures/drunk_idle_turn_360_R_001.fbx")
 
 print(f"Nodes: {len(scene.nodes)}")
 print(f"Anim stacks: {len(scene.anim_stacks)}")
