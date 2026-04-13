@@ -5,10 +5,12 @@ The key regression being guarded: if ufbx.c is compiled into more than one
 extension module, ufbx's interned string pointers differ between modules and
 bake_anim silently returns 2 identity-quaternion keyframes instead of real data.
 """
+
 import pathlib
 
 import numpy as np
 import pytest
+
 import pyufbx
 
 SAMPLE_FBX = str(pathlib.Path(__file__).parent / "fixtures" / "drunk_idle_turn_360_R_001.fbx")

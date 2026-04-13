@@ -7,6 +7,9 @@ try:
 except Exception:
     __version__ = "0.0.0"
 
+import ctypes as _ctypes
+import importlib.util as _importlib_util
+
 # On Linux/macOS: load ufbx_wrapper with RTLD_GLOBAL so its ufbx C symbols
 # (string constants, ufbx_free_scene, ufbx_bake_anim, etc.) are visible to
 # all other extension modules. ufbx uses pointer identity for interned strings,
@@ -14,8 +17,6 @@ except Exception:
 # On Windows: RTLD_GLOBAL is a no-op; each module that needs ufbx symbols
 # has ufbx.c compiled into it directly (see setup.py).
 import sys as _sys
-import ctypes as _ctypes
-import importlib.util as _importlib_util
 
 if _sys.platform != "win32":
     _spec = _importlib_util.find_spec("pyufbx.ufbx_wrapper")
@@ -76,8 +77,7 @@ def __getattr__(name):
 
         return PropsWrapper
     elif name in ("Vec2Property", "Vec3Property", "Vec4Property", "QuatProperty"):
-        from pyufbx.core.math_types import (QuatProperty, Vec2Property,
-                                            Vec3Property, Vec4Property)
+        from pyufbx.core.math_types import QuatProperty, Vec2Property, Vec3Property, Vec4Property
 
         return locals()[name]
     elif name == "Node":

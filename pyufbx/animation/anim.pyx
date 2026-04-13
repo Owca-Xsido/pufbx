@@ -26,8 +26,7 @@ bool 	custom
 Custom ufbx_anim created by ufbx_create_anim(). """
 
 from ..core.math_types cimport Vec3Property
-from ..generated.lists cimport (AnimCurveList, AnimLayerList, AnimValueList,
-                                BakedNodeList, ElementList, NodeList)
+from ..generated.lists cimport AnimCurveList, AnimLayerList, AnimValueList, BakedNodeList, ElementList, NodeList
 from ..generated.wrappers cimport wrap_anim, wrap_anim_prop, wrap_anim_value
 from ..props.prop cimport PropsWrapper
 

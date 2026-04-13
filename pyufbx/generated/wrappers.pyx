@@ -1,57 +1,106 @@
 # cython: language_level=3
-from weakref import WeakValueDictionary
 from threading import Lock
-from pyufbx.pyufbx cimport ufbx_element, ufbx_node, ufbx_prop, ufbx_transform, ufbx_bone, ufbx_anim, ufbx_anim_value, ufbx_anim_curve, ufbx_keyframe, ufbx_anim_prop, ufbx_anim_layer, ufbx_baked_anim, ufbx_baked_node, ufbx_mesh, ufbx_light, ufbx_camera, ufbx_empty, ufbx_line_curve, ufbx_nurbs_curve, ufbx_nurbs_surface, ufbx_nurbs_trim_surface, ufbx_nurbs_trim_boundary, ufbx_procedural_geometry, ufbx_stereo_camera, ufbx_camera_switcher, ufbx_marker, ufbx_lod_group, ufbx_skin_deformer, ufbx_skin_cluster, ufbx_blend_deformer, ufbx_blend_channel, ufbx_blend_shape, ufbx_cache_deformer, ufbx_cache_file, ufbx_material, ufbx_texture, ufbx_video, ufbx_shader, ufbx_shader_binding, ufbx_anim_stack, ufbx_display_layer, ufbx_selection_set, ufbx_selection_node, ufbx_character, ufbx_constraint, ufbx_audio_layer, ufbx_audio_clip, ufbx_pose, ufbx_metadata_object, ufbx_texture_file
-from pyufbx.elements.element cimport Element
-from pyufbx.elements.node cimport Node
-from pyufbx.props.prop cimport Prop
-from pyufbx.core.transform cimport Transform
-from pyufbx.elements.bone cimport Bone
-from pyufbx.animation.anim cimport Anim
-from pyufbx.animation.anim cimport AnimValue
+from weakref import WeakValueDictionary
+
+from pyufbx.animation.anim cimport Anim, AnimLayer, AnimProp, AnimValue
 from pyufbx.animation.anim_curve cimport AnimCurve
-from pyufbx.animation.keyframe cimport Keyframe
-from pyufbx.animation.anim cimport AnimProp
-from pyufbx.animation.anim cimport AnimLayer
+from pyufbx.animation.anim_stack cimport AnimStack
 from pyufbx.animation.bake_anim cimport BakedAnim
-from pyufbx.elements.node cimport BakedNode
-from pyufbx.elements.mesh cimport Mesh
-from pyufbx.elements.light cimport Light
-from pyufbx.elements.camera cimport Camera
-from pyufbx.elements.empty cimport Empty
-from pyufbx.elements.line_curve cimport LineCurve
-from pyufbx.elements.nurbs_curve cimport NurbsCurve
-from pyufbx.elements.nurbs_surface cimport NurbsSurface
-from pyufbx.elements.nurbs_trim_surface cimport NurbsTrimSurface
-from pyufbx.elements.nurbs_trim_boundary cimport NurbsTrimBoundary
-from pyufbx.elements.procedural_geometry cimport ProceduralGeometry
-from pyufbx.elements.stereo_camera cimport StereoCamera
-from pyufbx.elements.camera_switcher cimport CameraSwitcher
-from pyufbx.elements.marker cimport Marker
-from pyufbx.elements.lod_group cimport LodGroup
-from pyufbx.elements.skin_deformer cimport SkinDeformer
-from pyufbx.elements.skin_cluster cimport SkinCluster
-from pyufbx.elements.blend_deformer cimport BlendDeformer
+from pyufbx.animation.keyframe cimport Keyframe
+from pyufbx.audio.audio_clip cimport AudioClip
+from pyufbx.audio.audio_layer cimport AudioLayer
+from pyufbx.core.transform cimport Transform
 from pyufbx.elements.blend_channel cimport BlendChannel
+from pyufbx.elements.blend_deformer cimport BlendDeformer
 from pyufbx.elements.blend_shape cimport BlendShape
+from pyufbx.elements.bone cimport Bone
 from pyufbx.elements.cache_deformer cimport CacheDeformer
 from pyufbx.elements.cache_file cimport CacheFile
-from pyufbx.materials.material cimport Material
-from pyufbx.materials.texture cimport Texture
-from pyufbx.materials.video cimport Video
-from pyufbx.materials.shader cimport Shader
-from pyufbx.materials.shader_binding cimport ShaderBinding
-from pyufbx.animation.anim_stack cimport AnimStack
-from pyufbx.elements.display_layer cimport DisplayLayer
-from pyufbx.elements.selection_set cimport SelectionSet
-from pyufbx.elements.selection_node cimport SelectionNode
+from pyufbx.elements.camera cimport Camera
+from pyufbx.elements.camera_switcher cimport CameraSwitcher
 from pyufbx.elements.character cimport Character
 from pyufbx.elements.constraint cimport Constraint
-from pyufbx.audio.audio_layer cimport AudioLayer
-from pyufbx.audio.audio_clip cimport AudioClip
-from pyufbx.elements.pose cimport Pose
+from pyufbx.elements.display_layer cimport DisplayLayer
+from pyufbx.elements.element cimport Element
+from pyufbx.elements.empty cimport Empty
+from pyufbx.elements.light cimport Light
+from pyufbx.elements.line_curve cimport LineCurve
+from pyufbx.elements.lod_group cimport LodGroup
+from pyufbx.elements.marker cimport Marker
+from pyufbx.elements.mesh cimport Mesh
 from pyufbx.elements.metadata_object cimport MetadataObject
+from pyufbx.elements.node cimport BakedNode, Node
+from pyufbx.elements.nurbs_curve cimport NurbsCurve
+from pyufbx.elements.nurbs_surface cimport NurbsSurface
+from pyufbx.elements.nurbs_trim_boundary cimport NurbsTrimBoundary
+from pyufbx.elements.nurbs_trim_surface cimport NurbsTrimSurface
+from pyufbx.elements.pose cimport Pose
+from pyufbx.elements.procedural_geometry cimport ProceduralGeometry
+from pyufbx.elements.selection_node cimport SelectionNode
+from pyufbx.elements.selection_set cimport SelectionSet
+from pyufbx.elements.skin_cluster cimport SkinCluster
+from pyufbx.elements.skin_deformer cimport SkinDeformer
+from pyufbx.elements.stereo_camera cimport StereoCamera
+from pyufbx.materials.material cimport Material
+from pyufbx.materials.shader cimport Shader
+from pyufbx.materials.shader_binding cimport ShaderBinding
+from pyufbx.materials.texture cimport Texture
 from pyufbx.materials.texture_file cimport TextureFile
+from pyufbx.materials.video cimport Video
+from pyufbx.props.prop cimport Prop
+from pyufbx.pyufbx cimport (
+    ufbx_anim,
+    ufbx_anim_curve,
+    ufbx_anim_layer,
+    ufbx_anim_prop,
+    ufbx_anim_stack,
+    ufbx_anim_value,
+    ufbx_audio_clip,
+    ufbx_audio_layer,
+    ufbx_baked_anim,
+    ufbx_baked_node,
+    ufbx_blend_channel,
+    ufbx_blend_deformer,
+    ufbx_blend_shape,
+    ufbx_bone,
+    ufbx_cache_deformer,
+    ufbx_cache_file,
+    ufbx_camera,
+    ufbx_camera_switcher,
+    ufbx_character,
+    ufbx_constraint,
+    ufbx_display_layer,
+    ufbx_element,
+    ufbx_empty,
+    ufbx_keyframe,
+    ufbx_light,
+    ufbx_line_curve,
+    ufbx_lod_group,
+    ufbx_marker,
+    ufbx_material,
+    ufbx_mesh,
+    ufbx_metadata_object,
+    ufbx_node,
+    ufbx_nurbs_curve,
+    ufbx_nurbs_surface,
+    ufbx_nurbs_trim_boundary,
+    ufbx_nurbs_trim_surface,
+    ufbx_pose,
+    ufbx_procedural_geometry,
+    ufbx_prop,
+    ufbx_selection_node,
+    ufbx_selection_set,
+    ufbx_shader,
+    ufbx_shader_binding,
+    ufbx_skin_cluster,
+    ufbx_skin_deformer,
+    ufbx_stereo_camera,
+    ufbx_texture,
+    ufbx_texture_file,
+    ufbx_transform,
+    ufbx_video,
+)
+
 
 # Cache for Element
 cdef object _element_cache_lock = Lock()

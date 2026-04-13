@@ -210,9 +210,7 @@ def generate_list_files():
             f.write(f"    cdef {item_type} {ptr}_data\n")
             f.write(f"    cdef size_t _count\n")
             f.write(f"    @staticmethod\n")
-            f.write(
-                f"    cdef {class_name}List create({item_type} {ptr}data, size_t count)\n\n"
-            )
+            f.write(f"    cdef {class_name}List create({item_type} {ptr}data, size_t count)\n\n")
 
     # --- 2. Generate .pyx ---
     pyx_path = os.path.join(output_dir, "lists.pyx")

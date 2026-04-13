@@ -2,9 +2,14 @@
 # elements/node.pyx
 # cython: language_level=3
 
-from ..core.math_types cimport (QuatProperty, Vec2Property, Vec3Property,
-                                Vec4Property, fast_baked_quat_copy,
-                                fast_baked_vec3_copy)
+from ..core.math_types cimport (
+    QuatProperty,
+    Vec2Property,
+    Vec3Property,
+    Vec4Property,
+    fast_baked_quat_copy,
+    fast_baked_vec3_copy,
+)
 from ..props.prop cimport Prop, PropsWrapper
 from .bone cimport Bone
 from .element cimport Element
