@@ -71,6 +71,14 @@ def __getattr__(name):
         from pyufbx.generated.lists import NodeList
 
         return NodeList
+    elif name == "AnimCurveList":
+        from pyufbx.generated.lists import AnimCurveList
+
+        return AnimCurveList
+    elif name == "KeyframeList":
+        from pyufbx.animation.keyframe import KeyframeList
+
+        return KeyframeList
     elif name == "bake_anim":
         from pyufbx.animation.bake_anim import bake_anim
 

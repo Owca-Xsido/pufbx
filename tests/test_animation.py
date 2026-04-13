@@ -8,7 +8,7 @@ from pyufbx.core.math_types import Vec3Property
 @pytest.fixture
 def cube_scene():
     """Load the cube and bone FBX scene with animation data."""
-    return fbx.load_fbx("tests/fixtures/cube_and_bone.fbx")
+    return fbx.load_fbx("tests/fixtures/drunk_idle_turn_360_R_001.fbx")
 
 
 @pytest.fixture
@@ -365,8 +365,10 @@ def test_anim_boolean_flags(cube_scene):
         pytest.skip("No anim objects found in test fixture")
 
 
-def test_anim_not_implemented_features(cube_scene):
-    """Test that unimplemented Anim features raise NotImplementedError."""
+def test_anim_layers(cube_scene):
+    """Test that Anim.layers returns an AnimLayerList."""
+    from pyufbx.generated.lists import AnimLayerList
+
     anim_stacks = cube_scene.anim_stacks
 
     if len(anim_stacks) == 0:
@@ -378,22 +380,7 @@ def test_anim_not_implemented_features(cube_scene):
             anim = layer.anim
             if anim is not None:
                 found_anim = True
-
-                # Test layers raises NotImplementedError
-                with pytest.raises(NotImplementedError):
-                    _ = anim.layers
-
-                # Test override_layer_weights raises NotImplementedError
-                with pytest.raises(NotImplementedError):
-                    _ = anim.override_layer_weights
-
-                # Test prop_overrides raises NotImplementedError
-                with pytest.raises(NotImplementedError):
-                    _ = anim.prop_overrides
-
-                # Test transform_overrides raises NotImplementedError
-                with pytest.raises(NotImplementedError):
-                    _ = anim.transform_overrides
+                assert isinstance(anim.layers, AnimLayerList)
                 break
         if found_anim:
             break

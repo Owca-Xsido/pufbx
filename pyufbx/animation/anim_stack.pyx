@@ -1,6 +1,7 @@
 # cython: language_level=3
 from pyufbx.pyufbx cimport ufbx_anim_stack
 
+from ..generated.lists cimport AnimLayerList
 from ..generated.wrappers cimport wrap_anim
 from ..props.prop cimport PropsWrapper
 
@@ -36,11 +37,17 @@ cdef class AnimStack:
     def properties(self):
         return PropsWrapper.create(&self._anim_stack.props)
 
-    # Complex properties - TODO
     @property
     def layers(self):
-        # TODO: layers add implementation
-        raise NotImplementedError("layers is not implemented yet.")
+        return AnimLayerList.create(self._anim_stack.layers.data, self._anim_stack.layers.count)
+
+    @property
+    def time_begin(self):
+        return self._anim_stack.time_begin
+
+    @property
+    def time_end(self):
+        return self._anim_stack.time_end
 
     @property
     def anim(self):

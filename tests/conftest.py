@@ -6,7 +6,7 @@ import pyufbx as fbx
 @pytest.fixture
 def cube_scene():
     """Load the cube and bone FBX scene."""
-    return fbx.load_fbx("tests/fixtures/cube_and_bone.fbx")
+    return fbx.load_fbx("tests/fixtures/drunk_idle_turn_360_R_001.fbx")
 
 
 @pytest.fixture

@@ -86,6 +86,9 @@ cdef class Vec3Property:
     def __repr__(self):
         return f"Vec3({self.x}, {self.y}, {self.z})"
 
+    def __len__(self):
+        return 3
+
     def __iter__(self):
         """Allows unpacking: x, y, z = vec"""
         yield self.x
