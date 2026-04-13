@@ -13,7 +13,7 @@ import numpy as np
 import pyufbx
 
 data, times, node_names = pyufbx.anim_to_array(
-    "samples/drunk_idle_turn_360_R_001.fbx",
+    "tests/fixtures/drunk_idle_turn_360_R_001.fbx",
     anim_index=0,
     resample_rate=30.0,
 )

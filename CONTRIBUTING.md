@@ -1,0 +1,51 @@
+# Contributing to pyufbx
+
+Thanks for your interest in contributing!
+
+## Getting started
+
+```bash
+git clone https://github.com/Owca-Xsido/pyufbx.git
+cd pyufbx
+pip install -e ".[dev]"
+python -m pytest tests/
+```
+
+Building from source requires a C compiler and Python development headers.
+
+## Development workflow
+
+1. Create a branch from `main`.
+2. Make your changes.
+3. Run the formatter and linter:
+   ```bash
+   black pyufbx/ tests/
+   isort pyufbx/ tests/
+   ```
+4. Run the test suite:
+   ```bash
+   python -m pytest tests/
+   ```
+5. Open a pull request against `main`.
+
+## Cython extensions
+
+The Cython `.pyx` files live under `pyufbx/`. After editing them, rebuild with:
+
+```bash
+pip install -e .
+```
+
+The vendored ufbx C source is in `ufbx/`. Do not edit it directly — it comes
+from upstream [ufbx](https://github.com/ufbx/ufbx).
+
+## Tests
+
+All tests are in `tests/` and use pytest. The test fixture FBX file is at
+`tests/fixtures/drunk_idle_turn_360_R_001.fbx`.
+
+## Code style
+
+- Formatting: [black](https://github.com/psf/black) (line length 120)
+- Import sorting: [isort](https://pycqa.github.io/isort/) (black profile)
+- No comments or docstrings unless explicitly needed — prefer self-documenting code.
