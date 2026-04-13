@@ -8,7 +8,7 @@ from pyufbx.core.math_types import Vec3Property
 @pytest.fixture
 def cube_scene():
     """Load the cube and bone FBX scene with animation data."""
-    return fbx.load_fbx("tests/fixtures/drunk_idle_turn_360_R_001.fbx")
+    return fbx.load_fbx("tests/fixtures/cube_and_bone.fbx")
 
 
 @pytest.fixture

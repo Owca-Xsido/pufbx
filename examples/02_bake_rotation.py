@@ -10,7 +10,7 @@ a single unit quaternion per keyframe — no manual Euler→Quat needed.
 """
 import pyufbx
 
-scene = pyufbx.load_fbx("tests/fixtures/drunk_idle_turn_360_R_001.fbx")
+scene = pyufbx.load_fbx("tests/fixtures/cube_and_bone.fbx")
 anim = scene.anim_stacks[0].anim
 
 baked = pyufbx.bake_anim(scene, anim, resample_rate=30.0)

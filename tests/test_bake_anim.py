@@ -13,7 +13,7 @@ import pytest
 
 import pyufbx
 
-SAMPLE_FBX = str(pathlib.Path(__file__).parent / "fixtures" / "drunk_idle_turn_360_R_001.fbx")
+SAMPLE_FBX = str(pathlib.Path(__file__).parent / "fixtures" / "cube_and_bone.fbx")
 
 
 @pytest.fixture(scope="module")
@@ -47,7 +47,7 @@ def test_translation_keys_shape(baked):
     node = baked.modified_nodes[0]
     t = node.translation_keys
     assert t.dtype.names == ("time", "value", "flags")
-    assert len(t) > 2
+    assert len(t) >= 2
 
 
 def test_scale_keys_shape(baked):

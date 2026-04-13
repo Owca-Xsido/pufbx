@@ -9,7 +9,7 @@ the resampled quaternion output from bake_anim().
 """
 import pyufbx
 
-scene = pyufbx.load_fbx("tests/fixtures/drunk_idle_turn_360_R_001.fbx")
+scene = pyufbx.load_fbx("tests/fixtures/cube_and_bone.fbx")
 anim = scene.anim_stacks[0].anim
 
 for layer in anim.layers:
