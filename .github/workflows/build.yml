@@ -12,7 +12,7 @@ on:
 jobs:
   lint:
     name: Lint
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux]
 
     steps:
       - uses: actions/checkout@v4
@@ -31,11 +31,11 @@ jobs:
 
   test:
     name: Test (${{ matrix.os }}, ${{ matrix.python-version }})
-    runs-on: ${{ matrix.os }}
+    runs-on: [self-hosted, ${{ matrix.os }}]
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [Linux, Windows, macOS]
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
 
     steps:
@@ -54,11 +54,11 @@ jobs:
 
   build_wheels:
     name: Build wheels (${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
+    runs-on: [self-hosted, ${{ matrix.os }}]
     needs: [lint, test]
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [Linux, Windows, macOS]
 
     steps:
       - uses: actions/checkout@v4
@@ -78,7 +78,7 @@ jobs:
 
   build_sdist:
     name: Build source distribution
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux]
     needs: [lint, test]
 
     steps:
@@ -100,7 +100,7 @@ jobs:
 
   release:
     name: Publish to GitHub Releases & PyPI
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Linux]
     needs: [build_wheels, build_sdist]
     if: github.event_name == 'release'
     permissions:
