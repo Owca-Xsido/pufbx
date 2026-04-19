@@ -19,6 +19,7 @@ env/
 dist/
 build/
 *.egg-info/
+.pytest_cache/
 
 # Dependency cache (pip cache)
 .cache/
