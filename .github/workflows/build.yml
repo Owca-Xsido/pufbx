@@ -12,7 +12,9 @@ on:
 jobs:
   lint:
     name: Lint
-    runs-on: [self-hosted, Linux]
+    runs-on:
+      - self-hosted
+      - Linux
 
     steps:
       - uses: actions/checkout@v4
@@ -30,8 +32,10 @@ jobs:
         run: uvx isort --check pufbx/ tests/
 
   test:
-    name: Test (${{ matrix.os }}, ${{ matrix.python-version }})
-    runs-on: [self-hosted, ${{ matrix.os }}]
+    name: "Test (${{ matrix.os }}, ${{ matrix.python-version }})"
+    runs-on:
+      - self-hosted
+      - ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
@@ -53,8 +57,10 @@ jobs:
           uv run --python ${{ matrix.python-version }} python -m pytest tests/ -q
 
   build_wheels:
-    name: Build wheels (${{ matrix.os }})
-    runs-on: [self-hosted, ${{ matrix.os }}]
+    name: "Build wheels (${{ matrix.os }})"
+    runs-on:
+      - self-hosted
+      - ${{ matrix.os }}
     needs: [lint, test]
     strategy:
       matrix:
@@ -78,7 +84,9 @@ jobs:
 
   build_sdist:
     name: Build source distribution
-    runs-on: [self-hosted, Linux]
+    runs-on:
+      - self-hosted
+      - Linux
     needs: [lint, test]
 
     steps:
@@ -100,7 +108,9 @@ jobs:
 
   release:
     name: Publish to GitHub Releases & PyPI
-    runs-on: [self-hosted, Linux]
+    runs-on:
+      - self-hosted
+      - Linux
     needs: [build_wheels, build_sdist]
     if: github.event_name == 'release'
     permissions:
