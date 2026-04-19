@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "cython>=3.0", "numpy>=1.20"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pyufbx"
+name = "pufbx"
 version = "0.1.0"
 description = "Fast, Pythonic bindings for the ufbx FBX file loader"
 readme = "README.md"
@@ -44,9 +44,9 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/Owca-Xsido/pyufbx"
-Repository = "https://github.com/Owca-Xsido/pyufbx"
-Issues = "https://github.com/Owca-Xsido/pyufbx/issues"
+Homepage = "https://github.com/Owca-Xsido/pufbx"
+Repository = "https://github.com/Owca-Xsido/pufbx"
+Issues = "https://github.com/Owca-Xsido/pufbx/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]

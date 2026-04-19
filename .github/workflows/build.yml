@@ -24,10 +24,10 @@ jobs:
           python-version: "3.11"
 
       - name: Check formatting (black)
-        run: uvx black --check pyufbx/ tests/
+        run: uvx black --check pufbx/ tests/
 
       - name: Check import order (isort)
-        run: uvx isort --check pyufbx/ tests/
+        run: uvx isort --check pufbx/ tests/
 
   test:
     name: Test (${{ matrix.os }}, ${{ matrix.python-version }})

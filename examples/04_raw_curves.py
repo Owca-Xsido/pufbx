@@ -7,9 +7,9 @@ Before baking, FBX stores rotation as three separate Euler-angle curves
 Use this when you need the original authored keyframe data rather than
 the resampled quaternion output from bake_anim().
 """
-import pyufbx
+import pufbx
 
-scene = pyufbx.load_fbx("tests/fixtures/cube_and_bone.fbx")
+scene = pufbx.load_fbx("tests/fixtures/cube_and_bone.fbx")
 anim = scene.anim_stacks[0].anim
 
 for layer in anim.layers:

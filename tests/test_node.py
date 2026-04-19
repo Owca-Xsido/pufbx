@@ -1,7 +1,7 @@
 import pytest
 
-import pyufbx as fbx
-from pyufbx.core.math_types import Vec3Property
+import pufbx as fbx
+from pufbx.core.math_types import Vec3Property
 
 
 @pytest.fixture

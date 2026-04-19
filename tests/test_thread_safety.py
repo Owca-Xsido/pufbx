@@ -1,7 +1,7 @@
 import pathlib
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-import pyufbx as fbx
+import pufbx as fbx
 
 _FIXTURE = pathlib.Path(__file__).resolve().parent / "fixtures" / "cube_and_bone.fbx"
 

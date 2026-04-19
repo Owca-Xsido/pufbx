@@ -4,9 +4,9 @@ Example 01: Load an FBX scene and inspect its nodes.
 Shows how to open an FBX file, walk the node hierarchy, and print
 each node's name and attribute type.
 """
-import pyufbx
+import pufbx
 
-scene = pyufbx.load_fbx("tests/fixtures/cube_and_bone.fbx")
+scene = pufbx.load_fbx("tests/fixtures/cube_and_bone.fbx")
 
 print(f"Nodes: {len(scene.nodes)}")
 print(f"Anim stacks: {len(scene.anim_stacks)}")

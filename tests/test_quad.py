@@ -1,7 +1,7 @@
 # cython: language_level=3
 import numpy as np
 
-from pyufbx.core.math_types import QuatProperty
+from pufbx.core.math_types import QuatProperty
 
 
 def test_quat_init():

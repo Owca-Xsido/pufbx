@@ -1,6 +1,6 @@
 import pytest
 
-import pyufbx as fbx
+import pufbx as fbx
 
 # Mock classes to simulate C struct behavior
 

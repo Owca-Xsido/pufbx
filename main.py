@@ -1,4 +1,4 @@
-import pyufbx as fbx 
+import pufbx as fbx 
 
 
 

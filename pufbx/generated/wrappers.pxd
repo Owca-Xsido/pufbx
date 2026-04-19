@@ -1,0 +1,151 @@
+# cython: language_level=3
+from pufbx.animation.anim cimport Anim, AnimLayer, AnimProp, AnimValue
+from pufbx.animation.anim_curve cimport AnimCurve
+from pufbx.animation.anim_stack cimport AnimStack
+from pufbx.animation.bake_anim cimport BakedAnim
+from pufbx.animation.keyframe cimport Keyframe
+from pufbx.audio.audio_clip cimport AudioClip
+from pufbx.audio.audio_layer cimport AudioLayer
+from pufbx.core.transform cimport Transform
+from pufbx.elements.blend_channel cimport BlendChannel
+from pufbx.elements.blend_deformer cimport BlendDeformer
+from pufbx.elements.blend_shape cimport BlendShape
+from pufbx.elements.bone cimport Bone
+from pufbx.elements.cache_deformer cimport CacheDeformer
+from pufbx.elements.cache_file cimport CacheFile
+from pufbx.elements.camera cimport Camera
+from pufbx.elements.camera_switcher cimport CameraSwitcher
+from pufbx.elements.character cimport Character
+from pufbx.elements.constraint cimport Constraint
+from pufbx.elements.display_layer cimport DisplayLayer
+from pufbx.elements.element cimport Element
+from pufbx.elements.empty cimport Empty
+from pufbx.elements.light cimport Light
+from pufbx.elements.line_curve cimport LineCurve
+from pufbx.elements.lod_group cimport LodGroup
+from pufbx.elements.marker cimport Marker
+from pufbx.elements.mesh cimport Mesh
+from pufbx.elements.metadata_object cimport MetadataObject
+from pufbx.elements.node cimport BakedNode, Node
+from pufbx.elements.nurbs_curve cimport NurbsCurve
+from pufbx.elements.nurbs_surface cimport NurbsSurface
+from pufbx.elements.nurbs_trim_boundary cimport NurbsTrimBoundary
+from pufbx.elements.nurbs_trim_surface cimport NurbsTrimSurface
+from pufbx.elements.pose cimport Pose
+from pufbx.elements.procedural_geometry cimport ProceduralGeometry
+from pufbx.elements.selection_node cimport SelectionNode
+from pufbx.elements.selection_set cimport SelectionSet
+from pufbx.elements.skin_cluster cimport SkinCluster
+from pufbx.elements.skin_deformer cimport SkinDeformer
+from pufbx.elements.stereo_camera cimport StereoCamera
+from pufbx.materials.material cimport Material
+from pufbx.materials.shader cimport Shader
+from pufbx.materials.shader_binding cimport ShaderBinding
+from pufbx.materials.texture cimport Texture
+from pufbx.materials.texture_file cimport TextureFile
+from pufbx.materials.video cimport Video
+from pufbx.props.prop cimport Prop
+from pufbx.pufbx cimport (
+    ufbx_anim,
+    ufbx_anim_curve,
+    ufbx_anim_layer,
+    ufbx_anim_prop,
+    ufbx_anim_stack,
+    ufbx_anim_value,
+    ufbx_audio_clip,
+    ufbx_audio_layer,
+    ufbx_baked_anim,
+    ufbx_baked_node,
+    ufbx_blend_channel,
+    ufbx_blend_deformer,
+    ufbx_blend_shape,
+    ufbx_bone,
+    ufbx_cache_deformer,
+    ufbx_cache_file,
+    ufbx_camera,
+    ufbx_camera_switcher,
+    ufbx_character,
+    ufbx_constraint,
+    ufbx_display_layer,
+    ufbx_element,
+    ufbx_empty,
+    ufbx_keyframe,
+    ufbx_light,
+    ufbx_line_curve,
+    ufbx_lod_group,
+    ufbx_marker,
+    ufbx_material,
+    ufbx_mesh,
+    ufbx_metadata_object,
+    ufbx_node,
+    ufbx_nurbs_curve,
+    ufbx_nurbs_surface,
+    ufbx_nurbs_trim_boundary,
+    ufbx_nurbs_trim_surface,
+    ufbx_pose,
+    ufbx_procedural_geometry,
+    ufbx_prop,
+    ufbx_selection_node,
+    ufbx_selection_set,
+    ufbx_shader,
+    ufbx_shader_binding,
+    ufbx_skin_cluster,
+    ufbx_skin_deformer,
+    ufbx_stereo_camera,
+    ufbx_texture,
+    ufbx_texture_file,
+    ufbx_transform,
+    ufbx_video,
+)
+
+
+cdef Element wrap_element(ufbx_element *ptr)
+cdef Node wrap_node(ufbx_node *ptr)
+cdef Prop wrap_prop(ufbx_prop *ptr)
+cdef Transform wrap_transform(ufbx_transform *ptr)
+cdef Bone wrap_bone(ufbx_bone *ptr)
+cdef Anim wrap_anim(ufbx_anim *ptr)
+cdef AnimValue wrap_anim_value(ufbx_anim_value *ptr)
+cdef AnimCurve wrap_anim_curve(ufbx_anim_curve *ptr)
+cdef Keyframe wrap_keyframe(ufbx_keyframe *ptr)
+cdef AnimProp wrap_anim_prop(ufbx_anim_prop *ptr)
+cdef AnimLayer wrap_anim_layer(ufbx_anim_layer *ptr)
+cdef BakedAnim wrap_baked_anim(ufbx_baked_anim *ptr)
+cdef BakedNode wrap_baked_node(ufbx_baked_node *ptr)
+cdef Mesh wrap_mesh(ufbx_mesh *ptr)
+cdef Light wrap_light(ufbx_light *ptr)
+cdef Camera wrap_camera(ufbx_camera *ptr)
+cdef Empty wrap_empty(ufbx_empty *ptr)
+cdef LineCurve wrap_line_curve(ufbx_line_curve *ptr)
+cdef NurbsCurve wrap_nurbs_curve(ufbx_nurbs_curve *ptr)
+cdef NurbsSurface wrap_nurbs_surface(ufbx_nurbs_surface *ptr)
+cdef NurbsTrimSurface wrap_nurbs_trim_surface(ufbx_nurbs_trim_surface *ptr)
+cdef NurbsTrimBoundary wrap_nurbs_trim_boundary(ufbx_nurbs_trim_boundary *ptr)
+cdef ProceduralGeometry wrap_procedural_geometry(ufbx_procedural_geometry *ptr)
+cdef StereoCamera wrap_stereo_camera(ufbx_stereo_camera *ptr)
+cdef CameraSwitcher wrap_camera_switcher(ufbx_camera_switcher *ptr)
+cdef Marker wrap_marker(ufbx_marker *ptr)
+cdef LodGroup wrap_lod_group(ufbx_lod_group *ptr)
+cdef SkinDeformer wrap_skin_deformer(ufbx_skin_deformer *ptr)
+cdef SkinCluster wrap_skin_cluster(ufbx_skin_cluster *ptr)
+cdef BlendDeformer wrap_blend_deformer(ufbx_blend_deformer *ptr)
+cdef BlendChannel wrap_blend_channel(ufbx_blend_channel *ptr)
+cdef BlendShape wrap_blend_shape(ufbx_blend_shape *ptr)
+cdef CacheDeformer wrap_cache_deformer(ufbx_cache_deformer *ptr)
+cdef CacheFile wrap_cache_file(ufbx_cache_file *ptr)
+cdef Material wrap_material(ufbx_material *ptr)
+cdef Texture wrap_texture(ufbx_texture *ptr)
+cdef Video wrap_video(ufbx_video *ptr)
+cdef Shader wrap_shader(ufbx_shader *ptr)
+cdef ShaderBinding wrap_shader_binding(ufbx_shader_binding *ptr)
+cdef AnimStack wrap_anim_stack(ufbx_anim_stack *ptr)
+cdef DisplayLayer wrap_display_layer(ufbx_display_layer *ptr)
+cdef SelectionSet wrap_selection_set(ufbx_selection_set *ptr)
+cdef SelectionNode wrap_selection_node(ufbx_selection_node *ptr)
+cdef Character wrap_character(ufbx_character *ptr)
+cdef Constraint wrap_constraint(ufbx_constraint *ptr)
+cdef AudioLayer wrap_audio_layer(ufbx_audio_layer *ptr)
+cdef AudioClip wrap_audio_clip(ufbx_audio_clip *ptr)
+cdef Pose wrap_pose(ufbx_pose *ptr)
+cdef MetadataObject wrap_metadata_object(ufbx_metadata_object *ptr)
+cdef TextureFile wrap_texture_file(ufbx_texture_file *ptr)

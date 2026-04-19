@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 
-import pyufbx as fbx
-from pyufbx.core.math_types import Vec3Property
+import pufbx as fbx
+from pufbx.core.math_types import Vec3Property
 
 
 @pytest.fixture
@@ -367,7 +367,7 @@ def test_anim_boolean_flags(cube_scene):
 
 def test_anim_layers(cube_scene):
     """Test that Anim.layers returns an AnimLayerList."""
-    from pyufbx.generated.lists import AnimLayerList
+    from pufbx.generated.lists import AnimLayerList
 
     anim_stacks = cube_scene.anim_stacks
 

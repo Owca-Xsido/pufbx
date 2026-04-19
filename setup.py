@@ -28,9 +28,9 @@ _UFBX_WIN_IMPORT_DEFS = [
 
 _UFBX_WIN_LINK = frozenset(
     {
-        "pyufbx.ufbx_wrapper",
-        "pyufbx.scene",
-        "pyufbx.animation.bake_anim",
+        "pufbx.ufbx_wrapper",
+        "pufbx.scene",
+        "pufbx.animation.bake_anim",
     }
 )
 
@@ -47,12 +47,12 @@ class build_ext(_build_ext):
         if sys.platform != "win32":
             super().build_extension(ext)
             return
-        if ext.name == "pyufbx._ufbx":
+        if ext.name == "pufbx._ufbx":
             super().build_extension(ext)
             self._ufbx_import_lib = self._find_newest_ufbx_import_lib()
             if not self._ufbx_import_lib:
                 raise RuntimeError(
-                    "Built pyufbx._ufbx but could not find the MSVC import library (.lib). "
+                    "Built pufbx._ufbx but could not find the MSVC import library (.lib). "
                     "If you use a non-MSVC toolchain on Windows, report this as a build issue."
                 )
             return
@@ -63,14 +63,14 @@ class build_ext(_build_ext):
 
     def _require_ufbx_import_lib(self) -> str:
         if not self._ufbx_import_lib:
-            raise RuntimeError("pyufbx._ufbx must be built before other native modules on Windows")
+            raise RuntimeError("pufbx._ufbx must be built before other native modules on Windows")
         return self._ufbx_import_lib
 
     def _find_newest_ufbx_import_lib(self) -> str | None:
         if not self.build_temp:
             return None
         patterns = (
-            os.path.join(self.build_temp, "**", "pyufbx._ufbx*.lib"),
+            os.path.join(self.build_temp, "**", "pufbx._ufbx*.lib"),
             os.path.join(self.build_temp, "**", "_ufbx*.lib"),
         )
         candidates: list[str] = []
@@ -83,7 +83,7 @@ class build_ext(_build_ext):
         return candidates[0]
 
 
-def find_pyx_files(base_dir="pyufbx"):
+def find_pyx_files(base_dir="pufbx"):
     base_path = ROOT / base_dir
     pyx_files = base_path.rglob("*.pyx")
     modules = []
@@ -97,7 +97,7 @@ def find_pyx_files(base_dir="pyufbx"):
 
 
 def ensure_cython_ufbx_source_clean() -> None:
-    ufbx_c_path = ROOT / "pyufbx" / "_ufbx.c"
+    ufbx_c_path = ROOT / "pufbx" / "_ufbx.c"
     if not ufbx_c_path.exists():
         return
     try:
@@ -110,14 +110,14 @@ def ensure_cython_ufbx_source_clean() -> None:
 
 ensure_cython_ufbx_source_clean()
 
-all_modules = find_pyx_files("pyufbx")
+all_modules = find_pyx_files("pufbx")
 extensions: list[Extension] = []
 
 if sys.platform == "win32":
     extensions.append(
         Extension(
-            "pyufbx._ufbx",
-            sources=["pyufbx/_ufbx.pyx", "ufbx/ufbx.c"],
+            "pufbx._ufbx",
+            sources=["pufbx/_ufbx.pyx", "ufbx/ufbx.c"],
             include_dirs=COMMON_INCLUDE_DIRS,
             define_macros=_UFBX_WIN_EXPORT_DEFS,
         )
@@ -134,7 +134,7 @@ for module_name in all_modules:
             sources = [pyx_path]
             macros = []
     else:
-        if module_name in ("pyufbx.ufbx_wrapper",):
+        if module_name in ("pufbx.ufbx_wrapper",):
             sources = [pyx_path, "ufbx/ufbx.c"]
             macros = []
         else:

@@ -11,31 +11,31 @@ import pathlib
 import numpy as np
 import pytest
 
-import pyufbx
-from pyufbx.errors import ErrorType, UFBXError
+import pufbx
+from pufbx.errors import ErrorType, UFBXError
 
 SAMPLE_FBX = str(pathlib.Path(__file__).parent / "fixtures" / "cube_and_bone.fbx")
 
 
 def test_ufbx_error_public():
-    assert pyufbx.UFBXError is UFBXError
-    assert pyufbx.ErrorType is ErrorType
+    assert pufbx.UFBXError is UFBXError
+    assert pufbx.ErrorType is ErrorType
     assert issubclass(UFBXError, RuntimeError)
 
 
 def test_load_missing_file_ufbx_error():
     missing = str(pathlib.Path(__file__).parent / "fixtures" / "does_not_exist.fbx")
     with pytest.raises(UFBXError) as ctx:
-        pyufbx.load_fbx(missing)
+        pufbx.load_fbx(missing)
     assert ctx.value.error_type == ErrorType.FILE_NOT_FOUND
     assert ctx.value.args[0]
 
 
 @pytest.fixture(scope="module")
 def baked():
-    scene = pyufbx.load_fbx(SAMPLE_FBX)
+    scene = pufbx.load_fbx(SAMPLE_FBX)
     anim = scene.anim_stacks[0].anim
-    return pyufbx.bake_anim(scene, anim)
+    return pufbx.bake_anim(scene, anim)
 
 
 def test_bake_returns_many_keyframes(baked):
@@ -46,7 +46,7 @@ def test_bake_returns_many_keyframes(baked):
     assert len(rot) > 2, (
         f"Got {len(rot)} rotation keyframes — expected >2. "
         "This usually means multiple copies of ufbx.c are linked on Windows "
-        "instead of the single shared pyufbx._ufbx extension (see setup.py)."
+        "instead of the single shared pufbx._ufbx extension (see setup.py)."
     )
 
 
@@ -73,7 +73,7 @@ def test_scale_keys_shape(baked):
 
 
 def test_anim_to_array_shape():
-    data, times, names = pyufbx.anim_to_array(SAMPLE_FBX)
+    data, times, names = pufbx.anim_to_array(SAMPLE_FBX)
     assert data.ndim == 3
     assert data.shape[2] == 10  # tx ty tz rx ry rz rw sx sy sz
     assert data.shape[0] == len(names)
@@ -82,6 +82,6 @@ def test_anim_to_array_shape():
 
 
 def test_anim_to_array_not_identity():
-    data, times, names = pyufbx.anim_to_array(SAMPLE_FBX)
+    data, times, names = pufbx.anim_to_array(SAMPLE_FBX)
     # rx ry rz should not all be zero
     assert not np.allclose(data[:, :, 3:6], 0.0)

@@ -1,12 +1,12 @@
-# pyufbx
+# pufbx
 
-[![CI](https://github.com/Owca-Xsido/pyufbx/actions/workflows/build.yml/badge.svg)](https://github.com/Owca-Xsido/pyufbx/actions/workflows/build.yml)
+[![CI](https://github.com/Owca-Xsido/pufbx/actions/workflows/build.yml/badge.svg)](https://github.com/Owca-Xsido/pufbx/actions/workflows/build.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 
 Fast, Pythonic bindings for the [ufbx](https://github.com/ufbx/ufbx) FBX file loader by [Samuli Raivio (@bqqbarbhg)](https://github.com/bqqbarbhg).
 
-**pyufbx** wraps the battle-tested C library *ufbx* via Cython, giving you
+**pufbx** wraps the battle-tested C library *ufbx* via Cython, giving you
 high-performance access to FBX scene data — nodes, meshes, bones, animations,
 materials, and more — without writing a single line of C.
 
@@ -26,14 +26,14 @@ materials, and more — without writing a single line of C.
 ### From PyPI
 
 ```bash
-pip install pyufbx
+pip install pufbx
 ```
 
 ### From source
 
 ```bash
-git clone https://github.com/Owca-Xsido/pyufbx.git
-cd pyufbx
+git clone https://github.com/Owca-Xsido/pufbx.git
+cd pufbx
 uv sync --extra dev
 ```
 
@@ -45,9 +45,9 @@ uv sync --extra dev
 ### Load a scene and traverse nodes
 
 ```python
-import pyufbx
+import pufbx
 
-scene = pyufbx.load_fbx("character.fbx")
+scene = pufbx.load_fbx("character.fbx")
 
 print(f"Nodes: {len(scene.nodes)}")
 
@@ -59,10 +59,10 @@ for node in scene.nodes:
 ### Bake animation to quaternion keyframes
 
 ```python
-import pyufbx
+import pufbx
 
-scene = pyufbx.load_fbx("character.fbx")
-baked = pyufbx.bake_anim(scene)
+scene = pufbx.load_fbx("character.fbx")
+baked = pufbx.bake_anim(scene)
 
 for node in baked.modified_nodes:
     r = node.rotation_keys
@@ -72,9 +72,9 @@ for node in baked.modified_nodes:
 ### Export dense numpy array (ML-ready)
 
 ```python
-import pyufbx
+import pufbx
 
-data, times, names = pyufbx.anim_to_array("character.fbx")
+data, times, names = pufbx.anim_to_array("character.fbx")
 # data.shape  → (num_nodes, num_frames, 10)
 # channels: [tx, ty, tz, rx, ry, rz, rw, sx, sy, sz]
 ```
@@ -95,8 +95,8 @@ See the [`examples/`](examples/) directory for complete, runnable scripts:
 Install [uv](https://docs.astral.sh/uv/), then:
 
 ```bash
-git clone https://github.com/Owca-Xsido/pyufbx.git
-cd pyufbx
+git clone https://github.com/Owca-Xsido/pufbx.git
+cd pufbx
 uv sync --extra dev
 uv run python -m pytest tests/
 ```
@@ -104,13 +104,13 @@ uv run python -m pytest tests/
 ### Formatting & linting
 
 ```bash
-uv run black pyufbx/ tests/
-uv run isort pyufbx/ tests/
+uv run black pufbx/ tests/
+uv run isort pufbx/ tests/
 ```
 
 ## How it works
 
-pyufbx vendors the [ufbx](https://github.com/ufbx/ufbx) C source (by
+pufbx vendors the [ufbx](https://github.com/ufbx/ufbx) C source (by
 [Samuli Raivio](https://github.com/bqqbarbhg)) and compiles it into a shared
 Cython extension. On Linux/macOS, `ufbx_wrapper` is loaded with `RTLD_GLOBAL`
 so all extension modules share a single copy of the ufbx C symbols (required

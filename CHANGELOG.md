@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
-- Initial release of pyufbx.
+- Initial release of pufbx.
 - `load_fbx()` — load FBX files into a Python scene graph.
 - `bake_anim()` — bake animation into quaternion keyframes via numpy structured arrays.
 - `anim_to_array()` — export animation as dense `(nodes × frames × 10)` numpy arrays.

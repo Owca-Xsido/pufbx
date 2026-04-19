@@ -2,7 +2,7 @@
 
 ## Repository notes for agents
 
-**pyufbx** is a Python/Cython binding for the [ufbx](https://github.com/ufbx/ufbx) FBX file loader. It is a single-package library (not a monorepo) with no external services, databases, or network dependencies.
+**pufbx** is a Python/Cython binding for the [ufbx](https://github.com/ufbx/ufbx) FBX file loader. It is a single-package library (not a monorepo) with no external services, databases, or network dependencies.
 
 ### Prerequisites
 
@@ -45,15 +45,15 @@ GitHub Actions runs the suite on **Ubuntu, macOS, and Windows** for **Python 3.9
 The `justfile` uses `black`, `isort`, and `autopep8`. Note: the existing codebase has some pre-existing lint issues that are not regressions.
 
 ```
-uv run black --check pyufbx/ tests/
-uv run isort --check pyufbx/ tests/
+uv run black --check pufbx/ tests/
+uv run isort --check pufbx/ tests/
 ```
 
 ### Gotchas
 
 - `.python-version` is **3.12** (local default for `uv`). CI still tests **3.9–3.13** on all platforms in the matrix; lint uses 3.11.
 - The build requires `python3.12-dev` (or equivalent) for `Python.h`. Without it the C extension compilation fails.
-- On Linux/macOS, `ufbx_wrapper` is loaded with `RTLD_GLOBAL` so all extension modules share C symbols. This is handled automatically by `pyufbx/__init__.py`.
-- On Windows, `ufbx.c` is built into a single extension module `pyufbx._ufbx`; other native modules link against it so string interning stays consistent. `pyufbx/__init__.py` imports `_ufbx` before `ufbx_wrapper`.
+- On Linux/macOS, `ufbx_wrapper` is loaded with `RTLD_GLOBAL` so all extension modules share C symbols. This is handled automatically by `pufbx/__init__.py`.
+- On Windows, `ufbx.c` is built into a single extension module `pufbx._ufbx`; other native modules link against it so string interning stays consistent. `pufbx/__init__.py` imports `_ufbx` before `ufbx_wrapper`.
 - `anim_to_array()` takes a filename string (not a `Scene` object) and returns a `(data, times, names)` tuple.
 - `bake_anim()` takes a `Scene` object and returns a `BakedAnim` (not a dict); use `.modified_nodes` to iterate.

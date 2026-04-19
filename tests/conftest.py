@@ -2,7 +2,7 @@ import pathlib
 
 import pytest
 
-import pyufbx as fbx
+import pufbx as fbx
 
 _FIXTURES = pathlib.Path(__file__).parent / "fixtures"
 

@@ -10,9 +10,9 @@ anim_to_array() returns:
 Rotation columns 3-6 are quaternion components (x, y, z, w).
 """
 import numpy as np
-import pyufbx
+import pufbx
 
-data, times, node_names = pyufbx.anim_to_array(
+data, times, node_names = pufbx.anim_to_array(
     "tests/fixtures/cube_and_bone.fbx",
     anim_index=0,
     resample_rate=30.0,

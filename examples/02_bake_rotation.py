@@ -8,12 +8,12 @@ FBX stores Euler angles internally; bake_anim composites the full
 transformation chain (pre/post rotations, pivots, rotation order) into
 a single unit quaternion per keyframe — no manual Euler→Quat needed.
 """
-import pyufbx
+import pufbx
 
-scene = pyufbx.load_fbx("tests/fixtures/cube_and_bone.fbx")
+scene = pufbx.load_fbx("tests/fixtures/cube_and_bone.fbx")
 anim = scene.anim_stacks[0].anim
 
-baked = pyufbx.bake_anim(scene, anim, resample_rate=30.0)
+baked = pufbx.bake_anim(scene, anim, resample_rate=30.0)
 
 print(f"Baked {len(baked.modified_nodes)} nodes")
 print(f"Duration: {baked.playback_duration:.3f}s\n")

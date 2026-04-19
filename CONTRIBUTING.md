@@ -1,12 +1,12 @@
-# Contributing to pyufbx
+# Contributing to pufbx
 
 Thanks for your interest in contributing!
 
 ## Getting started
 
 ```bash
-git clone https://github.com/Owca-Xsido/pyufbx.git
-cd pyufbx
+git clone https://github.com/Owca-Xsido/pufbx.git
+cd pufbx
 ```
 
 Building from source requires a C compiler and Python development headers.
@@ -24,8 +24,8 @@ uv run python -m pytest tests/
 2. Make your changes.
 3. Run the formatter and linter:
    ```bash
-   uv run black pyufbx/ tests/
-   uv run isort pyufbx/ tests/
+   uv run black pufbx/ tests/
+   uv run isort pufbx/ tests/
    ```
    (Or `just autoformat` / `just lint` from the `justfile`.)
 4. Run the test suite:
@@ -36,7 +36,7 @@ uv run python -m pytest tests/
 
 ## Cython extensions
 
-The Cython `.pyx` files live under `pyufbx/`. After editing them, rebuild with:
+The Cython `.pyx` files live under `pufbx/`. After editing them, rebuild with:
 
 ```bash
 uv pip install -e .

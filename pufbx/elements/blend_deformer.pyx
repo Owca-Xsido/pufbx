@@ -1,0 +1,43 @@
+# cython: language_level=3
+from pufbx.pufbx cimport ufbx_blend_deformer
+
+from ..generated.lists cimport BlendChannelList
+from ..props.prop cimport PropsWrapper
+from .element cimport Element
+
+include "../core/strings.pxi"
+
+
+cdef class BlendDeformer:
+    """Represents a blend deformer in the FBX structure."""
+
+    def __cinit__(self):
+        self._blend_deformer = NULL
+
+    def __repr__(self):
+        if self._blend_deformer == NULL:
+            return "<BlendDeformer None>"
+        return f"<BlendDeformer name='{self.name}'>"
+
+    @property
+    def name(self):
+        if self._blend_deformer == NULL:
+            return "None"
+        return to_py_string(self._blend_deformer.name)
+
+    @property
+    def element_id(self):
+        return self._blend_deformer.element_id
+
+    @property
+    def typed_id(self):
+        return self._blend_deformer.typed_id
+
+    @property
+    def properties(self):
+        return PropsWrapper.create(&self._blend_deformer.props)
+
+    @property
+    def channels(self):
+        return BlendChannelList.create(self._blend_deformer.channels.data, self._blend_deformer.channels.count)
+
