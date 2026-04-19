@@ -13,7 +13,7 @@ from pyufbx.scene cimport Scene
 # Include files (relative paths work here)s
 
 include "core/strings.pxi"
-
+include "core/raise_ufbx_error.pxi"
 
 
 # Main loading function
@@ -36,14 +36,8 @@ def load_fbx(filename: str):
     # Call the imported C function
     scene = ufbx_load_file(c_filename, NULL, &error)
 
-    # Simple error check (assuming you have error handling logic)
     if scene is NULL:
-        # In a real library, you'd raise a proper exception here
-        # based on the content of the 'error' struct.
-        error_msg = to_py_string(error.description)
-
-        raise FileNotFoundError(
-            f"Could not load FBX file: {filename} {error_msg}")
+        raise_ufbx_error(&error)
 
     cdef Scene scene_obj = Scene()
     scene_obj._set_scene(scene)

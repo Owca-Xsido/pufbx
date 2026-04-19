@@ -31,6 +31,8 @@ from pyufbx.ufbx_wrapper import load_fbx
 
 __all__ = [
     "load_fbx",
+    "UFBXError",
+    "ErrorType",
     "bake_anim",
     "anim_to_array",
     "Anim",
@@ -111,6 +113,14 @@ def __getattr__(name):
         from pyufbx.animation.keyframe import KeyframeList
 
         return KeyframeList
+    elif name == "UFBXError":
+        from pyufbx.errors import UFBXError
+
+        return UFBXError
+    elif name == "ErrorType":
+        from pyufbx.errors import ErrorType
+
+        return ErrorType
     elif name == "bake_anim":
         from pyufbx.animation.bake_anim import bake_anim
 

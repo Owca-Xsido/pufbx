@@ -10,6 +10,8 @@ Fast, Pythonic bindings for the [ufbx](https://github.com/ufbx/ufbx) FBX file lo
 high-performance access to FBX scene data — nodes, meshes, bones, animations,
 materials, and more — without writing a single line of C.
 
+**Project status:** **alpha**. **Planned scope** is **everything ufbx defines** for reading FBX (its public types, fields, lists, and loader-facing API). **Rough completion:** ~**35%** toward that bar (informal): many wrappers exist, but exhaustive parity and polish across the full ufbx surface are still in progress. **Version 0.1.0** focused on **animation** — scene load, **bake**, **dense numpy export** (`anim_to_array`), and **raw curves**.
+
 ## Features
 
 - **Fast** — thin Cython layer over native C; loads large FBX files in milliseconds

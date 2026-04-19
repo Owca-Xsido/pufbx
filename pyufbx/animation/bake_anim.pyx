@@ -9,6 +9,9 @@ from ..pyufbx cimport ufbx_bake_anim  # Or just: from . cimport *
 from ..pyufbx cimport ufbx_bake_opts, ufbx_baked_anim, ufbx_error
 from ..scene cimport Scene
 
+include "../core/strings.pxi"
+include "../core/raise_ufbx_error.pxi"
+
 
 cdef class BakedAnim:
     """
@@ -141,10 +144,8 @@ def bake_anim(Scene scene, Anim anim=None, *,
         &error
     )
     
-    # Check for errors
     if result == NULL:
-        # TODO: Raise a proper UFBXError exception
-        raise NotImplementedError(f"ERORR HERE: {error.message.decode('utf-8')}")
+        raise_ufbx_error(&error)
 
     return wrap_baked_anim(result)
 

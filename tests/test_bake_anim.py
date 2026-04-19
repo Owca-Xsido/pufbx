@@ -12,8 +12,23 @@ import numpy as np
 import pytest
 
 import pyufbx
+from pyufbx.errors import ErrorType, UFBXError
 
 SAMPLE_FBX = str(pathlib.Path(__file__).parent / "fixtures" / "cube_and_bone.fbx")
+
+
+def test_ufbx_error_public():
+    assert pyufbx.UFBXError is UFBXError
+    assert pyufbx.ErrorType is ErrorType
+    assert issubclass(UFBXError, RuntimeError)
+
+
+def test_load_missing_file_ufbx_error():
+    missing = str(pathlib.Path(__file__).parent / "fixtures" / "does_not_exist.fbx")
+    with pytest.raises(UFBXError) as ctx:
+        pyufbx.load_fbx(missing)
+    assert ctx.value.error_type == ErrorType.FILE_NOT_FOUND
+    assert ctx.value.args[0]
 
 
 @pytest.fixture(scope="module")
