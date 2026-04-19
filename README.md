@@ -21,10 +21,10 @@ materials, and more — without writing a single line of C.
 
 ## Installation
 
-### From PyPI (when published)
+### From PyPI
 
 ```bash
-uv pip install pyufbx
+pip install pyufbx
 ```
 
 ### From source
