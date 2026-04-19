@@ -1,10 +1,12 @@
-import sys
+import glob
 import os
+import sys
 from pathlib import Path
 
-from setuptools import setup, Extension, find_packages
-from Cython.Build import cythonize
 import numpy as np
+from Cython.Build import cythonize
+from setuptools import Extension, setup
+from setuptools.command.build_ext import build_ext as _build_ext
 
 ROOT = Path(__file__).parent.absolute()
 
@@ -13,26 +15,72 @@ COMMON_INCLUDE_DIRS = [
     str(ROOT),
 ]
 
-# ufbx uses pointer identity for interned strings, so ideally all code shares
-# a single compiled copy of ufbx.c.
-#
-# On Linux/macOS: compile ufbx.c only into ufbx_wrapper, then load it with
-# RTLD_GLOBAL in __init__.py so all other extensions share its symbols.
-#
-# On Windows: RTLD_GLOBAL is a no-op and DLLs cannot share symbols without
-# explicit import libraries. We compile ufbx.c into every module that calls
-# ufbx functions directly (scene, bake_anim). This means bake_anim string
-# interning is broken on Windows until a proper shared DLL approach is added.
-if sys.platform == "win32":
-    NEEDS_UFBX_C = {
+_UFBX_WIN_EXPORT_DEFS = [
+    ("ufbx_abi", "__declspec(dllexport)"),
+    ("ufbx_abi_data", "__declspec(dllexport)"),
+    ("ufbx_abi_data_def", "__declspec(dllexport)"),
+]
+
+_UFBX_WIN_IMPORT_DEFS = [
+    ("ufbx_abi", "__declspec(dllimport)"),
+    ("ufbx_abi_data", "__declspec(dllimport)"),
+]
+
+_UFBX_WIN_LINK = frozenset(
+    {
         "pyufbx.ufbx_wrapper",
         "pyufbx.scene",
         "pyufbx.animation.bake_anim",
     }
-else:
-    NEEDS_UFBX_C = {
-        "pyufbx.ufbx_wrapper",
-    }
+)
+
+
+class build_ext(_build_ext):
+    _ufbx_import_lib: str | None = None
+
+    def run(self) -> None:
+        if sys.platform == "win32":
+            self.parallel = False
+        super().run()
+
+    def build_extension(self, ext) -> None:
+        if sys.platform != "win32":
+            super().build_extension(ext)
+            return
+        if ext.name == "pyufbx._ufbx":
+            super().build_extension(ext)
+            self._ufbx_import_lib = self._find_newest_ufbx_import_lib()
+            if not self._ufbx_import_lib:
+                raise RuntimeError(
+                    "Built pyufbx._ufbx but could not find the MSVC import library (.lib). "
+                    "If you use a non-MSVC toolchain on Windows, report this as a build issue."
+                )
+            return
+        if ext.name in _UFBX_WIN_LINK:
+            ext.extra_link_args = list(ext.extra_link_args or [])
+            ext.extra_link_args.append(self._require_ufbx_import_lib())
+        super().build_extension(ext)
+
+    def _require_ufbx_import_lib(self) -> str:
+        if not self._ufbx_import_lib:
+            raise RuntimeError("pyufbx._ufbx must be built before other native modules on Windows")
+        return self._ufbx_import_lib
+
+    def _find_newest_ufbx_import_lib(self) -> str | None:
+        if not self.build_temp:
+            return None
+        patterns = (
+            os.path.join(self.build_temp, "**", "pyufbx._ufbx*.lib"),
+            os.path.join(self.build_temp, "**", "_ufbx*.lib"),
+        )
+        candidates: list[str] = []
+        for pattern in patterns:
+            candidates.extend(glob.glob(pattern, recursive=True))
+        candidates = list(dict.fromkeys(candidates))
+        if not candidates:
+            return None
+        candidates.sort(key=lambda p: os.path.getmtime(p), reverse=True)
+        return candidates[0]
 
 
 def find_pyx_files(base_dir="pyufbx"):
@@ -49,21 +97,42 @@ def find_pyx_files(base_dir="pyufbx"):
 
 
 all_modules = find_pyx_files("pyufbx")
-extensions = []
+extensions: list[Extension] = []
+
+if sys.platform == "win32":
+    extensions.append(
+        Extension(
+            "pyufbx._ufbx",
+            sources=["pyufbx/_ufbx.c", "ufbx/ufbx.c"],
+            include_dirs=COMMON_INCLUDE_DIRS,
+            define_macros=_UFBX_WIN_EXPORT_DEFS,
+        )
+    )
 
 for module_name in all_modules:
     pyx_path = module_name.replace(".", "/") + ".pyx"
 
-    if module_name in NEEDS_UFBX_C:
-        sources = [pyx_path, "ufbx/ufbx.c"]
+    if sys.platform == "win32":
+        if module_name in _UFBX_WIN_LINK:
+            sources = [pyx_path]
+            macros = list(_UFBX_WIN_IMPORT_DEFS)
+        else:
+            sources = [pyx_path]
+            macros = []
     else:
-        sources = [pyx_path]
+        if module_name in ("pyufbx.ufbx_wrapper",):
+            sources = [pyx_path, "ufbx/ufbx.c"]
+            macros = []
+        else:
+            sources = [pyx_path]
+            macros = []
 
     extensions.append(
         Extension(
             module_name,
             sources=sources,
             include_dirs=COMMON_INCLUDE_DIRS,
+            define_macros=macros,
         )
     )
 
@@ -72,4 +141,5 @@ setup(
         extensions,
         compiler_directives={"language_level": "3"},
     ),
+    cmdclass={"build_ext": build_ext},
 )

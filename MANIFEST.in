@@ -4,4 +4,4 @@ include pyproject.toml
 include setup.py
 
 recursive-include ufbx *.c *.h
-recursive-include pyufbx *.pyx *.pxd *.pyi *.py
+recursive-include pyufbx *.pyx *.pxd *.pyi *.py *.c

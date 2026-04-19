@@ -30,8 +30,8 @@ def test_bake_returns_many_keyframes(baked):
     rot = nodes[0].rotation_keys
     assert len(rot) > 2, (
         f"Got {len(rot)} rotation keyframes — expected >2. "
-        "This usually means ufbx.c is compiled into multiple extension modules, "
-        "breaking ufbx's internal string interning. See setup.py NEEDS_UFBX_C."
+        "This usually means multiple copies of ufbx.c are linked on Windows "
+        "instead of the single shared pyufbx._ufbx extension (see setup.py)."
     )
 
 

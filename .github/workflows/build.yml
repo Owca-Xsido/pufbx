@@ -35,9 +35,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Windows excluded: ufbx string interning requires a shared DLL on
-        # Windows which is not yet implemented. bake_anim tests would fail.
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
 
     steps:
@@ -51,8 +49,8 @@ jobs:
 
       - name: Install and test
         run: |
-          uv sync --frozen --extra dev
-          uv run pytest tests/ -q
+          uv sync --extra dev
+          uv run python -m pytest tests/ -q
 
   build_wheels:
     name: Build wheels (${{ matrix.os }})
@@ -72,7 +70,6 @@ jobs:
           CIBW_SKIP: "*-win32 *-manylinux_i686 pp*"
           CIBW_TEST_REQUIRES: pytest numpy
           CIBW_TEST_COMMAND: "python -m pytest {project}/tests/test_bake_anim.py -q --import-mode=importlib"
-          CIBW_TEST_SKIP: "*-win_amd64"
 
       - uses: actions/upload-artifact@v4
         with:

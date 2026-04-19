@@ -14,9 +14,12 @@ import importlib.util as _importlib_util
 # (string constants, ufbx_free_scene, ufbx_bake_anim, etc.) are visible to
 # all other extension modules. ufbx uses pointer identity for interned strings,
 # so all ufbx code must share a single compiled copy.
-# On Windows: RTLD_GLOBAL is a no-op; each module that needs ufbx symbols
-# has ufbx.c compiled into it directly (see setup.py).
+# On Windows: load the shared pyufbx._ufbx extension first so ufbx.c exists in
+# exactly one DLL; ufbx_wrapper, scene, and bake_anim link against it (setup.py).
 import sys as _sys
+
+if _sys.platform == "win32":
+    import pyufbx._ufbx as _pyufbx_ufbx  # noqa: F401
 
 if _sys.platform != "win32":
     _spec = _importlib_util.find_spec("pyufbx.ufbx_wrapper")
