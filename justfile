@@ -1,6 +1,7 @@
+set windows-shell := ["powershell.exe", "-NoLogo", "-Command"]
+
 alias b := build
-host := `uname -a`
-default: autoformat lint generate_list generate_wrappers build_dev  run
+default: autoformat lint generate_list generate_wrappers build_dev run
 build_release: autoformat lint build test
 
 
@@ -8,7 +9,7 @@ build_release: autoformat lint build test
 test:
 	@echo "Running tests..."
 	
-	uv run --no-sync pytest tests/ --maxfail=1 -s
+	uv run --no-sync python -m pytest tests/ --maxfail=1 -s
 	
 lint:
 	@echo "Linting code..."

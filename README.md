@@ -96,7 +96,7 @@ Install [uv](https://docs.astral.sh/uv/), then:
 git clone https://github.com/Owca-Xsido/pyufbx.git
 cd pyufbx
 uv sync --extra dev
-uv run pytest tests/
+uv run python -m pytest tests/
 ```
 
 ### Formatting & linting

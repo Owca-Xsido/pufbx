@@ -15,7 +15,7 @@ Building from source requires a C compiler and Python development headers.
 
 ```bash
 uv sync --extra dev
-uv run pytest tests/
+uv run python -m pytest tests/
 ```
 
 ## Development workflow
@@ -30,7 +30,7 @@ uv run pytest tests/
    (Or `just autoformat` / `just lint` from the `justfile`.)
 4. Run the test suite:
    ```bash
-   uv run pytest tests/
+   uv run python -m pytest tests/
    ```
 5. Open a pull request against `main`.
 
