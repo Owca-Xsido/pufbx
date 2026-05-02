@@ -13,7 +13,6 @@ jobs:
   lint:
     name: Lint
     runs-on:
-      - self-hosted
       - Linux
 
     steps:
@@ -34,7 +33,7 @@ jobs:
   test:
     name: "Test (${{ matrix.os }}, ${{ matrix.python-version }})"
     runs-on:
-      - self-hosted
+      
       - ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -59,7 +58,7 @@ jobs:
   build_wheels:
     name: "Build wheels (${{ matrix.os }})"
     runs-on:
-      - self-hosted
+      
       - ${{ matrix.os }}
     needs: [lint, test]
     strategy:
@@ -85,7 +84,7 @@ jobs:
   build_sdist:
     name: Build source distribution
     runs-on:
-      - self-hosted
+      
       - Linux
     needs: [lint, test]
 
@@ -109,7 +108,7 @@ jobs:
   release:
     name: Publish to GitHub Releases & PyPI
     runs-on:
-      - self-hosted
+      
       - Linux
     needs: [build_wheels, build_sdist]
     if: github.event_name == 'release'
