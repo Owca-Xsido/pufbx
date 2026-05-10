@@ -57,3 +57,12 @@ uv run isort --check pufbx/ tests/
 - On Windows, `ufbx.c` is built into a single extension module `pufbx._ufbx`; other native modules link against it so string interning stays consistent. `pufbx/__init__.py` imports `_ufbx` before `ufbx_wrapper`.
 - `anim_to_array()` takes a filename string (not a `Scene` object) and returns a `(data, times, names)` tuple.
 - `bake_anim()` takes a `Scene` object and returns a `BakedAnim` (not a dict); use `.modified_nodes` to iterate.
+
+## Cursor Cloud specific instructions
+
+The VM update script runs `uv sync --python 3.12 --extra dev` on startup, which installs all dependencies and compiles the Cython/C extensions. System prerequisites (`python3.12-dev`, `gcc`, `uv`) are pre-installed in the VM snapshot.
+
+- **No external services** are needed. This is a standalone library; just install and run tests.
+- **First build takes ~80s** because it compiles ~51 Cython extensions and the vendored C library. Subsequent `uv sync` calls are fast if nothing changed.
+- **CI/CD for PyPI**: `.github/workflows/build.yml` handles lint, test matrix, wheel builds (cibuildwheel), and PyPI publishing. Publishing triggers on a GitHub release event and uses trusted publishing (OIDC via `id-token: write`). The repo owner must configure a trusted publisher on PyPI for `Owca-Xsido/pufbx`.
+- Standard commands are documented in the `AGENTS.md` sections above and in `README.md`.
